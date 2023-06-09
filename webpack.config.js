@@ -88,6 +88,9 @@ module.exports = {
       new webpack.DefinePlugin({
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
         SERVER_URL: JSON.stringify(process.env.SERVER_URL),
+        API_TOKEN: JSON.stringify(process.env.API_TOKEN),
+        ARTICLE_URL: JSON.stringify(process.env.ARTICLE_URL),
+        ARTICLE_TOKEN: JSON.stringify(process.env.ARTICLE_TOKEN)
       }),
     ],
     /* separates js (and css) that is shared between bundles - allows browser to cache */

@@ -13,3 +13,29 @@ body {
     width: auto;
     margin: auto;
 }
+.newsTile {
+    height: 100px;
+    width: 166px;
+}
+/*fancy_card from https://nestedsoftware.com/2019/11/05/card-with-expand-on-hover-effect-2ccm.200941.html*/
+.fancy_card {
+    font-family: Roboto, sans-serif;
+    width: 400px;
+    border-radius: 5px;
+    overflow: hidden; /* otherwise header image won't respect rounded corners */
+    transition: all .5s ease; /* back to normal */
+    background-color: #2b373f;
+  }
+  .fancy_card:hover {
+    transform: translate3D(0,-1px,0) scale(1.03); /* move up slightly and zoom in */
+    transition: all .4s ease; /* zoom in */
+    cursor: pointer;
+  }
+  
+  .card_image {
+    width: 100%; /* forces image to maintain its aspect ratio; otherwise image stretches vertically */
+  }
+  
+  .card_text {
+    padding: 20px 13px 10px 16px;
+  }
