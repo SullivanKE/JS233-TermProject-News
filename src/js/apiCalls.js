@@ -1,6 +1,8 @@
 
 import './debug';
-var apiDebugging = true;
+import { debug, error} from './debug';
+var apiDebugging = false;
+var apiPrefix = "apiCalls.js";
 // API documentation
 // https://www.thenewsapi.com/documentation
 
@@ -227,7 +229,7 @@ export async function getHeadlines(publishedOn = "", locale = "us", language = "
 
     let url = `${SERVER_URL}headlines?locale=${locale}&language=${language}&api_token=${API_TOKEN}`;
     url += publishedOn == "" ? "" : `&published_on=${publishedOn}`;
-    debug("getHeadlines URL", url, apiDebugging);
+    debug(apiPrefix, "getHeadlines URL", url, apiDebugging);
     const article = await fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -236,12 +238,12 @@ export async function getHeadlines(publishedOn = "", locale = "us", language = "
                 }
             }
             else {
-                debug("Reponse from the getHeadlines call", response, apiDebugging);
+                debug(apiPrefix, "Reponse from the getHeadlines call", response, apiDebugging);
                 return response.json();
             }
         })
         .catch(err => {
-            error("getHeadlines", err);
+            error(apiPrefix, "getHeadlines", err);
         })
     return article;
 }
@@ -449,12 +451,12 @@ export async function topStories(search = "", searchFields = "", categories = ""
                 }
             }
             else {
-                debug("Response from the topStories call", response, apiDebugging);
+                debug(apiPrefix, "Response from the topStories call", response, apiDebugging);
                 return response.json();
             }
         })
         .catch(err => {
-            error("topStories", err);
+            error(apiPrefix, "topStories", err);
         })
     return article;
 }
@@ -644,12 +646,12 @@ export async function allNews(search = "", searchFields = "", categories = "", p
                 }
             }
             else {
-                debug("Response from the allNews call", response, apiDebugging);
+                debug(apiPrefix, "Response from the allNews call", response, apiDebugging);
                 return response.json();
             }
         })
         .catch(err => {
-            error("allNews", err);
+            error(apiPrefix, "allNews", err);
         })
     return article;
 }
@@ -729,12 +731,12 @@ export async function similarNews(uuid, categories = "", publishedOn = "", publi
                 }
             }
             else {
-                debug("Response from the similarNews call", response, apiDebugging);
+                debug(apiPrefix, "Response from the similarNews call", response, apiDebugging);
                 return response.json()
             }
         })
         .catch(err => {
-            error("similarNews", err);
+            error(apiPrefix, "similarNews", err);
         })
     return article;
 }
@@ -766,12 +768,12 @@ export async function newsByUUID(uuid) {
                 }
             }
             else {
-                debug("Response from the newsByUUID call", response, apiDebugging);
+                debug(apiPrefix, "Response from the newsByUUID call", response, apiDebugging);
                 return response.json();
             }
         })
         .catch(err => {
-            error("newsByUUID", err);
+            error(apiPrefix, "newsByUUID", err);
         })
     return article;
 }
@@ -885,12 +887,12 @@ export async function fetchArticle(article) {
                 }
             }
             else {
-                debug("Response from the fetchArticle call", response, apiDebugging);
+                debug(apiPrefix, "Response from the fetchArticle call", response, apiDebugging);
                 return response.json();
             }
         })
         .catch(err => {
-            error("fetchArticle", err);
+            error(apiPrefix, "fetchArticle", err);
         })
     return returnArticle;
 }

@@ -1,14 +1,15 @@
 import toastr from 'toastr';
 import 'toastr/toastr.scss';
 
-export function debug(description, data, externalDebugging = false) {
+export function debug(prefix, description, data, externalDebugging = false) {
     const debugging = true;
     if (debugging && externalDebugging) {
         toastr.info(description);
-        console.log("modal.js: " + description, data);
+        console.log(prefix + " | " + description, data);
     }
 }
-export function error(description, data) {
+export function error(prefix, description, data) {
     toastr.error(description);
-    console.error("modal.js: " + description, data);
+    let caller = debug.caller;
+    console.error(prefix + " | " + description, data);
 }

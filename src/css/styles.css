@@ -2,6 +2,9 @@ body {
     background-color: #0b0e10;
     color:aliceblue;
 }
+a:link {
+  color:aliceblue;
+}
 .columnStyle {
     background-color: #36454F;
 }
@@ -24,6 +27,10 @@ body {
     border-radius: 5px;
     overflow: hidden; /* otherwise header image won't respect rounded corners */
     transition: all .5s ease; /* back to normal */
+    background-color: #2b373f;
+  }
+  .modal-content {
+    font-family: Roboto, sans-serif;
     background-color: #2b373f;
   }
   .fancy_card:hover {

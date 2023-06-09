@@ -1,22 +1,20 @@
 import './general';
 import './apiCalls';
+import {getHeadlines, topStories, allNews, similarNews, newsByUUID, fetchArticle,} from './apiCalls';
+
 import './modal';
-import './debug';
-import { getHeadlines } from './apiCalls';
-import { topStories } from './apiCalls';
-import { allNews } from './apiCalls';
-import { similarNews } from './apiCalls';
-import { newsByUUID } from './apiCalls';
-import { fetchArticle } from './apiCalls';
 import { Modal } from './modal';
-import { debug } from './debug';
-import { error } from './debug';
+
+import './debug';
+import { debug, error} from './debug';
+
+
 
 class News {
     constructor() {
         this.debugging = true;
+        this.prefix = "news.js";
 
-        
         this.$carouselIndicators = document.querySelector('#carouselIndicators');
         this.$carouselInner = document.querySelector('#carouselInner');
         this.$favorites = document.querySelector('#saved');
@@ -25,8 +23,18 @@ class News {
 
         this.modal = new Modal();
 
+        debug(this.prefix, "Modal Header", document.querySelector("#modalHeader"), this.debugging);
+
         //this.apiTest();
-        this.openStory("");
+        //this.openStory("");
+
+        // TODO: Category filtering
+        // TODO: Search function
+        // TODO: Populating top story carousel
+        // TODO: Populating content area
+        // TODO: Saving to and deleting from favorites
+        // TODO: Second modal before accessing the main article with summary information
+
     }
     openStory(story) {
         story = {
@@ -92,7 +100,7 @@ class News {
             ],
             "html": null
         }
-        this.modal.showModal(story);
+        this.modal.showArticleModal(story);
     }
     
     apiTest() {
@@ -106,9 +114,9 @@ class News {
         //allNews();
         //similarNews(exampleUUID);
         newsByUUID(exampleUUID).then(data => {
-            debug("Article loaded", data, this.debugging);
+            debug(this.prefix, "Article loaded", data, this.debugging);
             fetchArticle(data.url).then(article => {
-                this.debug("Article data", article);
+                this.debug(this.prefix, "Article data", article);
             })
         });
     }
