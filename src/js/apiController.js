@@ -1,8 +1,6 @@
-
-import './debug';
 import { debug, error} from './debug';
 var apiDebugging = false;
-var apiPrefix = "apiCalls.js";
+var apiPrefix = "apiController.js";
 // API documentation
 // https://www.thenewsapi.com/documentation
 

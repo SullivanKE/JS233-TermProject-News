@@ -1,11 +1,10 @@
 import './general';
-import './debug';
 import * as bootstrap from 'bootstrap';
 import { debug, error } from './debug';
-export class Modal {
+export class ArticleModal {
     constructor() {
         this.debugging = false;
-        this.prefix = "modal.js";
+        this.prefix = "articleModal.js";
 
         this.$modal = document.querySelector("#newsStoryModal");
         this.$modalHeader = document.querySelector("#modalHeader");
@@ -14,9 +13,12 @@ export class Modal {
         this.$modalFooter = document.querySelector("#modalFooter");
         this.articleModal = new bootstrap.Modal(this.$modal);
 
-        this.showArticleModal = this.showArticleModal.bind(this);
+        this.showModal = this.showModal.bind(this);
     }
-    showArticleModal(article) {
+    closeModal() {
+      this.articleModal.close();
+  }
+    showModal(article) {
         // Make header
         debug(this.prefix, "Modal Header", this.$modalHeader, this.debugging);
         this.$modalHeader.innerHTML = this.buildHeader(article.title, article.url);
@@ -36,7 +38,7 @@ export class Modal {
         // TODO: Check if it is favorited for the favorite button
         return `<a href="${url}"><strong class="modal-title" id="newsModalLabel">${title}</strong></a>
         
-        <button type="button" class="btn-close color-danger" data-bs-dismiss="modal" aria-label="Close"></button>`
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>`
     }
     buildImageCarousel(images, videos) {
         //^(http(s):\/\/.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$

@@ -1,13 +1,10 @@
 import './general';
-import './apiCalls';
-import {getHeadlines, topStories, allNews, similarNews, newsByUUID, fetchArticle,} from './apiCalls';
-
-import './modal';
-import { Modal } from './modal';
-
-import './debug';
+import {getHeadlines, topStories, allNews, similarNews, newsByUUID, fetchArticle,} from './apiController';
+import { ArticleModal } from './articleModal';
+import { SummaryModal } from './summaryModal';
 import { debug, error} from './debug';
-
+import {SaveController} from './saveController';
+import {ContentController} from './contentController';
 
 
 class News {
@@ -15,29 +12,24 @@ class News {
         this.debugging = true;
         this.prefix = "news.js";
 
-        this.$carouselIndicators = document.querySelector('#carouselIndicators');
-        this.$carouselInner = document.querySelector('#carouselInner');
-        this.$favorites = document.querySelector('#saved');
-        this.$categories = document.querySelector('#categories');
-        this.$content = document.querySelector('#content');
-
-        this.modal = new Modal();
+        this.articleModal = new ArticleModal();
+        this.summaryModal = new SummaryModal();
 
         debug(this.prefix, "Modal Header", document.querySelector("#modalHeader"), this.debugging);
 
         //this.apiTest();
         //this.openStory("");
+        this.openSummary("");
 
         // TODO: Category filtering
         // TODO: Search function
         // TODO: Populating top story carousel
         // TODO: Populating content area
         // TODO: Saving to and deleting from favorites
-        // TODO: Second modal before accessing the main article with summary information
 
     }
-    openStory(story) {
-        story = {
+    async openStory(url) {
+        /*story = {
             "publish_date": "2023-06-09 02:42:02-04:00",
             "source_url": "https://www.benzinga.com",
             "url": "https://www.benzinga.com/news/earnings/23/06/32791363/markets-turn-bullish-after-dow-rises-for-third-straight-session",
@@ -99,8 +91,39 @@ class News {
                 "next-head-count"
             ],
             "html": null
-        }
-        this.modal.showArticleModal(story);
+        }*/
+        debug(this.prefix, "openStory call", url, this.debugging);
+
+        fetchArticle(url).then(story => {
+            debug(this.prefix, "openStory call inside promise", story, this.debugging);
+            this.articleModal.showModal(story.data);
+        })
+    }
+    openSummary(summary) {
+        summary = {"uuid": "fe01d54c-42b2-42a9-be2c-f820ede296fe",
+        "title": "Jays' Anthony Bass says anti-LGBTQIA+ post he shared wasn't hateful",
+        "description": "Blue Jays pitcher Anthony Bass said Thursday that he didn't believe the post he shared, which described the sale of LGBTQIA+ merchandise as",
+        "keywords": "",
+        "snippet": "TORONTO -- Toronto Blue Jays pitcher Anthony Bass said Thursday he doesn't believe an anti-LGBTQIA+ social media post he shared last month was hateful.\n\nThe rig...",
+        "url": "https://www.espn.com/mlb/story/_/id/37823206/jays-anthony-bass-says-anti-lgbtq+-post-shared-hateful",
+        "image_url": "https://a4.espncdn.com/combiner/i?img=/photo/2023/0609/r1184409_1296x729_16-9.jpg",
+        "language": "en",
+        "published_at": "2023-06-09T05:24:23.000000Z",
+        "source": "espn.com",
+        "categories": [
+            "sports",
+            "general"
+        ],
+        "relevance_score": null,
+        "locale": "us"};
+
+        this.summaryModal.showModal(summary);
+        this.addSummaryEventHandlers(summary.url);
+
+    }
+    addSummaryEventHandlers(url) {
+        document.querySelector('#readFullArticleButton').onclick = this.openStory.bind(this, url);
+        // Favorite button will go here too
     }
     
     apiTest() {
@@ -120,6 +143,11 @@ class News {
             })
         });
     }
+
+    addEventHandlers() {
+        // This will open up the modal window that does not contain the article. A view article button could be on it to openStory(). I think adding and removing from favorites would go well here.
+    }
+
 }
 let news;
 window.onload = () => {

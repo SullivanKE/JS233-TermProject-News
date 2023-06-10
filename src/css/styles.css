@@ -2,7 +2,7 @@ body {
     background-color: #0b0e10;
     color:aliceblue;
 }
-a:link {
+a:link a:visited {
   color:aliceblue;
 }
 .columnStyle {
@@ -45,4 +45,8 @@ a:link {
   
   .card_text {
     padding: 20px 13px 10px 16px;
+  }
+
+  .btn-link {
+    color: aliceblue;
   }
