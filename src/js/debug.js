@@ -1,15 +1,19 @@
 import toastr from 'toastr';
 import 'toastr/toastr.scss';
-
-export function debug(prefix, description, data, externalDebugging = false) {
-    const debugging = true;
-    if (debugging && externalDebugging) {
-        toastr.info(description);
-        console.log(prefix + " | " + description, data);
+export class Debug {
+    constructor(prefix, classDebugger) {
+        this.debugging = true;
+        this.prefix = prefix;
+        this.classDebugger = classDebugger
     }
-}
-export function error(prefix, description, data) {
-    toastr.error(description);
-    let caller = debug.caller;
-    console.error(prefix + " | " + description, data);
+    debug(description, data) {
+        if (this.debugging && this.classDebugger) {
+            toastr.info(this.description);
+            console.log(this.prefix + " | " + description, data);
+        }
+    }
+    error(description, data) {
+        toastr.error(description);
+        console.error(this.prefix + " | " + description, data);
+    }
 }

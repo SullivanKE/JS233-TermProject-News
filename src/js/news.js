@@ -1,8 +1,8 @@
 import './general';
-import {getHeadlines, topStories, allNews, similarNews, newsByUUID, fetchArticle,} from './apiController';
+import { ApiController } from './apiController';
 import { ArticleModal } from './articleModal';
 import { SummaryModal } from './summaryModal';
-import { debug, error} from './debug';
+import { Debug } from './debug';
 import {SaveController} from './saveController';
 import {ContentController} from './contentController';
 
@@ -11,11 +11,15 @@ class News {
     constructor() {
         this.debugging = true;
         this.prefix = "news.js";
+        this.debug = new Debug(this.prefix, this.debugging);
 
         this.articleModal = new ArticleModal();
         this.summaryModal = new SummaryModal();
+        this.contentController = new ContentController();
+        this.saveController = new SaveController();
+        this.apiController = new ApiController();
 
-        debug(this.prefix, "Modal Header", document.querySelector("#modalHeader"), this.debugging);
+        this.debug.debug("Modal Header", document.querySelector("#modalHeader"));
 
         //this.apiTest();
         //this.openStory("");
@@ -92,10 +96,10 @@ class News {
             ],
             "html": null
         }*/
-        debug(this.prefix, "openStory call", url, this.debugging);
+        this.debug.debug("openStory call", url);
 
-        fetchArticle(url).then(story => {
-            debug(this.prefix, "openStory call inside promise", story, this.debugging);
+        this.apiController.fetchArticle(url).then(story => {
+            this.debug.debug("openStory call inside promise", story);
             this.articleModal.showModal(story.data);
         })
     }
@@ -131,12 +135,12 @@ class News {
 
 
         // Headlines is part of the paid API plan
-        //getHeadlines();
+        //this.apiController.getHeadlines();
         
-        //topStories();
-        //allNews();
-        //similarNews(exampleUUID);
-        newsByUUID(exampleUUID).then(data => {
+        //this.apiController.topStories();
+        //this.apiController.allNews();
+        //this.apiController.similarNews(exampleUUID);
+        this.apiController.newsByUUID(exampleUUID).then(data => {
             debug(this.prefix, "Article loaded", data, this.debugging);
             fetchArticle(data.url).then(article => {
                 this.debug(this.prefix, "Article data", article);
