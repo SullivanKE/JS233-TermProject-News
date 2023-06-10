@@ -69,11 +69,11 @@ export class SummaryModal {
       */
     }
     closeModal() {
-        this.summaryModal.close();
+        this.summaryModal.hide();
     }
-    showModal(article) {
+    showModal(article, favorite) {
         this.$modalHeader.innerHTML = this.buildHeader(article.title);
-        this.$modalBody.innerHTML = this.buildBody(article.image_url, article.url, article.description, article.published_at, article.source);
+        this.$modalBody.innerHTML = this.buildBody(article.image_url, article.url, article.description, article.published_at, article.source, favorite);
         this.$modalFooter.innerHTML = this.buildFooter(article.categories, article.uuid);
 
         this.debug.debug("modal body", this.$modalBody.innerHTML);
@@ -85,8 +85,15 @@ export class SummaryModal {
         return `<h5 class="modal-title" id="summaryModalLabel">${title}</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>`;
     }
-    buildBody(img, url, description, published_at, source) {
+    buildBody(img, url, description, published_at, source, favorite) {
         let publishTime = new Date(Date.parse(published_at));
+        let btnstyle = "btn-success";
+        let btntext = "Add to Favorites";
+        if (favorite) {
+            btnstyle = "btn-danger";
+            btntext = "Remove from Favorites";
+        }
+            
         return `<div class="row">
                     <div class="col p-3">
                         <!--image-->
@@ -102,7 +109,7 @@ export class SummaryModal {
                                 <a href="${url}">Read on ${source}</a>
                             </div>
                             <div class="p-0">
-                                <button class="btn btn-success m-0">Add to Favorites</button>
+                                <button id="favoritebtn" class="btn ${btnstyle} m-0">${btntext}</button>
                             </div>
                         </div>
                     </div>
@@ -120,7 +127,6 @@ export class SummaryModal {
                     </div>
                 </div>`;
             
-    }
-    
+    }   
 
 }

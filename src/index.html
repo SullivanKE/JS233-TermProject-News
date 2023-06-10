@@ -54,7 +54,7 @@
       </div>
     </div>
     <!--Article Modal-->
-    <div id="newsStoryModal" class="modal fade modal-fullscreen" tabindex="-1">
+    <div id="newsStoryModal" class="modal fade modal-xl" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header" id="modalHeader">
@@ -125,17 +125,17 @@
     </div>
     <!--Headlines-->
     <div class="m-1 p-1 headlines">
-      <div id="headlinesCarousel" class="carousel slide">
+      <div id="headlinesCarousel" class="carousel slide visually-hidden">
         <div class="carousel-indicators" id="headlineIndicators">
           <button type="button" data-bs-target="#headlinesCarousel" data-bs-slide-to="0" class="active"
             aria-current="true" aria-label="Slide 1"></button>
         </div>
         <div class="carousel-inner" id="headlineInner">
           <div class="carousel-item active">
-            <img src="/img/examples/1_TzaiFDmkiEkOxNU7eG43pw.jpg" class="d-block sliderItem" alt="...">
+            <img src="#" class="d-block sliderItem" alt="...">
             <div class="carousel-caption d-none d-md-block">
-              <h5>First slide label</h5>
-              <p>Some representative placeholder content for the first slide.</p>
+              <h5></h5>
+              <p></p>
             </div>
           </div>
         </div>
@@ -148,25 +148,34 @@
           <span class="visually-hidden">Next</span>
         </button>
       </div>
+      <div id="nocontenttop" class="visually-hidden">
+        <img src="./img/nocontent.png" class="img-fluid"/>
+      </div>
+      <div id ="loadingtop">
+        <img src="./img/loading.gif" class="img-fluid"/>
+      </div>
     </div>
+    
     <!--Bottom row-->
     <div class="row m-2">
       <div class="col-2">
         <!--Search-->
-        <input class="rounded-4 w-100" id="search" placeholder="Search..." />
+        <!--Not enough time to implement this feature-->
+        <!--
+        <input class="rounded-4 w-100" id="search" placeholder="Search..." hidden/>
+        -->
 
         <!--List of saved stories-->
-        <div class="border border-light m-2 columnStyle">
+        <div class="border border-light m-2 columnStyle h-100">
           <h4 class="text-center">Favorites</h4>
-          <ul id="saved" style="list-style-type: none;">
-            <li>
-              <button class="btn btn-link p-0" href="#" name="favorites" data-uuid="">Wildfires threaten Amazon forest</button>
-            </li>
+          <ul id="saved" style="list-style-type: none;" class="p-1 text-start">
           </ul>
         </div>
 
         <!--Categories-->
-        <div class="m-2 border border-light columnStyle">
+        <!--Not enough time to implement this feature-->
+        <!--
+<div class="m-2 border border-light columnStyle" hidden>
           <h4 class="text-center">Categories</h4>
           <ul style="list-style-type: none;" id="categories">
             <li>
@@ -201,12 +210,16 @@
             </li>
           </ul>
         </div>
+        -->
+        
 
       </div>
       <!--Top Stories / area for listing out search and category picks-->
-      <div class="col-8 m-1 p-1 border border-light columnStyle" id="content">
-        <h4>Trending Stories</h4>
+      <div class="col-8 m-2 p-1 border border-light columnStyle" id="content">
+        <h4 class="text-center">Trending Stories</h4>
+        <hr />
 
+        <!--
         <div class="row-md">
           <div class="col-md m-2 p-2">
 
@@ -229,6 +242,7 @@
 
           </div>
         </div>
+        -->
 
 
       </div>

@@ -30,35 +30,48 @@ class News {
         // TODO: Search function
         // TODO: Populating top story carousel
         // TODO: Populating content area
-        // TODO: Saving to and deleting from favorites
 
-        //this.init();
+        this.init();
 
     }
-    init() {
+    async init() {
         // Get what is saved
         let allNews = this.saveController.getAllNews();
         let topStories = this.saveController.getTopStories();
         let favorites = this.saveController.getFavorites();
 
+        this.debug.debug("allNews", allNews);
+        this.debug.debug("top stories", topStories);
+
+        this.debug.debug("Time since test", minutesSince(allNews.lastFetch));
+
         // If there are no articles in allNews storage, or it is time to fetch based on the value stored in saveController
         if (allNews.stories == null || minutesSince(allNews.lastFetch) >= this.saveController.getFetchTime()) {
-            allNews = this.apiController.allNews();
+            allNews = await this.apiController.allNews();
             this.saveController.refreshAllNews(allNews);
+            allNews = this.saveController.getAllNews();
         }
 
         // If there are no articles in topStories storage, or it is time to fetch based on the value stored in saveController
         if (topStories.stories == null || minutesSince(topStories.lastFetch) >= this.saveController.getFetchTime()) {
-            topStories = this.apiController.topStories();
+            topStories = await this.apiController.topStories();
             this.saveController.refreshTopStories(allNews);
+            topStories = this.saveController.getTopStories();
         }
+
+
+        this.debug.debug("allNews", allNews);
+        this.debug.debug("top stories", topStories);
 
         // Send what we have off to the display controller
         this.displayController.displayFavorites(favorites);
-        this.displayController.displayTopStories(topstories.stories);
-        this.displayController.displayContent(allNews.stories);
+        this.displayController.displayTopStories(topStories.stories.data);
+        this.displayController.displayContent(allNews.stories.data);
+
+        // Add event handlers to things
+        this.addEventHandlers();
     }
-    async openStory(url) {
+    async openStory(url, uuid) {
         /*story = {
             "publish_date": "2023-06-09 02:42:02-04:00",
             "source_url": "https://www.benzinga.com",
@@ -124,13 +137,26 @@ class News {
         }*/
         this.debug.debug("openStory call", url);
 
-        this.apiController.fetchArticle(url).then(story => {
+        // Check and see if we have the story, if not, do a fetch
+        let story = this.saveController.findArticle(uuid);
+        this.debug.debug("This is what story is getting set to from find article", story);
+        if (story == null) {
+            story = await this.apiController.fetchArticle(url);
             this.debug.debug("openStory call inside promise", story);
-            this.articleModal.showModal(story.data);
-        })
+            this.saveController.addArticle(uuid, story);
+        }
+        else {
+            story = story.article;
+        }
+            
+
+        this.debug.debug("This is what we are sending to the article modal", story);
+        this.articleModal.showModal(story.data);
+
+        
     }
     async openSummary(summary) {
-        summary = {"uuid": "fe01d54c-42b2-42a9-be2c-f820ede296fe",
+        /*summary = {"uuid": "fe01d54c-42b2-42a9-be2c-f820ede296fe",
         "title": "Jays' Anthony Bass says anti-LGBTQIA+ post he shared wasn't hateful",
         "description": "Blue Jays pitcher Anthony Bass said Thursday that he didn't believe the post he shared, which described the sale of LGBTQIA+ merchandise as",
         "keywords": "",
@@ -145,84 +171,36 @@ class News {
             "general"
         ],
         "relevance_score": null,
-        "locale": "us"};
+        "locale": "us"};*/
 
-        this.summaryModal.showModal(summary);
-        this.addSummaryEventHandlers(summary.url);
+        // Check if it is a favorite
+        let favorite = this.saveController.findFavorite(summary.uuid) != null;
+        this.debug.debug("Favorite?", favorite);
+        this.summaryModal.showModal(summary, favorite);
+        this.addSummaryEventHandlers(summary.url, summary.uuid, favorite);
 
     }
-    populateHeadlines() {
-        //Example response
-        /*
-            {
-    "meta": {
-        "found": 694864,
-        "returned": 3,
-        "limit": 3,
-        "page": 1
-    },
-    "data": [
-        {
-            "uuid": "fe01d54c-42b2-42a9-be2c-f820ede296fe",
-            "title": "Jays' Anthony Bass says anti-LGBTQIA+ post he shared wasn't hateful",
-            "description": "Blue Jays pitcher Anthony Bass said Thursday that he didn't believe the post he shared, which described the sale of LGBTQIA+ merchandise as",
-            "keywords": "",
-            "snippet": "TORONTO -- Toronto Blue Jays pitcher Anthony Bass said Thursday he doesn't believe an anti-LGBTQIA+ social media post he shared last month was hateful.\n\nThe rig...",
-            "url": "https://www.espn.com/mlb/story/_/id/37823206/jays-anthony-bass-says-anti-lgbtq+-post-shared-hateful",
-            "image_url": "https://a4.espncdn.com/combiner/i?img=/photo/2023/0609/r1184409_1296x729_16-9.jpg",
-            "language": "en",
-            "published_at": "2023-06-09T05:24:23.000000Z",
-            "source": "espn.com",
-            "categories": [
-                "sports",
-                "general"
-            ],
-            "relevance_score": null,
-            "locale": "us"
-        },
-        {
-            "uuid": "d5fe8fb3-27ac-430e-accd-d948acd41857",
-            "title": "The potent U.S. arsenal for Ukraine’s counteroffensive",
-            "description": "The U.S. and Western allies have laid out a deliberate approach to arming Ukraine, focusing on systems that complement one another on the battlefield.",
-            "keywords": "",
-            "snippet": "Europe The potent U.S. arsenal for Ukraine’s counteroffensive\n\nListen 5 min Comment Gift Article Share\n\nArmed with Western weapons and trained in NATO tactics...",
-            "url": "https://www.washingtonpost.com/world/2023/06/09/ukraine-counteroffensive-weapons-russia-war/",
-            "image_url": "https://www.washingtonpost.com/wp-apps/imrs.php?src=https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/2BFIVHJCEVAR7BVUDDEIULSEIM.jpg&w=1440",
-            "language": "en",
-            "published_at": "2023-06-09T05:00:06.000000Z",
-            "source": "washingtonpost.com",
-            "categories": [
-                "general",
-                "politics"
-            ],
-            "relevance_score": null,
-            "locale": "us"
-        },
-        {
-            "uuid": "0db413a3-88f2-4aef-b4b1-032706768047",
-            "title": "The twice-impeached Trump now faces his second criminal indictment as he looks to recapture White House",
-            "description": "Donald Trump, who has often lied, unquestionably told the truth when he said Thursday was a “dark day” for America.",
-            "keywords": "brand safety-nsf crime, brand safety-nsf mature, brand safety-nsf sensitive, continents and regions, crime, law enforcement and corrections, criminal investigations, criminal law, criminal offenses, domestic alerts, domestic-us news, domestic-us politics, donald trump, elections and campaigns, government and public administration, government bodies and offices, government departments and authorities, government organizations - us, grand jury, iab-crime, iab-elections, iab-law, iab-politics, impeachment, indictments, international alerts, international-impeachment, international-us news, international-us politics, investigations, jack smith (lawyer), joe biden, justice departments, law and legal system, manhattan, new york (state), new york city, north america, northeastern united states, political figures - us, political organizations, political scandals, politics, scandals, the americas, trump criminal cases, trump document investigation, united states, us department of justice, us federal departments and agencies, us federal government, us political parties, us republican party, white house",
-            "snippet": "CNN —\n\nDonald Trump, who has often lied, unquestionably told the truth when he said Thursday was a “dark day” for America.\n\nThe ex-president’s social me...",
-            "url": "https://www.cnn.com/2023/06/09/politics/analysis-donald-trump-indictment/index.html",
-            "image_url": "https://media.cnn.com/api/v1/images/stellar/prod/230608222340-07-donald-trump-neutral.jpg?c=16x9&q=w_800,c_fill",
-            "language": "en",
-            "published_at": "2023-06-09T04:51:15.000000Z",
-            "source": "cnn.com",
-            "categories": [
-                "general"
-            ],
-            "relevance_score": null,
-            "locale": "us"
-        },
+    addSummaryEventHandlers(url, uuid, favorite) {
+        document.querySelector('#readFullArticleButton').onclick = this.openStory.bind(this, url, uuid);
+
+        let news = this.saveController.getAllNews().stories.data.concat(this.saveController.getTopStories().stories.data);
+        let story = news.find(s => s.uuid == uuid);
+        // Is it already a favorite?
+        if (favorite) {
+            document.querySelector('#favoritebtn').addEventListener("click", this.saveController.removeFavorite.bind(this, uuid));
+            document.querySelector('#favoritebtn').addEventListener("click", this.updateFavorites.bind(this));
+        }
+        else {
+            document.querySelector('#favoritebtn').addEventListener("click", this.saveController.addFavorite.bind(this, story));
+            document.querySelector('#favoritebtn').addEventListener("click", this.updateFavorites.bind(this));
+        }
         
-    ]
     }
-        */
-    }
-    addSummaryEventHandlers(url) {
-        document.querySelector('#readFullArticleButton').onclick = this.openStory.bind(this, url);
-        // Favorite button will go here too
+    updateFavorites(isFav) {
+        let favorites = this.saveController.getFavorites();
+        this.displayController.displayFavorites(favorites);
+        this.summaryModal.closeModal();
+        this.addEventHandlers();
     }
     
     apiTest() {
@@ -245,6 +223,15 @@ class News {
 
     addEventHandlers() {
         // This will open up the modal window that does not contain the article. A view article button could be on it to openStory(). I think adding and removing from favorites would go well here.
+        let articles = document.getElementsByName("article");
+        let news = this.saveController.getAllNews().stories.data.concat(this.saveController.getTopStories().stories.data, this.saveController.getFavorites);
+        for (let i = 0; i < articles.length; i++) {
+            let uuid = articles[i].dataset.uuid;
+            let story = news.find(s => s.uuid == uuid);
+            if (story != undefined || story != null) {
+                articles[i].onclick = this.openSummary.bind(this, story);
+            }
+        }
     }
 
 }

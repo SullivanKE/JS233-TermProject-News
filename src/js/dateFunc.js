@@ -1,7 +1,8 @@
 export function minutesSince(time) {
-    const now = Date.now;
+    const now = new Date();
+    time = new Date(Date.parse(time));
     const difference = now - time;
-
+    
     const secs = Math.floor(Math.abs(difference) / 1000);
     const mins = Math.floor(secs / 60);
 

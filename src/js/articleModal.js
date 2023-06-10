@@ -83,7 +83,7 @@ export class ArticleModal {
         }
 
 
-        let completeModalCarousel = `${indicators}${videoList}${imageList}<button class="carousel-control-prev" type="button" data-bs-target="#modalCarousel"
+        let completeModalCarousel = `<div class="carousel-indicators">${indicators}</div><div class="carousel-inner">${videoList}${imageList}</div><button class="carousel-control-prev" type="button" data-bs-target="#modalCarousel"
         data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
@@ -96,11 +96,39 @@ export class ArticleModal {
       this.debug.debug("carousel", completeModalCarousel);
         return completeModalCarousel;
 
+        /*
+        <div class="m-1 p-1 headlines">
+      <div id="headlinesCarousel" class="carousel slide visually-hidden">
+        <div class="carousel-indicators" id="headlineIndicators">
+          <button type="button" data-bs-target="#headlinesCarousel" data-bs-slide-to="0" class="active"
+            aria-current="true" aria-label="Slide 1"></button>
+        </div>
+        <div class="carousel-inner" id="headlineInner">
+          <div class="carousel-item active">
+            <img src="#" class="d-block sliderItem" alt="...">
+            <div class="carousel-caption d-none d-md-block">
+              <h5></h5>
+              <p></p>
+            </div>
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#headlinesCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#headlinesCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+        */
+
 
     }
     buildBody(topImage, authors, published, siteName, source, text) {
         // Loop through authors
         let authorList = "";
+        published = new Date(Date.parse(published));
         for (let i = 0; i < authors.length; i++) {
             authorList += authors[i];
             if (i + 1 < authors.length)
@@ -125,7 +153,7 @@ export class ArticleModal {
           </div>
           <div class="p-2 bd-highlight">
             <!--Publication date-->
-            <small>${published}</small>
+            <small>${published.toDateString()}</small>
           </div>
         </div>
       </div>

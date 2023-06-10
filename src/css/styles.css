@@ -11,6 +11,10 @@ a:link a:visited {
 .headlines {
     height: 300px;
 }
+li {
+  background-color: #2b373f;
+  ;
+}
 .sliderItem {
     height: 300px;
     width: auto;
