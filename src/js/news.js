@@ -1,10 +1,11 @@
 import './general';
+import { minutesSince } from './dateFunc';
 import { ApiController } from './apiController';
 import { ArticleModal } from './articleModal';
 import { SummaryModal } from './summaryModal';
 import { Debug } from './debug';
-import {SaveController} from './saveController';
-import {ContentController} from './contentController';
+import { SaveController } from './saveController';
+import { DisplayController } from './displayController';
 
 
 class News {
@@ -15,7 +16,7 @@ class News {
 
         this.articleModal = new ArticleModal();
         this.summaryModal = new SummaryModal();
-        this.contentController = new ContentController();
+        this.displayController = new DisplayController();
         this.saveController = new SaveController();
         this.apiController = new ApiController();
 
@@ -23,7 +24,7 @@ class News {
 
         //this.apiTest();
         //this.openStory("");
-        this.openSummary("");
+        //this.openSummary("");
 
         // TODO: Category filtering
         // TODO: Search function
@@ -31,6 +32,31 @@ class News {
         // TODO: Populating content area
         // TODO: Saving to and deleting from favorites
 
+        //this.init();
+
+    }
+    init() {
+        // Get what is saved
+        let allNews = this.saveController.getAllNews();
+        let topStories = this.saveController.getTopStories();
+        let favorites = this.saveController.getFavorites();
+
+        // If there are no articles in allNews storage, or it is time to fetch based on the value stored in saveController
+        if (allNews.stories == null || minutesSince(allNews.lastFetch) >= this.saveController.getFetchTime()) {
+            allNews = this.apiController.allNews();
+            this.saveController.refreshAllNews(allNews);
+        }
+
+        // If there are no articles in topStories storage, or it is time to fetch based on the value stored in saveController
+        if (topStories.stories == null || minutesSince(topStories.lastFetch) >= this.saveController.getFetchTime()) {
+            topStories = this.apiController.topStories();
+            this.saveController.refreshTopStories(allNews);
+        }
+
+        // Send what we have off to the display controller
+        this.displayController.displayFavorites(favorites);
+        this.displayController.displayTopStories(topstories.stories);
+        this.displayController.displayContent(allNews.stories);
     }
     async openStory(url) {
         /*story = {
@@ -103,7 +129,7 @@ class News {
             this.articleModal.showModal(story.data);
         })
     }
-    openSummary(summary) {
+    async openSummary(summary) {
         summary = {"uuid": "fe01d54c-42b2-42a9-be2c-f820ede296fe",
         "title": "Jays' Anthony Bass says anti-LGBTQIA+ post he shared wasn't hateful",
         "description": "Blue Jays pitcher Anthony Bass said Thursday that he didn't believe the post he shared, which described the sale of LGBTQIA+ merchandise as",
@@ -124,6 +150,75 @@ class News {
         this.summaryModal.showModal(summary);
         this.addSummaryEventHandlers(summary.url);
 
+    }
+    populateHeadlines() {
+        //Example response
+        /*
+            {
+    "meta": {
+        "found": 694864,
+        "returned": 3,
+        "limit": 3,
+        "page": 1
+    },
+    "data": [
+        {
+            "uuid": "fe01d54c-42b2-42a9-be2c-f820ede296fe",
+            "title": "Jays' Anthony Bass says anti-LGBTQIA+ post he shared wasn't hateful",
+            "description": "Blue Jays pitcher Anthony Bass said Thursday that he didn't believe the post he shared, which described the sale of LGBTQIA+ merchandise as",
+            "keywords": "",
+            "snippet": "TORONTO -- Toronto Blue Jays pitcher Anthony Bass said Thursday he doesn't believe an anti-LGBTQIA+ social media post he shared last month was hateful.\n\nThe rig...",
+            "url": "https://www.espn.com/mlb/story/_/id/37823206/jays-anthony-bass-says-anti-lgbtq+-post-shared-hateful",
+            "image_url": "https://a4.espncdn.com/combiner/i?img=/photo/2023/0609/r1184409_1296x729_16-9.jpg",
+            "language": "en",
+            "published_at": "2023-06-09T05:24:23.000000Z",
+            "source": "espn.com",
+            "categories": [
+                "sports",
+                "general"
+            ],
+            "relevance_score": null,
+            "locale": "us"
+        },
+        {
+            "uuid": "d5fe8fb3-27ac-430e-accd-d948acd41857",
+            "title": "The potent U.S. arsenal for Ukraine’s counteroffensive",
+            "description": "The U.S. and Western allies have laid out a deliberate approach to arming Ukraine, focusing on systems that complement one another on the battlefield.",
+            "keywords": "",
+            "snippet": "Europe The potent U.S. arsenal for Ukraine’s counteroffensive\n\nListen 5 min Comment Gift Article Share\n\nArmed with Western weapons and trained in NATO tactics...",
+            "url": "https://www.washingtonpost.com/world/2023/06/09/ukraine-counteroffensive-weapons-russia-war/",
+            "image_url": "https://www.washingtonpost.com/wp-apps/imrs.php?src=https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/2BFIVHJCEVAR7BVUDDEIULSEIM.jpg&w=1440",
+            "language": "en",
+            "published_at": "2023-06-09T05:00:06.000000Z",
+            "source": "washingtonpost.com",
+            "categories": [
+                "general",
+                "politics"
+            ],
+            "relevance_score": null,
+            "locale": "us"
+        },
+        {
+            "uuid": "0db413a3-88f2-4aef-b4b1-032706768047",
+            "title": "The twice-impeached Trump now faces his second criminal indictment as he looks to recapture White House",
+            "description": "Donald Trump, who has often lied, unquestionably told the truth when he said Thursday was a “dark day” for America.",
+            "keywords": "brand safety-nsf crime, brand safety-nsf mature, brand safety-nsf sensitive, continents and regions, crime, law enforcement and corrections, criminal investigations, criminal law, criminal offenses, domestic alerts, domestic-us news, domestic-us politics, donald trump, elections and campaigns, government and public administration, government bodies and offices, government departments and authorities, government organizations - us, grand jury, iab-crime, iab-elections, iab-law, iab-politics, impeachment, indictments, international alerts, international-impeachment, international-us news, international-us politics, investigations, jack smith (lawyer), joe biden, justice departments, law and legal system, manhattan, new york (state), new york city, north america, northeastern united states, political figures - us, political organizations, political scandals, politics, scandals, the americas, trump criminal cases, trump document investigation, united states, us department of justice, us federal departments and agencies, us federal government, us political parties, us republican party, white house",
+            "snippet": "CNN —\n\nDonald Trump, who has often lied, unquestionably told the truth when he said Thursday was a “dark day” for America.\n\nThe ex-president’s social me...",
+            "url": "https://www.cnn.com/2023/06/09/politics/analysis-donald-trump-indictment/index.html",
+            "image_url": "https://media.cnn.com/api/v1/images/stellar/prod/230608222340-07-donald-trump-neutral.jpg?c=16x9&q=w_800,c_fill",
+            "language": "en",
+            "published_at": "2023-06-09T04:51:15.000000Z",
+            "source": "cnn.com",
+            "categories": [
+                "general"
+            ],
+            "relevance_score": null,
+            "locale": "us"
+        },
+        
+    ]
+    }
+        */
     }
     addSummaryEventHandlers(url) {
         document.querySelector('#readFullArticleButton').onclick = this.openStory.bind(this, url);

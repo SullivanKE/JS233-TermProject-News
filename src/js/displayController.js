@@ -1,7 +1,7 @@
 import './general';
 import { Debug } from './debug';
 
-export class ContentController {
+export class DisplayController {
     constructor() {
         this.debugging = true;
         this.prefix = "contentController.js";
@@ -13,6 +13,16 @@ export class ContentController {
         this.$categories = document.querySelector('#categories');
         this.$content = document.querySelector('#content');
 
+
+    }
+
+    displayFavorites(favorites) {
+
+    }
+    displayTopStories(topstories) {
+
+    }
+    displayContent(content) {
 
     }
 }
