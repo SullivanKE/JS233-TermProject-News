@@ -93,12 +93,12 @@ export class SaveController {
     }
     refreshTopStories(topStories) {
         this.topStories.lastFetch = new Date();
-        this.topStories.stories.data.concat(topStories.data);
+        this.topStories.stories = topStories.data;
         localStorage["top-article-storage"] = JSON.stringify(this.topStories);
     }
     refreshAllNews(allNews) {
         this.allNews.lastFetch = new Date();
-        this.allNews.stories.data.concat(allNews.data);
+        this.allNews.stories = allNews.data;
         localStorage["allnews-article-storage"] = JSON.stringify(this.allNews);
     }
 

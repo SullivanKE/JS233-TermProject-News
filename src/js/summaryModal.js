@@ -93,9 +93,11 @@ export class SummaryModal {
             btnstyle = "btn-danger";
             btntext = "Remove from Favorites";
         }
+        if (img == undefined || img == null || img == "")
+            img = "./img/nocontent.png";
             
         return `<div class="row">
-                    <div class="col p-3">
+                    <div class="col p-3 h-100">
                         <!--image-->
                         <img src="${img}" class="img-fluid rounded m-0" />
                     </div>
@@ -113,7 +115,7 @@ export class SummaryModal {
                             </div>
                         </div>
                     </div>
-                </div>`;
+                </div><br /><br />`;
 
     }
     buildFooter(categories, uuid) {

@@ -26,10 +26,8 @@ class News {
         //this.openStory("");
         //this.openSummary("");
 
-        // TODO: Category filtering
-        // TODO: Search function
-        // TODO: Populating top story carousel
-        // TODO: Populating content area
+        // Clear all saved information if there is a problem.
+        //this.saveController.clearAll();
 
         this.init();
 
@@ -46,16 +44,18 @@ class News {
         this.debug.debug("Time since test", minutesSince(allNews.lastFetch));
 
         // If there are no articles in allNews storage, or it is time to fetch based on the value stored in saveController
-        if (allNews.stories == null || minutesSince(allNews.lastFetch) >= this.saveController.getFetchTime()) {
+        if (allNews.stories == null || allNews.stories.length == 0 || minutesSince(allNews.lastFetch) >= this.saveController.getFetchTime()) {
             allNews = await this.apiController.allNews();
+            this.debug.debug("just after the fetch", allNews);
             this.saveController.refreshAllNews(allNews);
             allNews = this.saveController.getAllNews();
         }
 
         // If there are no articles in topStories storage, or it is time to fetch based on the value stored in saveController
-        if (topStories.stories == null || minutesSince(topStories.lastFetch) >= this.saveController.getFetchTime()) {
+        if (topStories.stories == null || topStories.stories.length == 0 || minutesSince(topStories.lastFetch) >= this.saveController.getFetchTime()) {
             topStories = await this.apiController.topStories();
-            this.saveController.refreshTopStories(allNews);
+            this.debug.debug("just after the fetch for top stories", topStories);
+            this.saveController.refreshTopStories(topStories);
             topStories = this.saveController.getTopStories();
         }
 
@@ -65,8 +65,8 @@ class News {
 
         // Send what we have off to the display controller
         this.displayController.displayFavorites(favorites);
-        this.displayController.displayTopStories(topStories.stories.data);
-        this.displayController.displayContent(allNews.stories.data);
+        this.displayController.displayTopStories(topStories.stories);
+        this.displayController.displayContent(allNews.stories);
 
         // Add event handlers to things
         this.addEventHandlers();
@@ -183,7 +183,7 @@ class News {
     addSummaryEventHandlers(url, uuid, favorite) {
         document.querySelector('#readFullArticleButton').onclick = this.openStory.bind(this, url, uuid);
 
-        let news = this.saveController.getAllNews().stories.data.concat(this.saveController.getTopStories().stories.data);
+        let news = this.saveController.getAllNews().stories.concat(this.saveController.getTopStories().stories);
         let story = news.find(s => s.uuid == uuid);
         // Is it already a favorite?
         if (favorite) {
@@ -224,7 +224,7 @@ class News {
     addEventHandlers() {
         // This will open up the modal window that does not contain the article. A view article button could be on it to openStory(). I think adding and removing from favorites would go well here.
         let articles = document.getElementsByName("article");
-        let news = this.saveController.getAllNews().stories.data.concat(this.saveController.getTopStories().stories.data, this.saveController.getFavorites);
+        let news = this.saveController.getAllNews().stories.concat(this.saveController.getTopStories().stories, this.saveController.getFavorites);
         for (let i = 0; i < articles.length; i++) {
             let uuid = articles[i].dataset.uuid;
             let story = news.find(s => s.uuid == uuid);

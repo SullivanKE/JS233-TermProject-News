@@ -88,8 +88,11 @@ export class DisplayController {
             // Build images
             active = "active";
             for (let i = 0; i < topstories.length; i++) {
+                let img = topstories[i].image_url;
+                if (img == undefined || img == null || img == "" || img == "...")
+                    img = "./img/nocontent.png";
                 items += `  <div class="carousel-item ${active}" name="article" data-uuid="${topstories[i].uuid}">
-                                <img src="${topstories[i].image_url}" class="d-block sliderItem" alt="${topstories[i].title}">
+                                <img src="${img}" class="d-block sliderItem" alt="${topstories[i].title}">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h5>${topstories[i].title.substr(0, this.titleLength)}...</h5>
                                     <p>${topstories[i].description.substr(0, this.descLength)}...</p>
@@ -151,6 +154,10 @@ export class DisplayController {
                 let front = "";
                 let rear = "";
 
+                let img = content[i].image_url;
+                if (img == undefined || img == null || img == "" || img == "...")
+                    img = "./img/nocontent.png";
+
                 // Two stories fit on a row, so mod 2 to add a row to an entry. 0 is a new row, 1 is the end of a row.
                 // We also need to check if this is the last item in the list.
                 if (mod == 0) {
@@ -167,7 +174,7 @@ export class DisplayController {
                                         </div>
                                         <div class="card-body">
                                             <figure class="figure">
-                                                <img src="${content[i].image_url}" class="figure-img card_image" />
+                                                <img src="${img}" class="figure-img card_image img-fluid" />
                                                 <figcaption class="figure-caption text-white small">${content[i].description.substr(0, this.descLength)}...</figcaption>
                                             </figure>
                                         </div>
