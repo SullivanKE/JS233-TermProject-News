@@ -4,7 +4,7 @@ import { ApiController } from './apiController';
 import { ArticleModal } from './articleModal';
 import { SummaryModal } from './summaryModal';
 import { Debug } from './debug';
-import { SaveController } from './saveController';
+import { LocalStorage } from './LocalStorage.js';
 import { DisplayController } from './displayController';
 
 
@@ -14,10 +14,23 @@ class News {
         this.prefix = "news.js";
         this.debug = new Debug(this.prefix, this.debugging);
 
+        let LocalStorageParams = 
+        {
+            defaults: {
+            "favorite-artical-storage": new Array(),
+            "top-artical": new Array(),
+            "allnews-article-storage": {lastFetch: new Date(), stories: null},
+            "story-article-storage": new Array()
+            },
+            cache: true,
+            fetchtime: 15
+        };
+    
+
         this.articleModal = new ArticleModal();
         this.summaryModal = new SummaryModal();
         this.displayController = new DisplayController();
-        this.saveController = new SaveController();
+        this.localStorage = new LocalStorage(LocalStorageParams);
         this.apiController = new ApiController();
 
         this.debug.debug("Modal Header", document.querySelector("#modalHeader"));
@@ -34,9 +47,9 @@ class News {
     }
     async init() {
         // Get what is saved
-        let allNews = this.saveController.getAllNews();
-        let topStories = this.saveController.getTopStories();
-        let favorites = this.saveController.getFavorites();
+        let allNews = this.localStorage.getValue("allnews-article-storage");
+        let topStories = this.localStorage.getValue("top-artical");
+        let favorites = this.localStorage.getValue("favorite-artical-storage");
 
         this.debug.debug("allNews", allNews);
         this.debug.debug("top stories", topStories);
@@ -44,19 +57,19 @@ class News {
         this.debug.debug("Time since test", minutesSince(allNews.lastFetch));
 
         // If there are no articles in allNews storage, or it is time to fetch based on the value stored in saveController
-        if (allNews.stories == null || allNews.stories.length == 0 || minutesSince(allNews.lastFetch) >= this.saveController.getFetchTime()) {
+        if (allNews.stories == null || allNews.stories.length == 0 || minutesSince(allNews.lastFetch) >= this.localStorage.getFetchTime()) {
             allNews = await this.apiController.allNews();
             this.debug.debug("just after the fetch", allNews);
-            this.saveController.refreshAllNews(allNews);
-            allNews = this.saveController.getAllNews();
+            this.localStorage.setValue("allnews-article-storage", allNews);
+            allNews = this.localStorage.getValue("allnews-article-storage");
         }
 
         // If there are no articles in topStories storage, or it is time to fetch based on the value stored in saveController
         if (topStories.stories == null || topStories.stories.length == 0 || minutesSince(topStories.lastFetch) >= this.saveController.getFetchTime()) {
             topStories = await this.apiController.topStories();
             this.debug.debug("just after the fetch for top stories", topStories);
-            this.saveController.refreshTopStories(topStories);
-            topStories = this.saveController.getTopStories();
+            this.localStorage.setValue("top-artical", topStories);
+            topStories = this.localStorage.getValue("top-artical");
         }
 
 

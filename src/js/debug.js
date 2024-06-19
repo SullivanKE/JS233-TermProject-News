@@ -3,7 +3,7 @@ import 'toastr/toastr.scss';
 export class Debug {
     constructor(prefix, classDebugger) {
         // Master switch for debugging across the program
-        this.debugging = false;
+        this.debugging = true;
         this.prefix = prefix;
         this.classDebugger = classDebugger
     }
