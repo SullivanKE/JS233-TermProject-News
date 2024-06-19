@@ -26,6 +26,7 @@ export class LocalStorage {
     // Clear all local storage
     clearAll() { localStorage.clear(); }
 
+    // TODO: Find a new home for these methods
     findArticle(uuid) {
         let index = this.articles.findIndex(a => a.uuid == uuid);
         return index == -1 ? null : this.articles[index];
