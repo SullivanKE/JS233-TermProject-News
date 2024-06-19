@@ -6,6 +6,7 @@ import { SummaryModal } from './summaryModal';
 import { Debug } from './debug';
 import { LocalStorage } from './LocalStorage.js';
 import { DisplayController } from './displayController';
+import { StorageList } from './StorageList.js';
 
 
 class News {
@@ -14,17 +15,18 @@ class News {
         this.prefix = "news.js";
         this.debug = new Debug(this.prefix, this.debugging);
 
+        console.log(SERVER_URL);
+        console.log(API_TOKEN);
+
         let LocalStorageParams = 
         {
             defaults: {
-            "favorite-artical-storage": new Array(),
-            "top-artical": new Array(),
-            "allnews-article-storage": {lastFetch: new Date(), stories: null},
-            "story-article-storage": new Array()
-            },
-            cache: true,
-            fetchtime: 15
+            "top-article": new Array(),
+            "allnews-article-storage": {lastFetch: new Date(), stories: null} // TODO: sets the default storage to when this is called
+            }
         };
+
+        this.fetchtime = 15; // Time in minutes before a new refresh should be done.
     
 
         this.articleModal = new ArticleModal();
@@ -32,6 +34,9 @@ class News {
         this.displayController = new DisplayController();
         this.localStorage = new LocalStorage(LocalStorageParams);
         this.apiController = new ApiController();
+
+        this.favoriteStorage = new StorageList({prefix: "Favorites-storage-"});
+        this.articleStorage = new StorageList({prefix: "Article-storage-"});
 
         this.debug.debug("Modal Header", document.querySelector("#modalHeader"));
 
@@ -48,8 +53,8 @@ class News {
     async init() {
         // Get what is saved
         let allNews = this.localStorage.getValue("allnews-article-storage");
-        let topStories = this.localStorage.getValue("top-artical");
-        let favorites = this.localStorage.getValue("favorite-artical-storage");
+        let topStories = this.localStorage.getValue("top-article");
+        let favorites = this.favoriteStorage.getAllItems();
 
         this.debug.debug("allNews", allNews);
         this.debug.debug("top stories", topStories);
@@ -57,19 +62,23 @@ class News {
         this.debug.debug("Time since test", minutesSince(allNews.lastFetch));
 
         // If there are no articles in allNews storage, or it is time to fetch based on the value stored in saveController
-        if (allNews.stories == null || allNews.stories.length == 0 || minutesSince(allNews.lastFetch) >= this.localStorage.getFetchTime()) {
-            allNews = await this.apiController.allNews();
-            this.debug.debug("just after the fetch", allNews);
-            this.localStorage.setValue("allnews-article-storage", allNews);
-            allNews = this.localStorage.getValue("allnews-article-storage");
+        if (allNews.stories == null || 
+            allNews.stories.length == 0 || 
+            minutesSince(allNews.lastFetch) >= this.fetchtime) {
+                allNews = await this.apiController.allNews();
+                this.debug.debug("just after the fetch", allNews);
+                this.localStorage.setValue("allnews-article-storage", {lastFetch: new Date(), stories: allNews.data});
+                allNews = this.localStorage.getValue("allnews-article-storage");
         }
 
         // If there are no articles in topStories storage, or it is time to fetch based on the value stored in saveController
-        if (topStories.stories == null || topStories.stories.length == 0 || minutesSince(topStories.lastFetch) >= this.saveController.getFetchTime()) {
-            topStories = await this.apiController.topStories();
-            this.debug.debug("just after the fetch for top stories", topStories);
-            this.localStorage.setValue("top-artical", topStories);
-            topStories = this.localStorage.getValue("top-artical");
+        if (topStories.stories == null || 
+            topStories.stories.length == 0 || 
+            minutesSince(topStories.lastFetch) >= this.fetchtime) {
+                topStories = await this.apiController.topStories();
+                this.debug.debug("just after the fetch for top stories", topStories);
+                this.localStorage.setValue("top-artical", {lastFetch: new Date(), stories: topStories.data});
+                topStories = this.localStorage.getValue("top-artical");
         }
 
 
@@ -151,12 +160,12 @@ class News {
         this.debug.debug("openStory call", url);
 
         // Check and see if we have the story, if not, do a fetch
-        let story = this.saveController.findArticle(uuid);
+        let story = this.articleStorage.getItem(uuid);
         this.debug.debug("This is what story is getting set to from find article", story);
         if (story == null) {
             story = await this.apiController.fetchArticle(url);
             this.debug.debug("openStory call inside promise", story);
-            this.saveController.addArticle(uuid, story);
+            this.articleStorage.addItem(uuid, story);
         }
         else {
             story = story.article;
@@ -187,16 +196,17 @@ class News {
         "locale": "us"};*/
 
         // Check if it is a favorite
-        let favorite = this.saveController.findFavorite(summary.uuid) != null;
+        let isFavorited = this.favoriteStorage.getItem(summary.uuid) != null;
         this.debug.debug("Favorite?", favorite);
         this.summaryModal.showModal(summary, favorite);
-        this.addSummaryEventHandlers(summary.url, summary.uuid, favorite);
+        this.addSummaryEventHandlers(summary.url, summary.uuid, isFavorited);
 
     }
     addSummaryEventHandlers(url, uuid, favorite) {
         document.querySelector('#readFullArticleButton').onclick = this.openStory.bind(this, url, uuid);
 
-        let news = this.saveController.getAllNews().stories.concat(this.saveController.getTopStories().stories);
+        let news = this.localStorage.getValue("allnews-article-storage")
+                                    .stories.concat(this.saveController.getTopStories().stories);
         let story = news.find(s => s.uuid == uuid);
         // Is it already a favorite?
         if (favorite) {
@@ -209,8 +219,8 @@ class News {
         }
         
     }
-    updateFavorites(isFav) {
-        let favorites = this.saveController.getFavorites();
+    updateFavorites() {
+        let favorites = this.favoriteStorage.getAllItems();
         this.displayController.displayFavorites(favorites);
         this.summaryModal.closeModal();
         this.addEventHandlers();
@@ -237,7 +247,10 @@ class News {
     addEventHandlers() {
         // This will open up the modal window that does not contain the article. A view article button could be on it to openStory(). I think adding and removing from favorites would go well here.
         let articles = document.getElementsByName("article");
-        let news = this.saveController.getAllNews().stories.concat(this.saveController.getTopStories().stories, this.saveController.getFavorites);
+        let news = this.localStorage.getValue("allnews-article-storage")
+                                    .stories.concat(this.localStorage.getValue("top-artical").stories, 
+                                                    this.favoriteStorage.getAllItems());
+
         for (let i = 0; i < articles.length; i++) {
             let uuid = articles[i].dataset.uuid;
             let story = news.find(s => s.uuid == uuid);
@@ -246,7 +259,6 @@ class News {
             }
         }
     }
-
 }
 let news;
 window.onload = () => {

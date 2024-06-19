@@ -469,7 +469,7 @@ export class ApiController {
                     }
                 })
                 .catch(err => {
-                    this.debug.error(apiPrefix, "topStories", err);
+                    this.debug.error("topStories", err);
                 })
             return article;
         }

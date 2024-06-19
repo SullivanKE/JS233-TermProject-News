@@ -33,6 +33,8 @@ export class DisplayController {
     displayFavorites(favorites) {
         let content = "";
 
+        this.debug.debug("Display favorites passed through", favorites);
+
         if (favorites.length == 0) {
             // No favorites
             content = "<li>Nothing is saved, try adding something.</li>"
