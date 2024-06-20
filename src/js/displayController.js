@@ -4,7 +4,7 @@ import { Debug } from './debug';
 export class DisplayController {
     constructor() {
         this.debugging = true;
-        this.prefix = "contentController.js";
+        this.prefix = "displayController.js";
         this.debug = new Debug(this.prefix, this.debugging)
 
         // Config info
