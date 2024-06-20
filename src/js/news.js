@@ -36,8 +36,6 @@ class News {
         this.favoriteStorage = new StorageList({prefix: "Favorites-storage-"});
         this.articleStorage = new StorageList({prefix: "Article-storage-"});
 
-        this.url = new Url(); // This can be expanded with offering the user options that are in different locales and languages
-
         this.debug.debug("Modal Header", document.querySelector("#modalHeader"));
 
         //this.apiTest();
@@ -65,8 +63,8 @@ class News {
         if (allNews.stories == null || 
             allNews.stories.length == 0 || 
             minutesSince(allNews.lastFetch) >= this.fetchtime) {
-                this.url.setURLParameters({key: "all"});
-                allNews = await this.apiController.allNews(this.url.toString());
+                let url = new Url(SERVER_URL + 'all',{locale: 'us', language: 'en', api_token: API_TOKEN });
+                allNews = await this.apiController.fetchArticle(url.toString());
                 this.debug.debug("just after the fetch", allNews);
                 this.localStorage.setValue("allnews-article-storage", {lastFetch: new Date(), stories: allNews.data});
                 allNews = this.localStorage.getValue("allnews-article-storage");
@@ -76,8 +74,8 @@ class News {
         if (topStories.stories == null || 
             topStories.stories.length == 0 || 
             minutesSince(topStories.lastFetch) >= this.fetchtime) {
-                this.url.setURLParameters({key: "top"});
-                topStories = await this.apiController.topStories(this.url.toString());
+                let url = new Url(SERVER_URL + 'top',{locale: 'us', language: 'en', api_token: API_TOKEN});
+                topStories = await this.apiController.fetchArticle(url.toString());
                 this.debug.debug("just after the fetch for top stories", topStories);
                 this.localStorage.setValue("top-article", {lastFetch: new Date(), stories: topStories.data});
                 topStories = this.localStorage.getValue("top-article");
@@ -118,8 +116,9 @@ class News {
         let isFavorited = this.favoriteStorage.getItem(summary.uuid) != null;
         this.debug.debug("Favorite?", isFavorited);
         this.summaryModal.showModal(summary, isFavorited);
-        this.addSummaryEventHandlers(summary.url, summary.uuid, isFavorited);
 
+        let url = new Url(ARTICLE_URL, {url: summary.url, api_token: ARTICLE_TOKEN});
+        this.addSummaryEventHandlers(url.toString(), summary.uuid, isFavorited);
     }
     addSummaryEventHandlers(url, uuid, isFavorite) {
         document.querySelector('#readFullArticleButton').onclick = this.openStory.bind(this, url, uuid);
@@ -145,24 +144,6 @@ class News {
         this.addEventHandlers();
     }
     
-    apiTest() {
-        let exampleUUID = "20cd4fa6-5ef4-49b2-978a-12242a15a538";
-
-
-        // Headlines is part of the paid API plan
-        //this.apiController.getHeadlines();
-        
-        //this.apiController.topStories();
-        //this.apiController.allNews();
-        //this.apiController.similarNews(exampleUUID);
-        this.apiController.newsByUUID(exampleUUID).then(data => {
-            debug(this.prefix, "Article loaded", data, this.debugging);
-            fetchArticle(data.url).then(article => {
-                this.debug(this.prefix, "Article data", article);
-            })
-        });
-    }
-
     addEventHandlers() {
         // This will open up the modal window that does not contain the article. A view article button could be on it to openStory(). I think adding and removing from favorites would go well here.
         let articles = document.getElementsByName("article");
