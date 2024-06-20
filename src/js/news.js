@@ -127,6 +127,8 @@ class News {
                                     .stories.concat(this.localStorage.getValue("top-article").stories);
         let story = news.find(s => s.uuid == uuid);
         // Is it already a favorite?
+
+        // TODO: Favorites is still broken currently.
         if (isFavorite) {
             document.querySelector('#favoritebtn').addEventListener("click", this.favoriteStorage.addItem.bind(this, uuid));
             document.querySelector('#favoritebtn').addEventListener("click", this.updateFavorites.bind(this));
