@@ -11,7 +11,7 @@ export class StorageList {
     // Add an item to our list
     addItem(id, value) {
         let key = StorageList.LIST_PREFIX + id; // Add our list prefix to the key value
-        this.setValue(key, value);
+        localStorage[key] = JSON.stringify(value);
     }
 
     // Remove an item based on its id

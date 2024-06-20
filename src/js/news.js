@@ -15,9 +15,6 @@ class News {
         this.prefix = "news.js";
         this.debug = new Debug(this.prefix, this.debugging);
 
-        console.log(SERVER_URL);
-        console.log(API_TOKEN);
-
         let LocalStorageParams = 
         {
             defaults: {
@@ -77,8 +74,8 @@ class News {
             minutesSince(topStories.lastFetch) >= this.fetchtime) {
                 topStories = await this.apiController.topStories();
                 this.debug.debug("just after the fetch for top stories", topStories);
-                this.localStorage.setValue("top-artical", {lastFetch: new Date(), stories: topStories.data});
-                topStories = this.localStorage.getValue("top-artical");
+                this.localStorage.setValue("top-article", {lastFetch: new Date(), stories: topStories.data});
+                topStories = this.localStorage.getValue("top-article");
         }
 
 
@@ -167,10 +164,6 @@ class News {
             this.debug.debug("openStory call inside promise", story);
             this.articleStorage.addItem(uuid, story);
         }
-        else {
-            story = story.article;
-        }
-            
 
         this.debug.debug("This is what we are sending to the article modal", story);
         this.articleModal.showModal(story.data);
@@ -197,24 +190,24 @@ class News {
 
         // Check if it is a favorite
         let isFavorited = this.favoriteStorage.getItem(summary.uuid) != null;
-        this.debug.debug("Favorite?", favorite);
-        this.summaryModal.showModal(summary, favorite);
+        this.debug.debug("Favorite?", isFavorited);
+        this.summaryModal.showModal(summary, isFavorited);
         this.addSummaryEventHandlers(summary.url, summary.uuid, isFavorited);
 
     }
-    addSummaryEventHandlers(url, uuid, favorite) {
+    addSummaryEventHandlers(url, uuid, isFavorite) {
         document.querySelector('#readFullArticleButton').onclick = this.openStory.bind(this, url, uuid);
 
         let news = this.localStorage.getValue("allnews-article-storage")
-                                    .stories.concat(this.saveController.getTopStories().stories);
+                                    .stories.concat(this.localStorage.getValue("top-article").stories);
         let story = news.find(s => s.uuid == uuid);
         // Is it already a favorite?
-        if (favorite) {
-            document.querySelector('#favoritebtn').addEventListener("click", this.saveController.removeFavorite.bind(this, uuid));
+        if (isFavorite) {
+            document.querySelector('#favoritebtn').addEventListener("click", this.favoriteStorage.addItem.bind(this, uuid));
             document.querySelector('#favoritebtn').addEventListener("click", this.updateFavorites.bind(this));
         }
         else {
-            document.querySelector('#favoritebtn').addEventListener("click", this.saveController.addFavorite.bind(this, story));
+            document.querySelector('#favoritebtn').addEventListener("click", this.favoriteStorage.removeItem.bind(this, story));
             document.querySelector('#favoritebtn').addEventListener("click", this.updateFavorites.bind(this));
         }
         
@@ -248,7 +241,7 @@ class News {
         // This will open up the modal window that does not contain the article. A view article button could be on it to openStory(). I think adding and removing from favorites would go well here.
         let articles = document.getElementsByName("article");
         let news = this.localStorage.getValue("allnews-article-storage")
-                                    .stories.concat(this.localStorage.getValue("top-artical").stories, 
+                                    .stories.concat(this.localStorage.getValue("top-article").stories, 
                                                     this.favoriteStorage.getAllItems());
 
         for (let i = 0; i < articles.length; i++) {
