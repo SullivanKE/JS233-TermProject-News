@@ -38,13 +38,13 @@ class News {
         this.displayController.displayContent(allNews.stories);
 
         // Add event handlers to things
-        this.addEventHandlers();
+        //this.addEventHandlers();
 
     }
 
+    /*
     async openStory(url, uuid) {
         
-        this.debug.debug("openStory call", url);
 
         // Check and see if we have the story, if not, do a fetch
         let story = this.articleStorage.getItem(uuid);
@@ -60,10 +60,11 @@ class News {
 
         
     }
+    
+    
     async openSummary(summary) {
                 // Check if it is a favorite
         let isFavorited = this.favoriteStorage.getItem(summary.uuid) != null;
-        this.debug.debug("Favorite?", isFavorited);
         this.summaryModal.showModal(summary, isFavorited);
 
         let url = new Url(ARTICLE_URL, {url: summary.url, api_token: ARTICLE_TOKEN});
@@ -98,9 +99,7 @@ class News {
     addEventHandlers() {
         // This will open up the modal window that does not contain the article. A view article button could be on it to openStory(). I think adding and removing from favorites would go well here.
         let articles = document.getElementsByName("article");
-        let news = this.localStorage.getValue("allnews-article-storage")
-                                    .stories.concat(this.localStorage.getValue("top-article").stories, 
-                                                    this.favoriteStorage.getAllItems());
+        let news = this.allNews.stories.concat(this.topStories.stories) // TODO: Add back favorites here when we impliment the favorites changes
 
         for (let i = 0; i < articles.length; i++) {
             let uuid = articles[i].dataset.uuid;
@@ -110,6 +109,7 @@ class News {
             }
         }
     }
+        */
 }
 let news;
 window.onload = () => {
