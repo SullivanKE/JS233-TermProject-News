@@ -1,5 +1,5 @@
 // Class for storing a list of items
-export class StorageList {
+export default class StorageList {
     constructor(config) {
         this.listPrefix = "list-storage-";
         // Optional prefix to use in local storage
