@@ -11,7 +11,6 @@ export default class NewsFeedApi {
 
     #locale = "us";
 
-
     static BASE_URL = "https://api.thenewsapi.com";
 
     static API_VERSION = "v1";
@@ -69,50 +68,55 @@ export default class NewsFeedApi {
     // All news feed.
     async getAllNews() {
         let url = this.getUrl(NewsFeedApi.ALL_NEWS_ENDPOINT);
-        return NewsFeedApi.getFeed(url, NewsFeedApi.ALL_NEWS_ENDPOINT);
+        return this.getFeed(url, NewsFeedApi.ALL_NEWS_ENDPOINT);
     }
 
 
     // Most-popular news feed.
     async getTopStories() {
         let url = this.getUrl(NewsFeedApi.TOP_STORIES_ENDPOINT);
-        return NewsFeedApi.getFeed(url, NewsFeedApi.TOP_STORIES_ENDPOINT);
+        return this.getFeed(url, NewsFeedApi.TOP_STORIES_ENDPOINT);
     }
 
 
     // Time-sensitive news feed.
     async getHeadlines() {
         let url = this.getUrl(NewsFeedApi.HEADLINES_ENDPOINT);
-        return NewsFeedApi.getFeed(url, NewsFeedApi.HEADLINES_ENDPOINT);
+        return this.getFeed(url, NewsFeedApi.HEADLINES_ENDPOINT);
     }
 
 
     // Returns either cached information or fetched the information based on how much time has elapsed.
-    static async getFeed(url, endpoint) {
+    async getFeed(url, endpoint) {
         let fetchedFeed;
         let cachedFeed = this.localStorage.getValue(endpoint);
 
-        if (cachedFeed !== undefined || 
-            cachedFeed.stories.length >= 0 || 
-            minutesSince(cachedFeed.lastFetch) < NewsFeedApi.TIME_TO_FETCH) {  // If we already have a recent news feed that is valid.
-                fetchedFeed = cachedFeed;
+        console.log(cachedFeed);
+
+        if (cachedFeed === null || 
+            cachedFeed.stories.length > 0 || 
+            minutesSince(cachedFeed.lastFetch) <= NewsFeedApi.TIME_TO_FETCH) {
+
+        // Fetch the data from the URL
+        fetchedFeed =  await fetch(url)
+            .then(resp => {
+                if(resp.ok) {
+                    return resp.json();
+                }
+                else if (resp.status == 402) {
+                    throw new Error("Daily usage limit is reached.");
+                }
+            })
+            .catch(err => {
+                return {error: true, message: err};
+            })
+    
+        // Store results in local storage
+        this.localStorage.setValue(endpoint, fetchedFeed);
+
         }
-        else {                                                      // Otherwise, pull from elsewhere
-            fetchedFeed =  await fetch(url)
-                .then(resp => {
-                    if(resp.ok) {
-                        return resp.json();
-                    }
-                    else if (resp.status == 402) {
-                        throw new Error("Daily usage limit is reached.");
-                    }
-                })
-                .catch(err => {
-                    return {error: true, message: err};
-                })
-            
-            // Store results in local storage
-            this.localStorage.setValue(endpoint, fetchedFeed);
+        else { 
+            fetchedFeed = cachedFeed;
         }
         return fetchedFeed;
     }
