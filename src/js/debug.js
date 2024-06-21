@@ -1,6 +1,6 @@
 import toastr from 'toastr';
 import 'toastr/toastr.scss';
-export class Debug {
+export default class Debug {
     constructor(prefix, classDebugger) {
         // Master switch for debugging across the program
         this.debugging = true;
