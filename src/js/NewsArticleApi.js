@@ -1,9 +1,7 @@
 // Pulls the full article from the article extractor API
 
 import Url from "./Url";
-import StorageList from "./LocalStorage";
-import { minutesSince } from './DateFunc.js';
-
+import StorageList from "./StorageList";
 
 export default class NewsFeedApi {
 
@@ -26,6 +24,7 @@ export default class NewsFeedApi {
         this.articleStorage = new StorageList({prefix: "Article-storage-"});
     }
 
+
     // Set the locale, I.E. What region is the news about? Ex. "us" for United States news.
     setLocale(locale) {
         if(Array.isArray(locale)) {
@@ -35,12 +34,14 @@ export default class NewsFeedApi {
         }
     }
 
-    // Set the language returned from article fetches. Ex. "en" for English, "es" for Spanish
+        // Set the language returned from article fetches. Ex. "en" for English, "es" for Spanish
     setLanguage(language) {
         this.language = language;
     }
 
-    // Using the Url class, construct an API call URL using our locale, language, and api token.
+
+    // Using the Url class, construct an API call URL using our locale, language, and api token. 
+    // articleUrl is the url of the article we are extracting.
     getUrl(articleUrl) {
         let apiRequestUrl = new Url(NewsFeedApi.BASE_URL + "/" + NewsFeedApi.API_VERSION + "/" + NewsFeedApi.ENDPOINT);
         apiRequestUrl.addParap("url", articleUrl)
@@ -48,29 +49,25 @@ export default class NewsFeedApi {
         apiRequestUrl.addParam("language", this.language);
         apiRequestUrl.addParam("api_token", this.apiToken);
 
-        // TODO: The API call needs a url param
-
         return apiRequestUrl.toString();
     }
+
 
     // Get an article's details from its url
     async getArticle(articleUrl) {
         let apiRequestUrl = this.getUrl(articleUrl);
-        return NewsFeedApi.getFeed(apiRequestUrl);
+        return NewsFeedApi.getFeed(apiRequestUrl, articleUrl);
     }
 
-    // Returns either cached information or fetched the information based on how much time has elapsed.
-    static async getFeed(apiRequestUrl, endpoint) {
+    
+    // Returns either cached information or fetched the information if it does not exist.
+    // articleUrlIdentifier is the url component that the API uses. It is used as a string key in our local storage
+    static async getFeed(apiRequestUrl, artileUrlIdentifier) {
         let fetchedFeed;
-        let cachedFeed = this.localStorage.getValue(endpoint);
+        let cachedFeed = this.articleStorage.getItem(artileUrlIdentifier);
 
-        if (cachedFeed !== undefined || 
-            cachedFeed.stories.length >= 0 || 
-            minutesSince(cachedFeed.lastFetch) < NewsFeedApi.TIME_TO_FETCH) {  // If we already have a recent news feed that is valid.
-                fetchedFeed = cachedFeed;
-        }
-        else {                                                                  // Otherwise, pull from elsewhere
-            fetchedFeed =  await fetch(apiRequestUrl)
+        if (cachedFeed === null) { // We don't have anything in cache, so retrieve it from the API
+                fetchedFeed =  await fetch(apiRequestUrl)
                 .then(resp => {
                     if(resp.ok) {
                         return resp.json();
@@ -84,7 +81,10 @@ export default class NewsFeedApi {
                 })
             
             // Store results in local storage
-            this.localStorage.setValue(endpoint, fetchedFeed);
+            this.articleStorage.addItem(endpoint, fetchedFeed);
+        }
+        else { // The article is cached, so we're going to use it instead                                     
+            fetchedFeed = cachedFeed;
         }
         return fetchedFeed;
     }
