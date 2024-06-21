@@ -1,6 +1,6 @@
 import './General';
 
-export class LocalStorage {
+export default class LocalStorage {
     // JSON Object that holds default string key names and default values if no values exist
     static DEFAULTS = {};
 
@@ -24,6 +24,7 @@ export class LocalStorage {
    
     // Clear all local storage
     clearAll() { 
+        // TODO: This should really be constrained to the keys that it accesses.
         localStorage.clear(); 
     }    
 }
