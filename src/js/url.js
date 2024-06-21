@@ -1,5 +1,5 @@
 // URL class takes in a domain path with parameters and compiles them together
-export class Url {
+export default class Url {
     constructor(path, param = {}) {
         this.path = path; // Ex. https://domain.com/api/v2/
         this.query = param; // Ex. {api: 123apikey, query: "Big hats"}
