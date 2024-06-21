@@ -32,7 +32,7 @@ export default class NewsFeedApi {
         {
             defaults: {
                 TOP_STORIES_ENDPOINT: new Array(),
-                ALL_NEWS_ENDPOINT: {lastFetch: new Date(), stories: null}s
+                ALL_NEWS_ENDPOINT: {lastFetch: new Date(), stories: null}
             }
         };
         this.localStorage = new LocalStorage(localStorageParams);
