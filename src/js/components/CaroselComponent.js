@@ -1,7 +1,18 @@
 // Returns the html required to form the carosel for the main page
 
-export default CaroselComponent {
+export default class CaroselComponent {
     constructor() {
+
+        // Config info
+        this.titleLength = 30;
+        this.descLength = 70;
+
+        // Items dealing with the top of the page
+        this.$carousel = document.querySelector('#headlinesCarousel');
+        this.$carouselIndicators = document.querySelector('#headlineIndicators');
+        this.$carouselInner = document.querySelector('#headlineInner');
+        this.$noTopContent = document.querySelector('#nocontenttop');
+        this.$loadingTop = document.querySelector('#loadingtop');
 
     }
     displayTopStories(topstories) {
@@ -26,7 +37,6 @@ export default CaroselComponent {
         </div>
 
         */
-       this.debug.debug("Top stories", topstories);
 
         let indicators = "";
         let items = "";

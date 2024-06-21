@@ -1,5 +1,5 @@
 import './General';
-import { Debug } from './Debug';
+import Debug from './debug';
 
 export class DisplayController {
     constructor() {

@@ -4,12 +4,18 @@
 export default class NewsItemComponent {
     constructor() {
 
+        // Config info
+        this.titleLength = 30;
+        this.descLength = 70;
+
+        // Items dealing with the main content
+        this.$content = document.querySelector('#content');
+        this.$noTop = document.querySelector('#nocontent');
+        this.$loading = document.querySelector('#loadingcontent');
+
     }
 
     displayContent(content) {
-
-        this.debug.debug("Content", content);
-
         
         if (content != null && content.length > 0) {
             // Content found, build stuff

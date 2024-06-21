@@ -3,11 +3,17 @@
 export default class FavoritesComponent {
     constructor() {
 
+        // Config info
+        this.titleLength = 30;
+        this.descLength = 70;
+
+        // Items dealing with the side bar
+        this.$favorites = document.querySelector('#saved');
+        this.$categories = document.querySelector('#categories');
+
     }
     displayFavorites(favorites) {
         let content = "";
-
-        this.debug.debug("Display favorites passed through", favorites);
 
         if (favorites.length == 0) {
             // No favorites
