@@ -38,6 +38,7 @@ export default class NewsFeedApi {
         this.localStorage = new LocalStorage(localStorageParams);
     }
 
+
     // Set the locale, I.E. What region is the news about? Ex. "us" for United States news.
     setLocale(locale) {
         if(Array.isArray(locale)) {
@@ -47,10 +48,12 @@ export default class NewsFeedApi {
         }
     }
 
+
     // Set the language returned from article fetches. Ex. "en" for English, "es" for Spanish
     setLanguage(language) {
         this.language = language;
     }
+
 
     // Using the Url class, construct an API call URL using our locale, language, and api token.
     getUrl(endpoint) {
@@ -62,11 +65,13 @@ export default class NewsFeedApi {
         return url.toString();
     }
 
+
     // All news feed.
     async getAllNews() {
         let url = this.getUrl(NewsFeedApi.ALL_NEWS_ENDPOINT);
         return NewsFeedApi.getFeed(url, NewsFeedApi.ALL_NEWS_ENDPOINT);
     }
+
 
     // Most-popular news feed.
     async getTopStories() {
@@ -74,11 +79,13 @@ export default class NewsFeedApi {
         return NewsFeedApi.getFeed(url, NewsFeedApi.TOP_STORIES_ENDPOINT);
     }
 
+
     // Time-sensitive news feed.
     async getHeadlines() {
         let url = this.getUrl(NewsFeedApi.HEADLINES_ENDPOINT);
         return NewsFeedApi.getFeed(url, NewsFeedApi.HEADLINES_ENDPOINT);
     }
+
 
     // Returns either cached information or fetched the information based on how much time has elapsed.
     static async getFeed(url, endpoint) {
@@ -109,8 +116,6 @@ export default class NewsFeedApi {
         }
         return fetchedFeed;
     }
-
-
 }
 
 /*
