@@ -1,11 +1,7 @@
 import './General';
 import * as bootstrap from 'bootstrap';
-import { Debug } from './Debug';
 export class SummaryModal {
     constructor() {
-        this.debugging = true;
-        this.prefix = "summaryModal.js";
-        this.debug = new Debug(this.prefix, this.debugging);
 
         this.$modal = document.querySelector("#summaryModal");
         this.$modalHeader = document.querySelector("#summaryModalHeader");
@@ -76,7 +72,6 @@ export class SummaryModal {
         this.$modalBody.innerHTML = this.buildBody(article.image_url, article.url, article.description, article.published_at, article.source, favorite);
         this.$modalFooter.innerHTML = this.buildFooter(article.categories, article.uuid);
 
-        this.debug.debug("modal body", this.$modalBody.innerHTML);
 
         this.summaryModal.show();
     }

@@ -1,11 +1,7 @@
 import './General';
 import * as bootstrap from 'bootstrap';
-import { Debug } from './debug';
 export class ArticleModal {
     constructor() {
-        this.debugging = false;
-        this.prefix = "articleModal.js";
-        this.debug = new Debug(this.prefix, this.debugging);
 
         this.$modal = document.querySelector("#newsStoryModal");
         this.$modalHeader = document.querySelector("#modalHeader");
@@ -21,7 +17,6 @@ export class ArticleModal {
   }
     showModal(article) {
         // Make header
-        this.debug.debug("Modal Header", this.$modalHeader);
         this.$modalHeader.innerHTML = this.buildHeader(article.title, article.url);
 
         // Make image carousel
@@ -45,14 +40,12 @@ export class ArticleModal {
         //^(http(s):\/\/.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$
         const re = new RegExp("^(http(s):\/\/.)");
         // Cleans the arrays
-        this.debug.debug("Images before filtering", images);
         images = images.filter(function (item) {
             return re.test(item);
         });
         videos = videos.filter(function (item) {
             return re.test(item);
         });
-        this.debug.debug("Images after filtering", images);
 
         let indicators = "";
         let imageList = "";
@@ -93,7 +86,6 @@ export class ArticleModal {
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
       </button>`;
-      this.debug.debug("carousel", completeModalCarousel);
         return completeModalCarousel;
 
         /*
