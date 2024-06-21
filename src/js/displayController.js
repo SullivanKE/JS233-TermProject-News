@@ -1,5 +1,5 @@
-import './general';
-import { Debug } from './debug';
+import './General';
+import { Debug } from './Debug';
 
 export class DisplayController {
     constructor() {
@@ -118,30 +118,6 @@ export class DisplayController {
     displayContent(content) {
 
         this.debug.debug("Content", content);
-        /*
-         <div class="row-md">
-          <div class="col-md m-2 p-2">
-
-            <div class="card fancy_card">
-              <div class="card-header">
-                <h5 class="text-center">Example news headline</h5>
-              </div>
-              <div class="card-body">
-                <figure class="figure">
-                  <img src="/img/examples/1_TzaiFDmkiEkOxNU7eG43pw.jpg" class="figure-img card_image" />
-                  <figcaption class="figure-caption text-white small">Snippit of the article. This could go on for a
-                    little bit...</figcaption>
-                </figure>
-              </div>
-              <div class="card-footer text-muted text-center">
-                UUID: 20cd4fa6-5ef4-49b2-978a-12242a15a538
-              </div>
-
-            </div>
-
-          </div>
-        </div>
-        */
 
         
         if (content != null && content.length > 0) {
@@ -200,4 +176,5 @@ export class DisplayController {
         }
 
     }
+    // TODO: Add new method that is responsible for one item
 }

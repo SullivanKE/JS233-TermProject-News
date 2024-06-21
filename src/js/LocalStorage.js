@@ -1,4 +1,4 @@
-import './general';
+import './General';
 
 export class LocalStorage {
     // JSON Object that holds default string key names and default values if no values exist

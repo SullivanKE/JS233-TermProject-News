@@ -1,0 +1,1 @@
+// Pulls the full article from the article extractor API

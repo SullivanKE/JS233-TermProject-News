@@ -1,0 +1,1 @@
+// Returns the html required to form the carosel for the main page

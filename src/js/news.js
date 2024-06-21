@@ -1,14 +1,18 @@
-import './general';
-import { minutesSince } from './dateFunc';
-import { ApiController } from './apiController';
-import { ArticleModal } from './articleModal';
-import { SummaryModal } from './summaryModal';
-import { Debug } from './debug';
+import './General.js';
+import { minutesSince } from './dateFunc.js';
+import { ApiController } from './apiController.js';
+import { ArticleModal } from './articleModal.js';
+import { SummaryModal } from './SummaryModal.js';
+import { Debug } from './debug.js';
 import { LocalStorage } from './LocalStorage.js';
-import { DisplayController } from './displayController';
+import { DisplayController } from './displayController.js';
 import { StorageList } from './StorageList.js';
 import { Url } from './url.js';
+import NewsFeedApi from './NewsFeedApi.js';
 
+window.NewsFeedApi = NewsFeedApi;
+window.Url = Url;
+console.log("This is the new console.log windows");
 
 class News {
     constructor() {
@@ -32,6 +36,8 @@ class News {
         this.displayController = new DisplayController();
         this.localStorage = new LocalStorage(LocalStorageParams);
         this.apiController = new ApiController();
+
+        this.newsFeedApi = new NewsFeedApi(API_TOKEN);
 
         this.favoriteStorage = new StorageList({prefix: "Favorites-storage-"});
         this.articleStorage = new StorageList({prefix: "Article-storage-"});
@@ -63,8 +69,10 @@ class News {
         if (allNews.stories == null || 
             allNews.stories.length == 0 || 
             minutesSince(allNews.lastFetch) >= this.fetchtime) {
-                let url = new Url(SERVER_URL + 'all',{locale: 'us', language: 'en', api_token: API_TOKEN });
-                allNews = await this.apiController.fetchArticle(url.toString());
+                
+                allNews = await this.newsFeedApi.getAllNews();
+                //let url = new Url(SERVER_URL + 'all',{locale: 'us', language: 'en', api_token: API_TOKEN });
+                //allNews = await this.apiController.fetchArticle(url.toString());
                 this.debug.debug("just after the fetch", allNews);
                 this.localStorage.setValue("allnews-article-storage", {lastFetch: new Date(), stories: allNews.data});
                 allNews = this.localStorage.getValue("allnews-article-storage");
@@ -74,8 +82,10 @@ class News {
         if (topStories.stories == null || 
             topStories.stories.length == 0 || 
             minutesSince(topStories.lastFetch) >= this.fetchtime) {
-                let url = new Url(SERVER_URL + 'top',{locale: 'us', language: 'en', api_token: API_TOKEN});
-                topStories = await this.apiController.fetchArticle(url.toString());
+                
+                topStories = await this.newsFeedApi.getTopStories();
+                //let url = new Url(SERVER_URL + 'top',{locale: 'us', language: 'en', api_token: API_TOKEN});
+                //topStories = await this.apiController.fetchArticle(url.toString());
                 this.debug.debug("just after the fetch for top stories", topStories);
                 this.localStorage.setValue("top-article", {lastFetch: new Date(), stories: topStories.data});
                 topStories = this.localStorage.getValue("top-article");

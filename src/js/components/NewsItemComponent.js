@@ -1,0 +1,1 @@
+// Returns the main content portion of the news application

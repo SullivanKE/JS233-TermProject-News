@@ -1,4 +1,4 @@
-import './general';
+import './General';
 import * as bootstrap from 'bootstrap';
 import { Debug } from './debug';
 export class ArticleModal {

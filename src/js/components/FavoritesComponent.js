@@ -1,0 +1,1 @@
+// Returns the favorites sidebar html

@@ -1,6 +1,6 @@
-import './general';
+import './General';
 import * as bootstrap from 'bootstrap';
-import { Debug } from './debug';
+import { Debug } from './Debug';
 export class SummaryModal {
     constructor() {
         this.debugging = true;

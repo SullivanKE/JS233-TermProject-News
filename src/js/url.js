@@ -1,8 +1,12 @@
 // URL class takes in a domain path with parameters and compiles them together
 export class Url {
-    constructor(path, param) {
+    constructor(path, param = {}) {
         this.path = path; // Ex. https://domain.com/api/v2/
         this.query = param; // Ex. {api: 123apikey, query: "Big hats"}
+    }
+    // Adds a parameter to the query
+    addParam(k,v) {
+            this.query[k] = v;
     }
 
     // toString constructs the query parameters into a second string and appends it to the url
@@ -15,3 +19,8 @@ export class Url {
         return url + parts.join('&');
     }
 }
+
+// Homework:
+/*
+
+*/

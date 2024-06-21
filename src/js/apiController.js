@@ -3,8 +3,23 @@ import { Debug } from './debug';
 // API documentation
 // https://www.thenewsapi.com/documentation
 
+
+
 export class ApiController {
-    constructor() {
+    #apiToken;
+
+    
+    static BASE_URL = ""; // Add later
+    static API_VERSION = "v1";
+    static ENDPOINT = "/news/all";
+
+    #local = ["us"];
+    #language = ["en"];
+
+    constructor(apiToken) {
+        this.apitoken = apiToken;
+
+
         this.debugging = false;
         this.prefix = "apiController.js"
         this.debug = new Debug(this.prefix, this.debugging);
@@ -13,6 +28,28 @@ export class ApiController {
         this.turnOnApiCalls = true;
 
     }
+    setLocal(local) {
+        if(Array.isArray(local)) {
+            this.locale = locale;
+        }
+        else {
+            this.local.push(locale);
+        }
+    }
+    setLanguage(language) {
+        if(Array.isArray(language)) {
+            this.language = language;
+        }
+        else {
+            this.language.push(language);
+        }
+    }
+    async getFeed() {
+        let url = new Url(); // fill this in
+
+
+    }
+
     async fetchArticle(url) {
 
         if (this.turnOnApiCalls) {
