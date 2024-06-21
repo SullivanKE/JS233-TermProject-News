@@ -1,13 +1,13 @@
 import './General.js';
-import { minutesSince } from './dateFunc.js';
-import { ApiController } from './apiController.js';
-import { ArticleModal } from './articleModal.js';
+import { minutesSince } from './DateFunc.js';
+import { ApiController } from './ApiController.js';
+import { ArticleModal } from './ArticleModal.js';
 import { SummaryModal } from './SummaryModal.js';
-import { Debug } from './debug.js';
-import { LocalStorage } from './LocalStorage.js';
+import Debug from './Debug';
+import LocalStorage from './LocalStorage.js';
 import { DisplayController } from './displayController.js';
 import { StorageList } from './StorageList.js';
-import { Url } from './url.js';
+import  Url  from './Url';
 import NewsFeedApi from './NewsFeedApi.js';
 
 window.NewsFeedApi = NewsFeedApi;
