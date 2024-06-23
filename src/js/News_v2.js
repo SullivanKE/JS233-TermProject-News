@@ -39,34 +39,7 @@ class News {
         this.displayController.populateFavoritesSidebar(favorites);
     }
 
-    /*
-    async openStory(url, uuid) {
-        
-
-        // Check and see if we have the story, if not, do a fetch
-        let story = this.articleStorage.getItem(uuid);
-        this.debug.debug("This is what story is getting set to from find article", story);
-        if (story == null) {
-            story = await this.apiController.fetchArticle(url);
-            this.debug.debug("openStory call inside promise", story);
-            this.articleStorage.addItem(uuid, story);
-        }
-
-        this.debug.debug("This is what we are sending to the article modal", story);
-        this.articleModal.showModal(story.data);
-
-        
-    }
-    
-    
-    async openSummary(summary) {
-                // Check if it is a favorite
-        let isFavorited = this.favoriteStorage.getItem(summary.uuid) != null;
-        this.summaryModal.showModal(summary, isFavorited);
-
-        let url = new Url(ARTICLE_URL, {url: summary.url, api_token: ARTICLE_TOKEN});
-        this.addSummaryEventHandlers(url.toString(), summary.uuid, isFavorited);
-    }
+    // TODO: The remaining methods are old methods that were moved here from the original news.js file. They need to be refactored. They control event handlers.
     addSummaryEventHandlers(url, uuid, isFavorite) {
         document.querySelector('#readFullArticleButton').onclick = this.openStory.bind(this, url, uuid);
 
@@ -106,7 +79,7 @@ class News {
             }
         }
     }
-        */
+
 }
 let news;
 window.onload = () => {
