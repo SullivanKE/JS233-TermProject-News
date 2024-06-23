@@ -1,11 +1,8 @@
 import './General.js';
-
-import ArticleModal from './components/ArticleModal';
-import SummaryModal from './components/SummaryModal';
 import DisplayController from './DisplayController';
-
 import NewsFeedApi from './NewsFeedApi';
 import NewsArticleApi from './NewsArticleApi'
+import StorageList from './StorageList.js';
 
 window.NewsFeedApi = NewsFeedApi;
 window.NewsArticleApi = NewsArticleApi;
@@ -14,10 +11,10 @@ class News {
     constructor() {
         this.newsFeedApi = new NewsFeedApi(NEWS_FEED_API_TOKEN);
         this.newsArticleApi = new NewsArticleApi(NEWS_ARTICLE_API_TOKEN);
-    
-        // TODO: These will be replaced eventually in the refactor
-        this.articleModal = new ArticleModal();
-        this.summaryModal = new SummaryModal();
+        this.favoriteStorage = new StorageList({prefix: "Favorite-storage-"});
+        this.articleStorage = new StorageList({prefix: "Article-storage-"});
+        
+        
         this.displayController = new DisplayController();
 
         // Get the news stories
@@ -38,7 +35,7 @@ class News {
     }
     async initializeFavorites() {
         // Get the favorites and display them
-        let favorites = new Array(); // TODO: Create a favorites class that controls stored favorites
+        let favorites = this.favoriteStorage.getAllItems();
         this.displayController.populateFavoritesSidebar(favorites);
     }
 

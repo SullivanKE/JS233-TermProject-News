@@ -3,6 +3,9 @@ import NewsItemComponent from './components/NewsItemComponent';
 import CaroselComponent from './components/CaroselComponent';
 import FavoritesComponent from './components/FavoritesComponent';
 
+import ArticleModal from './components/ArticleModal';
+import SummaryModal from './components/SummaryModal';
+
 export default class DisplayController {
     constructor() {
 
@@ -29,6 +32,9 @@ export default class DisplayController {
         this.newsItemComponents = new NewsItemComponent();
         this.newsCaroselComponent = new CaroselComponent();
         this.newsFavoritesComponent = new FavoritesComponent();
+
+        this.articleModal = new ArticleModal();
+        this.summaryModal = new SummaryModal();
 
 
     }
