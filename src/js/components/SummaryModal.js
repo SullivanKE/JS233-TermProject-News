@@ -1,4 +1,3 @@
-import './General';
 import * as bootstrap from 'bootstrap';
 export default class SummaryModal {
     constructor() {
