@@ -26,12 +26,12 @@ export default class NewsItemComponent {
 
     buildAllNewsItems(newsItems) {
         if (newsItems && newsItems.length > 0) {
-            const items = newsItems.map((item) => {
-                const front = item.index % 2 === 0 ? `<div class="d-flex flex-row">` : "";
-                const rear = item.index % 2 === 1 || item.index === newsItems.length - 1 ? `</div>` : "";
+            const items = newsItems.map((item, index) => {
+                const front = index % 2 === 0 ? `<div class="d-flex flex-row">` : "";
+                const rear = (index + 1) % 2 === 0 || index === newsItems.length - 1 ? `</div>` : "";
                 return front + this.buildItemCard(item) + rear;
             });
-
+    
             return items.join("");
         } else {
             return "No content found...";
