@@ -33,7 +33,7 @@ class News {
     async initializeAllNews() {
         // Get the main news content and display them
         let allNews = await this.newsFeedApi.getAllNews();
-        this.displayController.displayContent(allNews.stories);
+        this.displayController.populateAllNewsContentArea(allNews.stories);
     }
 
     /*

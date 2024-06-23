@@ -1,77 +1,41 @@
 // Returns the main content portion of the news application
 
-
 export default class NewsItemComponent {
-    constructor() {
+    #maximumTitleLength = 30;
+    #maximumDescriptionLength = 70;
 
-        // Config info
-        this.titleLength = 30;
-        this.descLength = 70;
-
-        // Items dealing with the main content
-        this.$content = document.querySelector('#content');
-        this.$noTop = document.querySelector('#nocontent');
-        this.$loading = document.querySelector('#loadingcontent');
-
+    buildItemCard(item) {
+        const img = item.image_url || "./img/nocontent.png";
+        return `<div class="m-1">
+                    <div class="card fancy_card m-1 h-100" name="article" data-uuid="${item.uuid}">
+                        <div class="card-header">
+                            <h5 class="text-center">${item.title.substr(0, this.#maximumTitleLength)}...</h5>
+                        </div>
+                        <div class="card-body">
+                            <figure class="figure">
+                                <img src="${img}" class="figure-img card_image img-fluid" />
+                                <figcaption class="figure-caption text-white small">${item.description.substr(0, this.#maximumDescriptionLength)}...</figcaption>
+                            </figure>
+                        </div>
+                        <div class="card-footer text-muted text-center">
+                            UUID: ${item.uuid}
+                        </div>
+                    </div>
+                </div>`;
     }
 
-    displayContent(content) {
-        
-        if (content != null && content.length > 0) {
-            // Content found, build stuff
+    buildAllNewsItems(newsItems) {
+        if (newsItems && newsItems.length > 0) {
+            const items = newsItems.map((item) => {
+                const front = item.index % 2 === 0 ? `<div class="d-flex flex-row">` : "";
+                const rear = item.index % 2 === 1 || item.index === newsItems.length - 1 ? `</div>` : "";
+                return front + this.buildItemCard(item) + rear;
+            });
 
-            // For testing
-            //content = content.concat(content, content, content, content, content);
-
-            let items = "";
-            for (let i = 0; i < content.length; i++) {
-                let mod = i % 2;
-                let front = "";
-                let rear = "";
-
-                let img = content[i].image_url;
-                if (img == undefined || img == null || img == "" || img == "...")
-                    img = "./img/nocontent.png";
-
-                // Two stories fit on a row, so mod 2 to add a row to an entry. 0 is a new row, 1 is the end of a row.
-                // We also need to check if this is the last item in the list.
-                if (mod == 0) {
-                    front = `<div class="d-flex flex-row">`;
-                }
-                else if (mod == 1 || i + 1 == content.length) {
-                    rear = `</div>`;
-                }
-
-                let middle = `  <div class="m-1">
-                                    <div class="card fancy_card m-1 h-100" name="article" data-uuid="${content[i].uuid}">
-                                        <div class="card-header">
-                                            <h5 class="text-center">${content[i].title.substr(0, this.titleLength)}...</h5>
-                                        </div>
-                                        <div class="card-body">
-                                            <figure class="figure">
-                                                <img src="${img}" class="figure-img card_image img-fluid" />
-                                                <figcaption class="figure-caption text-white small">${content[i].description.substr(0, this.descLength)}...</figcaption>
-                                            </figure>
-                                        </div>
-                                        <div class="card-footer text-muted text-center">
-                                            UUID: ${content[i].uuid}
-                                        </div>
-                                    </div>
-                                </div>`;
-
-                items += front + middle + rear;
-            }
-
-            // Display content
-            this.$content.innerHTML = items;
-
+            return items.join("");
+        } else {
+            return "No content found...";
         }
-        else {
-            // No content
-            this.$content.innerHTML = "No content found...";
-
-        }
-
     }
-    // TODO: Add new method that is responsible for one item
+
 }
