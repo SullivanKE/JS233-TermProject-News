@@ -1,6 +1,7 @@
 import './General';
 import NewsItemComponent from './components/NewsItemComponent';
 import CaroselComponent from './components/CaroselComponent';
+import FavoritesComponent from './components/FavoritesComponent';
 
 export default class DisplayController {
     constructor() {
@@ -27,28 +28,13 @@ export default class DisplayController {
 
         this.newsItemComponents = new NewsItemComponent();
         this.newsCaroselComponent = new CaroselComponent();
+        this.newsFavoritesComponent = new FavoritesComponent();
 
 
     }
 
-    displayFavorites(favorites) {
-        let content = "";
-
-
-        if (favorites.length == 0) {
-            // No favorites
-            content = "<li>Nothing is saved, try adding something.</li>"
-        }
-        else {
-            for (let i = 0; i < favorites.length; i++) {
-                // For each favorites, build a listing
-                content += `<li class="mb-3 border rounded">
-                                <img class="img-thumbnail" src="${favorites[i].image_url}" /><button class="btn btn-link p-0" name="article" data-uuid="${favorites[i].uuid}">${favorites[i].title.substr(0, this.titleLength)}...</button>
-                            </li>`;
-            }
-        }
-        this.$favorites.innerHTML = content;
-
+    populateFavoritesSidebar(favorites) {
+        this.$favorites.innerHTML = this.newsFavoritesComponent.buildFavorites(favorites);
     }
     populateTopStoriesCarosel(topstories) {
         if (topstories != null && topstories.length > 0) {

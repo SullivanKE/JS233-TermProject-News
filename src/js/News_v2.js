@@ -23,6 +23,7 @@ class News {
         // Get the news stories
         this.initializeTopStories();
         this.initializeAllNews();
+        this.initializeFavorites();
     }
 
     async initializeTopStories() {
@@ -34,6 +35,11 @@ class News {
         // Get the main news content and display them
         let allNews = await this.newsFeedApi.getAllNews();
         this.displayController.populateAllNewsContentArea(allNews.stories);
+    }
+    async initializeFavorites() {
+        // Get the favorites and display them
+        let favorites = new Array(); // TODO: Create a favorites class that controls stored favorites
+        this.displayController.populateFavoritesSidebar(favorites);
     }
 
     /*
