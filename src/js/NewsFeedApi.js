@@ -30,6 +30,7 @@ export default class NewsFeedApi {
         const localStorageParams = {
             defaults: {
                 [NewsFeedApi.TOP_STORIES_ENDPOINT]: {lastFetch: new Date(), stories: new Array()},
+                [NewsFeedApi.HEADLINES_ENDPOINT]: {lastFetch: new Date(), stories: new Array()},
                 [NewsFeedApi.ALL_NEWS_ENDPOINT]: {lastFetch: new Date(), stories: new Array()}
             }
         };
