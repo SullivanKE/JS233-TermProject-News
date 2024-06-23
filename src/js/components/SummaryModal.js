@@ -1,6 +1,6 @@
 import './General';
 import * as bootstrap from 'bootstrap';
-export class SummaryModal {
+export default class SummaryModal {
     constructor() {
 
         this.$modal = document.querySelector("#summaryModal");

@@ -1,6 +1,6 @@
 import './General';
 import * as bootstrap from 'bootstrap';
-export class ArticleModal {
+export default class ArticleModal {
     constructor() {
 
         this.$modal = document.querySelector("#newsStoryModal");

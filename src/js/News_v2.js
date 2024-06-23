@@ -1,7 +1,7 @@
 import './General.js';
 
-import { ArticleModal } from './ArticleModal.js';
-import { SummaryModal } from './SummaryModal.js';
+import ArticleModal from './components/ArticleModal';
+import SummaryModal from './components/SummaryModal';
 import DisplayController from './DisplayController';
 
 import NewsFeedApi from './NewsFeedApi';
