@@ -21,6 +21,8 @@ class News {
         this.initializeTopStories();
         this.initializeAllNews();
         this.initializeFavorites();
+
+        this.addEventHandlers();
     }
 
     async initializeTopStories() {
@@ -32,6 +34,8 @@ class News {
         // Get the main news content and display them
         let allNews = await this.newsFeedApi.getAllNews();
         this.displayController.populateAllNewsContentArea(allNews.stories);
+        console.log(allNews);
+        this.addEventHandlers(allNews.stories);
     }
     async initializeFavorites() {
         // Get the favorites and display them
@@ -66,18 +70,16 @@ class News {
         this.addEventHandlers();
     }
     
-    addEventHandlers() {
-        // This will open up the modal window that does not contain the article. A view article button could be on it to openStory(). I think adding and removing from favorites would go well here.
-        let articles = document.getElementsByName("article");
-        let news = this.allNews.stories.concat(this.topStories.stories) // TODO: Add back favorites here when we impliment the favorites changes
+    addEventHandlers(newsItems = []) {
+        const articles = document.getElementsByName("article");
 
-        for (let i = 0; i < articles.length; i++) {
-            let uuid = articles[i].dataset.uuid;
-            let story = news.find(s => s.uuid == uuid);
-            if (story != undefined || story != null) {
-                articles[i].onclick = this.openSummary.bind(this, story);
+        Array.from(articles).forEach((article, index) => {
+            const uuid = article.dataset.uuid;
+            const story = newsItems.find(item => item.uuid === uuid);
+            if (story) {
+                article.onclick = () => this.displayController.openSummary(story);
             }
-        }
+        });
     }
 
 }

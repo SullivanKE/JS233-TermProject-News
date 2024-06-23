@@ -83,10 +83,10 @@ export default class DisplayController {
     }
     async openSummary(summary) {
                 // Check if it is a favorite
-        let isFavorited = this.favoriteStorage.getItem(summary.uuid) != null;
+        let isFavorited = false;//this.favoriteStorage.getItem(summary.uuid) != null;
         this.summaryModal.showModal(summary, isFavorited);
 
-        let url = new Url(ARTICLE_URL, {url: summary.url, api_token: ARTICLE_TOKEN});
-        this.addSummaryEventHandlers(url.toString(), summary.uuid, isFavorited);
+        //let url = new Url(ARTICLE_URL, {url: summary.url, api_token: ARTICLE_TOKEN});
+        //this.addSummaryEventHandlers(url.toString(), summary.uuid, isFavorited);
     }
 }
