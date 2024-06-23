@@ -26,12 +26,11 @@ export default class NewsFeedApi {
     
 
     constructor(apiToken) {
-        this.apiToken = apiToken;
-        let localStorageParams = 
-        {
+        this.#apiToken = apiToken;
+        const localStorageParams = {
             defaults: {
-                TOP_STORIES_ENDPOINT: new Array(),
-                ALL_NEWS_ENDPOINT: {lastFetch: new Date(), stories: null}
+                [NewsFeedApi.TOP_STORIES_ENDPOINT]: {lastFetch: new Date(), stories: new Array()},
+                [NewsFeedApi.ALL_NEWS_ENDPOINT]: {lastFetch: new Date(), stories: new Array()}
             }
         };
         this.localStorage = new LocalStorage(localStorageParams);
@@ -39,11 +38,11 @@ export default class NewsFeedApi {
 
 
     // Set the locale, I.E. What region is the news about? Ex. "us" for United States news.
-    setLocale(locale) {
-        if(Array.isArray(locale)) {
-            this.locale = locale;
+    setLocale(newLocale) {
+        if (Array.isArray(newLocale)) {
+            this.#locale = newLocale;
         } else {
-            this.locale.push(locale);
+            this.#locale.push(newLocale);
         }
     }
 
@@ -57,9 +56,9 @@ export default class NewsFeedApi {
     // Using the Url class, construct an API call URL using our locale, language, and api token.
     getUrl(endpoint) {
         let url = new Url(NewsFeedApi.BASE_URL + "/" + NewsFeedApi.API_VERSION + "/" + endpoint);
-        url.addParam("locale", this.locale);
-        url.addParam("language", this.language);
-        url.addParam("api_token", this.apiToken);
+        url.addParam("locale", this.#locale);
+        url.addParam("language", this.#language);
+        url.addParam("api_token", this.#apiToken);
 
         return url.toString();
     }
@@ -86,39 +85,27 @@ export default class NewsFeedApi {
     }
 
 
-    // Returns either cached information or fetched the information based on how much time has elapsed.
     async getFeed(url, endpoint) {
-        let fetchedFeed;
-        let cachedFeed = this.localStorage.getValue(endpoint);
+        const cachedFeed = this.localStorage.getValue(endpoint);
 
         console.log(cachedFeed);
 
-        if (cachedFeed === null || 
-            cachedFeed.stories.length > 0 || 
+        if (cachedFeed && cachedFeed.stories.length > 0 &&
             minutesSince(cachedFeed.lastFetch) <= NewsFeedApi.TIME_TO_FETCH) {
-
-        // Fetch the data from the URL
-        fetchedFeed =  await fetch(url)
-            .then(resp => {
-                if(resp.ok) {
-                    return resp.json();
-                }
-                else if (resp.status == 402) {
-                    throw new Error("Daily usage limit is reached.");
-                }
-            })
-            .catch(err => {
-                return {error: true, message: err};
-            })
-    
-        // Store results in local storage
-        this.localStorage.setValue(endpoint, fetchedFeed);
-
+            return cachedFeed;
         }
-        else { 
-            fetchedFeed = cachedFeed;
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+            const feed = await response.json();
+            this.localStorage.setValue(endpoint, {lastFetch: new Date(), stories: feed.data});
+            return feed;
+        } catch (error) {
+            return { error: true, message: error.message };
         }
-        return fetchedFeed;
     }
 }
 
