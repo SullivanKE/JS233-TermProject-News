@@ -10,58 +10,6 @@ export default class SummaryModal {
 
         this.showModal = this.showModal.bind(this);
 
-        /*`<div id="summaryModal" class="modal fade modal-xl" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header" id="summaryModalHeader">
-              <h5 class="modal-title" id="summaryModalLabel">Article name</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="summaryModalBody">
-                <div class="row">
-                <div class="col">
-                <!--image-->
-                </div>
-                <div class="col">
-                <!--Text-->
-                <hr />
-                <a href="#">link to article</a>
-                </div>
-            </div>
-            <div class="d-flex flex-row">
-                <div class="d-flex align-items-start">
-                <button class="btn btn-primary">Read full article here</button>
-                </div>
-                <div class="d-flex align-items-end">
-                <button class="btn btn-outline-success">Add to Favorites</button>
-                </div>
-            </div>
-            </div>
-            <div class="modal-footer" id="summaryModalFooter">
-             
-            </div>
-          </div>
-        </div>
-      </div>`*/
-
-      /*
-        "uuid": "fe01d54c-42b2-42a9-be2c-f820ede296fe",
-        "title": "Jays' Anthony Bass says anti-LGBTQIA+ post he shared wasn't hateful",
-        "description": "Blue Jays pitcher Anthony Bass said Thursday that he didn't believe the post he shared, which described the sale of LGBTQIA+ merchandise as",
-        "keywords": "",
-        "snippet": "TORONTO -- Toronto Blue Jays pitcher Anthony Bass said Thursday he doesn't believe an anti-LGBTQIA+ social media post he shared last month was hateful.\n\nThe rig...",
-        "url": "https://www.espn.com/mlb/story/_/id/37823206/jays-anthony-bass-says-anti-lgbtq+-post-shared-hateful",
-        "image_url": "https://a4.espncdn.com/combiner/i?img=/photo/2023/0609/r1184409_1296x729_16-9.jpg",
-        "language": "en",
-        "published_at": "2023-06-09T05:24:23.000000Z",
-        "source": "espn.com",
-        "categories": [
-            "sports",
-            "general"
-        ],
-        "relevance_score": null,
-        "locale": "us"
-      */
     }
     closeModal() {
         this.summaryModal.hide();
