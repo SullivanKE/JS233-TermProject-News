@@ -2,7 +2,7 @@ import './General.js';
 
 import { ArticleModal } from './ArticleModal.js';
 import { SummaryModal } from './SummaryModal.js';
-import { DisplayController } from './displayController.js';
+import DisplayController from './DisplayController';
 
 import NewsFeedApi from './NewsFeedApi';
 import NewsArticleApi from './NewsArticleApi'
@@ -21,25 +21,21 @@ class News {
         this.displayController = new DisplayController();
 
         // Get the news stories
-        /// Get all news
-        let allNews = this.newsFeedApi.getAllNews();
+        this.initializeTopStories();
+        this.initializeAllNews();
+    }
 
-        /// Get top stories
-        let topStories = this.newsFeedApi.getTopStories();
-
-        /// Get favorites
-        // TODO: Favorites class to handle favorites
-
-
-        // Display the news stories
-        // TODO: Replace display controller with the new components
-        //this.displayController.displayFavorites(favorites);
+    async initializeTopStories() {
+        // Get top stories and display them
+        let topStories = await this.newsFeedApi.getTopStories();
+        console.log(topStories);
         this.displayController.displayTopStories(topStories.stories);
+    }
+    async initializeAllNews() {
+        // Get the main news content and display them
+        let allNews = await this.newsFeedApi.getAllNews();
+        console.log(allNews);
         this.displayController.displayContent(allNews.stories);
-
-        // Add event handlers to things
-        //this.addEventHandlers();
-
     }
 
     /*
