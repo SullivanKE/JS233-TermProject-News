@@ -34,8 +34,7 @@ class News {
         // Get the main news content and display them
         let allNews = await this.newsFeedApi.getAllNews();
         this.displayController.populateAllNewsContentArea(allNews.stories);
-        console.log(allNews);
-        this.addEventHandlers(allNews.stories);
+        this.addEventHandlers(allNews.stories); // TODO: Event handling should be rewritten as event delegation. We will keep this for now and refactor later.
     }
     async initializeFavorites() {
         // Get the favorites and display them
@@ -44,6 +43,27 @@ class News {
     }
 
     // TODO: The remaining methods are old methods that were moved here from the original news.js file. They need to be refactored. They control event handlers.
+    
+    updateFavorites() {
+        let favorites = this.favoriteStorage.getAllItems();
+        this.displayController.displayFavorites(favorites);
+        this.summaryModal.closeModal();
+        this.addEventHandlers();
+    }
+    
+    addEventHandlers(newsItems = []) {
+        const articles = document.getElementsByName("article");
+
+        Array.from(articles).forEach((article, index) => {
+            const uuid = article.dataset.uuid;
+            const summary = newsItems.find(item => item.uuid === uuid);
+            if (summary) {
+                let isFavorited = this.favoriteStorage.getItem(summary.uuid) != null;
+                article.onclick = () => this.displayController.openSummary(summary, isFavorited);
+            }
+        });
+    }
+
     addSummaryEventHandlers(url, uuid, isFavorite) {
         document.querySelector('#readFullArticleButton').onclick = this.openStory.bind(this, url, uuid);
 
@@ -62,24 +82,6 @@ class News {
             document.querySelector('#favoritebtn').addEventListener("click", this.updateFavorites.bind(this));
         }
         
-    }
-    updateFavorites() {
-        let favorites = this.favoriteStorage.getAllItems();
-        this.displayController.displayFavorites(favorites);
-        this.summaryModal.closeModal();
-        this.addEventHandlers();
-    }
-    
-    addEventHandlers(newsItems = []) {
-        const articles = document.getElementsByName("article");
-
-        Array.from(articles).forEach((article, index) => {
-            const uuid = article.dataset.uuid;
-            const story = newsItems.find(item => item.uuid === uuid);
-            if (story) {
-                article.onclick = () => this.displayController.openSummary(story);
-            }
-        });
     }
 
 }

@@ -9,10 +9,6 @@ import SummaryModal from './components/SummaryModal';
 export default class DisplayController {
     constructor() {
 
-        // Config info
-        this.titleLength = 30;
-        this.descLength = 70;
-
         // Items dealing with the top of the page
         this.$carousel = document.querySelector('#headlinesCarousel');
         this.$carouselIndicators = document.querySelector('#headlineIndicators');
@@ -69,24 +65,22 @@ export default class DisplayController {
     async openStory(url, uuid) {
         // Check and see if we have the story, if not, do a fetch
         let story = this.articleStorage.getItem(uuid);
-        this.debug.debug("This is what story is getting set to from find article", story);
         if (story == null) {
             story = await this.apiController.fetchArticle(url);
-            this.debug.debug("openStory call inside promise", story);
             this.articleStorage.addItem(uuid, story);
         }
 
-        this.debug.debug("This is what we are sending to the article modal", story);
         this.articleModal.showModal(story.data);
 
         
     }
-    async openSummary(summary) {
-                // Check if it is a favorite
-        let isFavorited = false;//this.favoriteStorage.getItem(summary.uuid) != null;
+    async openSummary(summary, isFavorited) {
         this.summaryModal.showModal(summary, isFavorited);
 
         //let url = new Url(ARTICLE_URL, {url: summary.url, api_token: ARTICLE_TOKEN});
         //this.addSummaryEventHandlers(url.toString(), summary.uuid, isFavorited);
     }
+
+
+
 }
