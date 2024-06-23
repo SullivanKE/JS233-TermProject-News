@@ -1,11 +1,7 @@
 import './General';
-import Debug from './debug';
 
-export class DisplayController {
+export default class DisplayController {
     constructor() {
-        this.debugging = true;
-        this.prefix = "displayController.js";
-        this.debug = new Debug(this.prefix, this.debugging)
 
         // Config info
         this.titleLength = 30;
@@ -33,7 +29,6 @@ export class DisplayController {
     displayFavorites(favorites) {
         let content = "";
 
-        this.debug.debug("Display favorites passed through", favorites);
 
         if (favorites.length == 0) {
             // No favorites
@@ -51,29 +46,7 @@ export class DisplayController {
 
     }
     displayTopStories(topstories) {
-
-        /*
-        <!--Headlines-->
-
-        <div class="carousel-indicators" id="headlineIndicators">
-          <button type="button" data-bs-target="#headlinesCarousel" data-bs-slide-to="0" class="active"
-            aria-current="true" aria-label="Slide 1"></button>
-        </div>
-
-
-        <div class="carousel-inner" id="headlineInner">
-          <div class="carousel-item active">
-            <img src="/img/examples/1_TzaiFDmkiEkOxNU7eG43pw.jpg" class="d-block sliderItem" alt="...">
-            <div class="carousel-caption d-none d-md-block">
-              <h5>First slide label</h5>
-              <p>Some representative placeholder content for the first slide.</p>
-            </div>
-          </div>
-        </div>
-
-        */
-       this.debug.debug("Top stories", topstories);
-
+        console.log(topstories);
         let indicators = "";
         let items = "";
         let active = `class="active"
@@ -116,10 +89,7 @@ export class DisplayController {
         }
     }
     displayContent(content) {
-
-        this.debug.debug("Content", content);
-
-        
+        console.log(content);
         if (content != null && content.length > 0) {
             // Content found, build stuff
 
