@@ -28,7 +28,7 @@ class News {
     async initializeTopStories() {
         // Get top stories and display them
         let topStories = await this.newsFeedApi.getTopStories();
-        this.displayController.displayTopStories(topStories.stories);
+        this.displayController.populateTopStoriesCarosel(topStories.stories);
     }
     async initializeAllNews() {
         // Get the main news content and display them

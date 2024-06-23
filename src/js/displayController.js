@@ -1,5 +1,6 @@
 import './General';
 import NewsItemComponent from './components/NewsItemComponent';
+import CaroselComponent from './components/CaroselComponent';
 
 export default class DisplayController {
     constructor() {
@@ -25,6 +26,7 @@ export default class DisplayController {
         this.$loading = document.querySelector('#loadingcontent');
 
         this.newsItemComponents = new NewsItemComponent();
+        this.newsCaroselComponent = new CaroselComponent();
 
 
     }
@@ -48,39 +50,12 @@ export default class DisplayController {
         this.$favorites.innerHTML = content;
 
     }
-    displayTopStories(topstories) {
-        console.log(topstories);
-        let indicators = "";
-        let items = "";
-        let active = `class="active"
-        aria-current="true"`;
-
+    populateTopStoriesCarosel(topstories) {
         if (topstories != null && topstories.length > 0) {
             // There are stories
-            // Build indicators
-            for (let i = 0; i < topstories.length; i++) {
-                indicators += `<button type="button" data-bs-target="#headlinesCarousel" data-bs-slide-to="${[i]}" ${active} aria-label="${topstories[i].title.substr(0, this.titleLength)}..."></button>`;
-                active = "";
-            }
-                
-            // Build images
-            active = "active";
-            for (let i = 0; i < topstories.length; i++) {
-                let img = topstories[i].image_url;
-                if (img == undefined || img == null || img == "" || img == "...")
-                    img = "./img/nocontent.png";
-                items += `  <div class="carousel-item ${active}" name="article" data-uuid="${topstories[i].uuid}">
-                                <img src="${img}" class="d-block sliderItem" alt="${topstories[i].title}">
-                                <div class="carousel-caption d-none d-md-block">
-                                    <h5>${topstories[i].title.substr(0, this.titleLength)}...</h5>
-                                    <p>${topstories[i].description.substr(0, this.descLength)}...</p>
-                                </div>
-                            </div>`;
-                active = "";
-            }
-
-            this.$carouselIndicators.innerHTML = indicators;
-            this.$carouselInner.innerHTML = items;
+           
+            this.$carouselIndicators.innerHTML = this.newsCaroselComponent.buildCarouselIndicators(topstories);
+            this.$carouselInner.innerHTML = this.newsCaroselComponent.buildCarouselItems(topstories);
 
             this.$carousel.classList.remove("visually-hidden");
             this.$loadingTop.classList.add("visually-hidden");
