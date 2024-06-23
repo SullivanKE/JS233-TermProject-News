@@ -28,13 +28,11 @@ class News {
     async initializeTopStories() {
         // Get top stories and display them
         let topStories = await this.newsFeedApi.getTopStories();
-        console.log(topStories);
         this.displayController.displayTopStories(topStories.stories);
     }
     async initializeAllNews() {
         // Get the main news content and display them
         let allNews = await this.newsFeedApi.getAllNews();
-        console.log(allNews);
         this.displayController.displayContent(allNews.stories);
     }
 
