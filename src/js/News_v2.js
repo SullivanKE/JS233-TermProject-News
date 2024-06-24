@@ -27,7 +27,6 @@ class News {
         this.initializeAllNews();
         this.initializeFavorites();
 
-        this.addEventHandlers();
     }
 
     async initializeTopStories() {
@@ -46,6 +45,7 @@ class News {
         let favorites = this.favoriteStorage.getAllItems();
         console.log(favorites);
         this.displayController.populateFavoritesSidebar(favorites);
+        this.addEventHandlers(favorites);
     }
 
     // TODO: The remaining methods are old methods that were moved here from the original news.js file. They need to be refactored. They control event handlers.
