@@ -66,25 +66,6 @@ class News {
 
     }
 
-    addSummaryEventHandlers(url, uuid, isFavorite) {
-        document.querySelector('#readFullArticleButton').onclick = this.openStory.bind(this, url, uuid);
-
-        let news = this.localStorage.getValue("allnews-article-storage")
-                                    .stories.concat(this.localStorage.getValue("top-article").stories);
-        let story = news.find(s => s.uuid == uuid);
-        // Is it already a favorite?
-
-        // TODO: Favorites is still broken currently.
-        if (isFavorite) {
-            document.querySelector('#favoritebtn').addEventListener("click", this.favoriteStorage.addItem.bind(this, uuid));
-            document.querySelector('#favoritebtn').addEventListener("click", this.updateFavorites.bind(this));
-        }
-        else {
-            document.querySelector('#favoritebtn').addEventListener("click", this.favoriteStorage.removeItem.bind(this, story));
-            document.querySelector('#favoritebtn').addEventListener("click", this.updateFavorites.bind(this));
-        }
-        
-    }
 
     // TODO: These are old methods that were moved here from the original news.js file. They need to be refactored.
     async openStory(url, uuid) {
