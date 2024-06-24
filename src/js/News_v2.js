@@ -2,7 +2,8 @@ import './General.js';
 import DisplayController from './DisplayController';
 import NewsFeedApi from './NewsFeedApi';
 import NewsArticleApi from './NewsArticleApi'
-import StorageList from './StorageList.js';
+import StorageList from './StorageList';
+import Favorites from './Favorites';
 
 import ArticleModal from './components/ArticleModal';
 import SummaryModal from './components/SummaryModal';
@@ -14,7 +15,7 @@ class News {
     constructor() {
         this.newsFeedApi = new NewsFeedApi(NEWS_FEED_API_TOKEN);
         this.newsArticleApi = new NewsArticleApi(NEWS_ARTICLE_API_TOKEN);
-        this.favoriteStorage = new StorageList({prefix: "Favorite-storage-"});
+        this.favoriteStorage = new Favorites({prefix: "Favorite-storage-"});
         this.articleStorage = new StorageList({prefix: "News-Metadata-storage-"});
         
         
@@ -83,27 +84,12 @@ class News {
     async openSummary(summary, isFavorited) {
         this.summaryModal.showModal(summary, isFavorited);
         let favoriteBtn = document.querySelector("#favoritebtn");
-        favoriteBtn.onclick = () => this.updateFavorites(summary, isFavorited);
+        favoriteBtn.onclick = () => this.favoriteStorage.updateFavorites(summary, isFavorited);
 
         let readFullArticleButton = document.querySelector("#readFullArticleButton");
         readFullArticleButton.onclick = () => this.openStory(summary.url, summary.uuid);
 
-        //let url = new Url(ARTICLE_URL, {url: summary.url, api_token: ARTICLE_TOKEN});
-        //this.addSummaryEventHandlers(url.toString(), summary.uuid, isFavorited);
-    }
-
-    updateFavorites(summary, isFavorited) {
-        console.log(summary);
-        if (isFavorited) {
-            this.favoriteStorage.removeItem(summary.uuid);
-        }
-        else {
-            this.favoriteStorage.addItem(summary.uuid, summary);
-        }
-        this.initializeFavorites();
-        this.summaryModal.closeModal();
-    }
-    
+    }   
 
 }
 let news;
