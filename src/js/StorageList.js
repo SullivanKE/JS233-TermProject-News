@@ -5,6 +5,9 @@ export default class StorageList {
         // Optional prefix to use in local storage
         if (config.prefix !== undefined)
             this.listPrefix = config.prefix;
+
+        this.getItem = this.getItem.bind(this);
+        this.getAllItems = this.getAllItems.bind(this);
     }
 
     // Add an item to our list
@@ -30,6 +33,7 @@ export default class StorageList {
                     .filter(key => key.includes(this.listPrefix)); // Get all keys that contain our prefix
                     
         console.log(keys);
+        keys = keys.map(key => key.replace(this.listPrefix, ""));
         return keys.map(this.getItem);
     }
 
