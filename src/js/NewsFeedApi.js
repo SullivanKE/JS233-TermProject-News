@@ -103,7 +103,7 @@ export default class NewsFeedApi {
             }
             const feed = await response.json();
             this.localStorage.setValue(endpoint, {lastFetch: new Date(), stories: feed.data});
-            return feed;
+            return {lastFetch: new Date(), stories: feed.data};
         } catch (error) {
             return { error: true, message: error.message };
         }
