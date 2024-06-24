@@ -15,7 +15,7 @@ class News {
         this.newsFeedApi = new NewsFeedApi(NEWS_FEED_API_TOKEN);
         this.newsArticleApi = new NewsArticleApi(NEWS_ARTICLE_API_TOKEN);
         this.favoriteStorage = new StorageList({prefix: "Favorite-storage-"});
-        this.articleStorage = new StorageList({prefix: "Article-storage-"});
+        this.articleStorage = new StorageList({prefix: "News-Metadata-storage-"});
         
         
         this.displayController = new DisplayController();

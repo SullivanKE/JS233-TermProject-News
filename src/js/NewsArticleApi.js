@@ -21,7 +21,7 @@ export default class NewsFeedApi {
 
     constructor(apiToken) {
         this.apiToken = apiToken;
-        this.articleStorage = new StorageList({prefix: "Article-storage-"});
+        this.articleStorage = new StorageList({prefix: "Article-extractor-storage-"});
     }
 
 
