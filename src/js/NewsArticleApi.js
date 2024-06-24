@@ -44,7 +44,7 @@ export default class NewsFeedApi {
     // articleUrl is the url of the article we are extracting.
     getUrl(articleUrl) {
         let apiRequestUrl = new Url(NewsFeedApi.BASE_URL + "/" + NewsFeedApi.API_VERSION + "/" + NewsFeedApi.ENDPOINT);
-        apiRequestUrl.addParap("url", articleUrl)
+        apiRequestUrl.addParam("url", articleUrl)
         apiRequestUrl.addParam("locale", this.locale);
         apiRequestUrl.addParam("language", this.language);
         apiRequestUrl.addParam("api_token", this.apiToken);
@@ -56,15 +56,16 @@ export default class NewsFeedApi {
     // Get an article's details from its url
     async getArticle(articleUrl) {
         let apiRequestUrl = this.getUrl(articleUrl);
-        return NewsFeedApi.getFeed(apiRequestUrl, articleUrl);
+        return this.getFeed(apiRequestUrl, articleUrl);
     }
 
     
     // Returns either cached information or fetched the information if it does not exist.
     // articleUrlIdentifier is the url component that the API uses. It is used as a string key in our local storage
-    static async getFeed(apiRequestUrl, artileUrlIdentifier) {
+    async getFeed(apiRequestUrl, articleUrlIdentifier) {
         let fetchedFeed;
-        let cachedFeed = this.articleStorage.getItem(artileUrlIdentifier);
+        console.log(articleUrlIdentifier);
+        let cachedFeed = this.articleStorage.getItem(articleUrlIdentifier);
 
         if (cachedFeed === null) { // We don't have anything in cache, so retrieve it from the API
                 fetchedFeed =  await fetch(apiRequestUrl)
@@ -81,7 +82,7 @@ export default class NewsFeedApi {
                 })
             
             // Store results in local storage
-            this.articleStorage.addItem(endpoint, fetchedFeed);
+            this.articleStorage.addItem(encodeURIComponent(fetchedFeed.url), fetchedFeed);
         }
         else { // The article is cached, so we're going to use it instead                                     
             fetchedFeed = cachedFeed;

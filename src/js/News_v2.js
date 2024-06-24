@@ -90,7 +90,7 @@ class News {
         // Check and see if we have the story, if not, do a fetch
         let story = this.articleStorage.getItem(uuid);
         if (story == null) {
-            story = await this.apiController.fetchArticle(url);
+            story = await this.newsArticleApi.getArticle(encodeURIComponent(url));
             this.articleStorage.addItem(uuid, story);
         }
 
@@ -102,6 +102,9 @@ class News {
         this.summaryModal.showModal(summary, isFavorited);
         let favoriteBtn = document.querySelector("#favoritebtn");
         favoriteBtn.onclick = () => this.updateFavorites(summary, isFavorited);
+
+        let readFullArticleButton = document.querySelector("#readFullArticleButton");
+        readFullArticleButton.onclick = () => this.openStory(summary.url, summary.uuid);
 
         //let url = new Url(ARTICLE_URL, {url: summary.url, api_token: ARTICLE_TOKEN});
         //this.addSummaryEventHandlers(url.toString(), summary.uuid, isFavorited);
