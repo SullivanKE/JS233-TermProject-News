@@ -103,28 +103,9 @@ export default class NewsFeedApi {
             }
             const feed = await response.json();
             this.localStorage.setValue(endpoint, {lastFetch: new Date(), stories: feed.data});
-            return {lastFetch: new Date(), stories: feed.data};
+            return {lastFetch: new Date(), stories: feed.data};C
         } catch (error) {
             return { error: true, message: error.message };
         }
     }
 }
-
-/*
-// pretend we're inside our main entry point.
-const feedApi = new NewsFeedApi(API_NEWS_FEED_TOKEN);
-let theFeed = feedApi.fetchAll();
-
-
-class NewsArticleApi {
-
-
-https://www.articlextractor.com/documentation
-
-}
-
-const newsApi = new NewsArticleApi(API_ARTICLE_EXTRACTION_TOKEN);
-let thisArticle = newsApi.fetchArticle("https://www.articlextractor.com/documentation");
-
-
-*/
