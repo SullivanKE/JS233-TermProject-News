@@ -3,8 +3,7 @@ import NewsItemComponent from './components/NewsItemComponent';
 import CaroselComponent from './components/CaroselComponent';
 import FavoritesComponent from './components/FavoritesComponent';
 
-import ArticleModal from './components/ArticleModal';
-import SummaryModal from './components/SummaryModal';
+
 
 export default class DisplayController {
     constructor() {
@@ -29,8 +28,7 @@ export default class DisplayController {
         this.newsCaroselComponent = new CaroselComponent();
         this.newsFavoritesComponent = new FavoritesComponent();
 
-        this.articleModal = new ArticleModal();
-        this.summaryModal = new SummaryModal();
+        
 
 
     }
@@ -61,25 +59,7 @@ export default class DisplayController {
         //this.$loading.classList.add("visually-hidden");
     }
 
-    // TODO: These are old methods that were moved here from the original news.js file. They need to be refactored.
-    async openStory(url, uuid) {
-        // Check and see if we have the story, if not, do a fetch
-        let story = this.articleStorage.getItem(uuid);
-        if (story == null) {
-            story = await this.apiController.fetchArticle(url);
-            this.articleStorage.addItem(uuid, story);
-        }
-
-        this.articleModal.showModal(story.data);
-
-        
-    }
-    async openSummary(summary, isFavorited) {
-        this.summaryModal.showModal(summary, isFavorited);
-
-        //let url = new Url(ARTICLE_URL, {url: summary.url, api_token: ARTICLE_TOKEN});
-        //this.addSummaryEventHandlers(url.toString(), summary.uuid, isFavorited);
-    }
+    
 
 
 

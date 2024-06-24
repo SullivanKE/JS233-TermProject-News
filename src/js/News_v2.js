@@ -4,6 +4,9 @@ import NewsFeedApi from './NewsFeedApi';
 import NewsArticleApi from './NewsArticleApi'
 import StorageList from './StorageList.js';
 
+import ArticleModal from './components/ArticleModal';
+import SummaryModal from './components/SummaryModal';
+
 window.NewsFeedApi = NewsFeedApi;
 window.NewsArticleApi = NewsArticleApi;
 
@@ -16,6 +19,8 @@ class News {
         
         
         this.displayController = new DisplayController();
+        this.articleModal = new ArticleModal();
+        this.summaryModal = new SummaryModal();
 
         // Get the news stories
         this.initializeTopStories();
@@ -39,17 +44,12 @@ class News {
     async initializeFavorites() {
         // Get the favorites and display them
         let favorites = this.favoriteStorage.getAllItems();
+        console.log(favorites);
         this.displayController.populateFavoritesSidebar(favorites);
     }
 
     // TODO: The remaining methods are old methods that were moved here from the original news.js file. They need to be refactored. They control event handlers.
     
-    updateFavorites() {
-        let favorites = this.favoriteStorage.getAllItems();
-        this.displayController.displayFavorites(favorites);
-        this.summaryModal.closeModal();
-        this.addEventHandlers();
-    }
     
     addEventHandlers(newsItems = []) {
         const articles = document.getElementsByName("article");
@@ -59,9 +59,10 @@ class News {
             const summary = newsItems.find(item => item.uuid === uuid);
             if (summary) {
                 let isFavorited = this.favoriteStorage.getItem(summary.uuid) != null;
-                article.onclick = () => this.displayController.openSummary(summary, isFavorited);
+                article.onclick = () => this.openSummary(summary, isFavorited);
             }
         });
+
     }
 
     addSummaryEventHandlers(url, uuid, isFavorite) {
@@ -83,6 +84,41 @@ class News {
         }
         
     }
+
+    // TODO: These are old methods that were moved here from the original news.js file. They need to be refactored.
+    async openStory(url, uuid) {
+        // Check and see if we have the story, if not, do a fetch
+        let story = this.articleStorage.getItem(uuid);
+        if (story == null) {
+            story = await this.apiController.fetchArticle(url);
+            this.articleStorage.addItem(uuid, story);
+        }
+
+        this.articleModal.showModal(story.data);
+
+        
+    }
+    async openSummary(summary, isFavorited) {
+        this.summaryModal.showModal(summary, isFavorited);
+        let favoriteBtn = document.querySelector("#favoritebtn");
+        favoriteBtn.onclick = () => this.updateFavorites(summary, isFavorited);
+
+        //let url = new Url(ARTICLE_URL, {url: summary.url, api_token: ARTICLE_TOKEN});
+        //this.addSummaryEventHandlers(url.toString(), summary.uuid, isFavorited);
+    }
+
+    updateFavorites(summary, isFavorited) {
+        console.log(summary);
+        if (isFavorited) {
+            this.favoriteStorage.removeItem(summary.uuid);
+        }
+        else {
+            this.favoriteStorage.addItem(summary.uuid, summary);
+        }
+        this.initializeFavorites();
+        this.summaryModal.closeModal();
+    }
+    
 
 }
 let news;
