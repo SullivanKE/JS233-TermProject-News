@@ -21,7 +21,10 @@ const fileNamePrefix = isProduction? '[chunkhash].' : '';
 module.exports = {
     mode: !isProduction ? 'development': 'production',
     entry: {
-      home: './src/js/News_v2.js',
+      home: './src/js/News.js',
+    },
+    resolve: {
+      symlinks: false,
     },
     output: {
       path: path.resolve(__dirname, "dist"),

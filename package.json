@@ -35,6 +35,7 @@
     "bootstrap-less": "^3.3.8",
     "less": "^4.1.1",
     "regenerator-runtime": "^0.13.9",
-    "toastr": "^2.1.4"
+    "toastr": "^2.1.4",
+    "@ocdla/http2": "file:dev_modules/@ocdla/http2"
   }
 }

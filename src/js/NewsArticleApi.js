@@ -1,6 +1,6 @@
 // Pulls the full article from the article extractor API
 
-import Url from "./Url";
+import Url from "../../dev_modules/@ocdla/url/Url";
 import StorageList from "./StorageList";
 
 export default class NewsFeedApi {
@@ -20,7 +20,7 @@ export default class NewsFeedApi {
    
 
     constructor(apiToken) {
-        this.apiToken = apiToken;
+        this.#apiToken = apiToken;
         this.articleStorage = new StorageList({prefix: "Article-extractor-storage-"});
     }
 
@@ -47,7 +47,7 @@ export default class NewsFeedApi {
         apiRequestUrl.addParam("url", articleUrl)
         apiRequestUrl.addParam("locale", this.locale);
         apiRequestUrl.addParam("language", this.language);
-        apiRequestUrl.addParam("api_token", this.apiToken);
+        apiRequestUrl.addParam("api_token", this.#apiToken);
 
         return apiRequestUrl.toString();
     }

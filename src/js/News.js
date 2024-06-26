@@ -1,15 +1,26 @@
 import './General.js';
-import DisplayController from './DisplayController';
-import NewsFeedApi from './NewsFeedApi';
-import NewsArticleApi from './NewsArticleApi'
-import StorageList from './StorageList';
-import Favorites from './Favorites';
+import NewsClient from '@ocdla/http2';
+import DisplayController from './DisplayController.js';
+import NewsFeedApi from './NewsFeedApi.js';
+import NewsArticleApi from './NewsArticleApi.js'
+import StorageList from './StorageList.js';
+import Favorites from './Favorites.js';
 
-import ArticleModal from './components/ArticleModal';
-import SummaryModal from './components/SummaryModal';
+import ArticleModal from './components/ArticleModal.js';
+import SummaryModal from './components/SummaryModal.js';
 
 window.NewsFeedApi = NewsFeedApi;
 window.NewsArticleApi = NewsArticleApi;
+
+// Define new class newsClient
+// request class is built in
+// import news client into this code
+// instantiate newsClient, send method
+
+// submit a request to a server, get a response back with the data
+// the thing that sends a request is called a client
+// formet is 
+
 
 class News {
     constructor() {
@@ -24,11 +35,64 @@ class News {
         this.summaryModal = new SummaryModal();
 
         // Get the news stories
-        this.initializeTopStories();
-        this.initializeAllNews();
-        this.initializeFavorites();
+        //this.initializeTopStories();
+        //this.initializeAllNews();
+        //this.initializeFavorites();
+        
+        let newsFeedApi = new NewsFeedApi(NEWS_FEED_API_TOKEN);
 
+        // Request an individual article.
+        //"news/all";
+        //"news/top";
+        //"news/headlines";
+        let endpoint = "news/all";
+        let url = newsFeedApi.getUrl(endpoint);
+        // url.addParam("zipCode",zipCode);
+
+
+        let req = new Request(url.toString());
+
+        // Instantiate an HTTP client that we create.
+        // Internally, the client uses fetch().
+        // It can also access the LocalStorageCache and
+        // store Responses in the cache for later use,
+        // and return Responses already stored in the cache
+        // that match() the Request.
+        let client = new NewsClient();
+        // client = new WeatherClient();
+
+        // Client can retrieve anything from the LocalStorageCache
+        // and return it as an HTTP Response.
+        let resp = client.send(req);
+
+
+        // Do something with the response;
+        // probably update the view.
+        resp.then((resp) => resp.json()).then((feed) => {
+            this.displayController.populateAllNewsContentArea(feed.data);
+            //this.addEventHandlers(feed);
+        });
+
+    
     }
+
+    /*
+    TODO LIST
+    Use request response life cycle anywhere we get data
+    One class to build URLs, always use the same news client class to send the request objects
+    Combine efforts in datefunc
+    - Third package for lib-date2
+
+    Adding lib-local-storagecache
+    lib-http2
+
+    Move localstoragecache to lib and also Url
+
+    Think through instructions on github.
+    http client if caching is turned on, the client asks if there is something in the local storage cache
+
+    time to live is attached to cache control header
+    */
 
     async initializeTopStories() {
         // Get top stories and display them

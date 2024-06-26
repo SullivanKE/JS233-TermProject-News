@@ -1,4 +1,4 @@
-import Url from "./Url";
+import Url from "../../dev_modules/@ocdla/url/Url.js";
 import LocalStorage from "./LocalStorage";
 import { minutesSince } from './DateFunc.js';
 
