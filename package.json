@@ -36,6 +36,8 @@
     "less": "^4.1.1",
     "regenerator-runtime": "^0.13.9",
     "toastr": "^2.1.4",
-    "@ocdla/http2": "file:dev_modules/@ocdla/http2"
+    "@ocdla/http2": "file:dev_modules/@ocdla/http2",
+    "@ocdla/url": "file:dev_modules/@ocdla/url",
+    "@ocdla/local-storage-cache": "file:dev_modules/@ocdla/local-storage-cache"
   }
 }
