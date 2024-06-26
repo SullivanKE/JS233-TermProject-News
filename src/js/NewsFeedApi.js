@@ -1,5 +1,5 @@
-import Url from "../../dev_modules/@ocdla/url/Url.js";
-import LocalStorage from "./LocalStorage";
+import Url from "@ocdla/url";
+import LocalStorage from '@ocdla/local-storage-cache';
 import { minutesSince } from './DateFunc.js';
 
 
@@ -87,14 +87,6 @@ export default class NewsFeedApi {
 
 
     async getFeed(url, endpoint) {
-        const cachedFeed = this.localStorage.getValue(endpoint);
-
-        console.log(cachedFeed);
-
-        if (cachedFeed && cachedFeed.stories.length > 0 &&
-            minutesSince(cachedFeed.lastFetch) <= NewsFeedApi.TIME_TO_FETCH) {
-            return cachedFeed;
-        }
 
         try {
             const response = await fetch(url);
@@ -102,8 +94,6 @@ export default class NewsFeedApi {
                 throw new Error(response.statusText);
             }
             const feed = await response.json();
-            this.localStorage.setValue(endpoint, {lastFetch: new Date(), stories: feed.data});
-            return {lastFetch: new Date(), stories: feed.data};C
         } catch (error) {
             return { error: true, message: error.message };
         }

@@ -1,5 +1,3 @@
-import '../../../src/js/General';
-
 export default class LocalStorage {
     // JSON Object that holds default string key names and default values if no values exist
     static DEFAULTS = {};

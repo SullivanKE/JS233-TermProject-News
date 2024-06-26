@@ -1,13 +1,13 @@
 import './General.js';
-import NewsClient from '@ocdla/http2';
-import DisplayController from './DisplayController.js';
-import NewsFeedApi from './NewsFeedApi.js';
-import NewsArticleApi from './NewsArticleApi.js'
-import StorageList from './StorageList.js';
-import Favorites from './Favorites.js';
+import NewsClient from '../../dev_modules/@ocdla/http2/HttpClient.js';
+import DisplayController from './DisplayController';
+import NewsFeedApi from './NewsFeedApi';
+import NewsArticleApi from './NewsArticleApi'
+import StorageList from './StorageList';
+import Favorites from './Favorites';
 
-import ArticleModal from './components/ArticleModal.js';
-import SummaryModal from './components/SummaryModal.js';
+import ArticleModal from './components/ArticleModal';
+import SummaryModal from './components/SummaryModal';
 
 window.NewsFeedApi = NewsFeedApi;
 window.NewsArticleApi = NewsArticleApi;
@@ -24,61 +24,51 @@ window.NewsArticleApi = NewsArticleApi;
 
 class News {
     constructor() {
-        this.newsFeedApi = new NewsFeedApi(NEWS_FEED_API_TOKEN);
-        this.newsArticleApi = new NewsArticleApi(NEWS_ARTICLE_API_TOKEN);
+        
         this.favoriteStorage = new Favorites({prefix: "Favorite-storage-"});
         this.articleStorage = new StorageList({prefix: "News-Metadata-storage-"});
         
         
         this.displayController = new DisplayController();
         this.articleModal = new ArticleModal();
-        this.summaryModal = new SummaryModal();
-
-        // Get the news stories
-        //this.initializeTopStories();
-        //this.initializeAllNews();
-        //this.initializeFavorites();
-        
+        this.summaryModal = new SummaryModal();        
         let newsFeedApi = new NewsFeedApi(NEWS_FEED_API_TOKEN);
 
-        // Request an individual article.
-        //"news/all";
-        //"news/top";
-        //"news/headlines";
-        let endpoint = "news/all";
-        let url = newsFeedApi.getUrl(endpoint);
-        // url.addParam("zipCode",zipCode);
+
+        let allNewsUrl = newsFeedApi.getUrl("news/all");
+        //let topNewsUrl = newsFeedApi.getUrl("news/top");
+        //let headlinesNewsUrl = newsFeedApi.getUrl("news/headlines");
 
 
-        let req = new Request(url.toString());
+        // We convert our urls to Request objects
+        let reqs = [new Request(allNewsUrl.toString())];//, new Request(topNewsUrl.toString())];//, new Request(headlinesNewsUrl.toString())];
 
-        // Instantiate an HTTP client that we create.
-        // Internally, the client uses fetch().
-        // It can also access the LocalStorageCache and
-        // store Responses in the cache for later use,
-        // and return Responses already stored in the cache
-        // that match() the Request.
+        // The client accesses our local storage and does fetchs on the Request objects we just made.
         let client = new NewsClient();
-        // client = new WeatherClient();
+        let resps = reqs.map((req) => client.send(req));
 
-        // Client can retrieve anything from the LocalStorageCache
-        // and return it as an HTTP Response.
-        let resp = client.send(req);
+        console.log(resps);
 
 
-        // Do something with the response;
-        // probably update the view.
-        resp.then((resp) => resp.json()).then((feed) => {
-            this.displayController.populateAllNewsContentArea(feed.data);
-            //this.addEventHandlers(feed);
+        // TODO: We are getting fullfilled promises here now because we need to await the body up stream to save it properly.
+        Promise.all(resps)
+        .then((responses) => Promise.all(responses.map((resp) => resp.json())))
+        .then((feeds) => {
+            console.log(feeds);
+            let parsedFeeds = feeds.map((feed) => JSON.parse(feed));
+            this.displayController.populateAllNewsContentArea(parsedFeeds.data);
+            this.addEventHandlers(parsedFeeds.data);
+            //this.displayController.populateTopStoriesCarosel(feeds[1].data);
+            //this.addEventHandlers(feeds[1].data);
+        })
+        .catch((error) => {
+            console.error("Error fetching data:", error);
         });
-
-    
     }
 
     /*
     TODO LIST
-    Use request response life cycle anywhere we get data
+    +Use request response life cycle anywhere we get data
     One class to build URLs, always use the same news client class to send the request objects
     Combine efforts in datefunc
     - Third package for lib-date2
