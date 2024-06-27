@@ -40,11 +40,10 @@ export default class HttpClient {
         }
 
         // TODO: This is not resolving the body and we are storing an empty JSON object in the cache.
-        return fetch(req)
-            .then(resp => {
-                LocalStorageCache.put(req, resp);
-                return resp;
-        });  
+        return fetch(req).then( resp => {
+            LocalStorageCache.put(req, resp.clone());
+            return resp;
+         }); 
 
         
 

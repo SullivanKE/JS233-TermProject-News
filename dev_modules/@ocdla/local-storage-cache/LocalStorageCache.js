@@ -11,20 +11,15 @@ export default class LocalStorageCache {
 
     static async put(req, httpResp) {
 
-        console.log("req", req);
-        console.log("httpresp", httpResp);
-
         let resp = LocalStorageResponse.fromHttpResponse(httpResp);
+        resp.then( resp => {
+            resp.addHeader("Date", new Date().toUTCString());
+            resp.addHeader("Cache-Control", "public, max-age="+LocalStorageCache.REFRESH_INTERVAL);
+            let key = req.method + httpResp.url;
+            let localStorage = new LocalStorage({});
+            localStorage.setValue(key, resp.toString());
+        });
 
-        console.log("resp", resp);
-
-        resp.addHeader("Date", new Date().toUTCString());
-        resp.addHeader("Cache-Control", "public, max-age="+LocalStorageCache.REFRESH_INTERVAL);
-
-        let key = req.method + httpResp.url;
-
-        let localStorage = new LocalStorage({});
-        localStorage.setValue(key, resp.toString());
     }
 
 

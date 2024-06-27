@@ -39,7 +39,6 @@ class News {
         //let topNewsUrl = newsFeedApi.getUrl("news/top");
         //let headlinesNewsUrl = newsFeedApi.getUrl("news/headlines");
 
-
         // We convert our urls to Request objects
         let reqs = [new Request(allNewsUrl.toString())];//, new Request(topNewsUrl.toString())];//, new Request(headlinesNewsUrl.toString())];
 
@@ -47,17 +46,12 @@ class News {
         let client = new NewsClient();
         let resps = reqs.map((req) => client.send(req));
 
-        console.log(resps);
-
-
-        // TODO: We are getting fullfilled promises here now because we need to await the body up stream to save it properly.
+        // TODO: When we get data from cache it is not being parsed into json. When we get it from the fetch it is.
         Promise.all(resps)
         .then((responses) => Promise.all(responses.map((resp) => resp.json())))
         .then((feeds) => {
-            console.log(feeds);
-            let parsedFeeds = feeds.map((feed) => JSON.parse(feed));
-            this.displayController.populateAllNewsContentArea(parsedFeeds.data);
-            this.addEventHandlers(parsedFeeds.data);
+            this.displayController.populateAllNewsContentArea(feeds[0].data);
+            this.addEventHandlers(feeds[0].data);
             //this.displayController.populateTopStoriesCarosel(feeds[1].data);
             //this.addEventHandlers(feeds[1].data);
         })

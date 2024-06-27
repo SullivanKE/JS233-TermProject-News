@@ -35,16 +35,14 @@ export default class LocalStorageResponse {
 
     // Convert stored JSON in the format '{"headers":{"h1":"h1","h2":"h2","h3":"h3"},"body":"{"prop1":"val1"}"}'.
     static fromJson(cacheJson) {
-
         const {headers,body} = JSON.parse(cacheJson);
+        const parsedBody = JSON.parse(body);
 
-        return new LocalStorageResponse(body,headers);
+        return new LocalStorageResponse(parsedBody,headers);
     }
 
     // Convert an instance JavaScript Response to an instance of this class.
     static fromHttpResponse(httpResp) {
-
-
         let date, cacheControl, xCache;
 
         date = new Date(httpResp.headers.get("Date")).toUTCString();
@@ -57,11 +55,7 @@ export default class LocalStorageResponse {
         headers.append("Cache-Control", cacheControl);
         headers.append("X-Cache", xCache);
 
-        let body;
-        if (httpResp.body) {
-            body = httpResp.text(); // If we don't await here the body will be saved as empty, but this is causing problems in news.js.
-        }
-
-        return new LocalStorageResponse(body, headers);
+        // return new LocalStorageResponse(body, headers);
+        return httpResp.text().then( body => new LocalStorageResponse(body,headers) );
     }
 }
