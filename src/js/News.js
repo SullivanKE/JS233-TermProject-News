@@ -1,8 +1,7 @@
-import './General.js';
 import NewsClient from '../../dev_modules/@ocdla/http2/HttpClient.js';
 import DisplayController from './DisplayController';
-import NewsFeedApi from './NewsFeedApi';
-import NewsArticleApi from './NewsArticleApi'
+import NewsFeedApi from './api/NewsFeedApi';
+import NewsArticleApi from './api/NewsArticleApi'
 import StorageList from './StorageList';
 import Favorites from './Favorites';
 
@@ -22,7 +21,7 @@ window.NewsArticleApi = NewsArticleApi;
 // formet is 
 
 
-class News {
+export default class News {
     constructor() {
         
         this.favoriteStorage = new Favorites({prefix: "Favorite-storage-"});
@@ -52,7 +51,7 @@ class News {
         .then((feeds) => {
             this.displayController.populateAllNewsContentArea(feeds[0].data);
             this.addEventHandlers(feeds[0].data);
-            //this.displayController.populateTopStoriesCarosel(feeds[1].data);
+            //this.displayController.populateTopStoriescarousel(feeds[1].data);
             //this.addEventHandlers(feeds[1].data);
         })
         .catch((error) => {
@@ -81,7 +80,7 @@ class News {
     async initializeTopStories() {
         // Get top stories and display them
         let topStories = await this.newsFeedApi.getTopStories();
-        this.displayController.populateTopStoriesCarosel(topStories.stories);
+        this.displayController.populateTopStoriescarousel(topStories.stories);
         this.addEventHandlers(topStories.stories);
     }
     async initializeAllNews() {
@@ -139,8 +138,4 @@ class News {
 
     }   
 
-}
-let news;
-window.onload = () => {
-    news = new News();
 }

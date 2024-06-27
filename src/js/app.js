@@ -1,10 +1,9 @@
-/**
- * CSS files
- */
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/styles.css';
-
-/**
- * Bootstrap JS File
- */
 import 'bootstrap';
+import News from './News';
+
+let news;
+window.onload = () => {
+    news = new News();
+}
