@@ -1,4 +1,5 @@
 import LocalStorageCache from "../local-storage-cache/LocalStorageCache";
+import Header from "./Header";
 export default class HttpClient {
 
     send(req) {
@@ -22,13 +23,8 @@ export default class HttpClient {
             let now = new Date();
             let nowTime = now.getTime() / 1000;
 
-            let parts = entry.headers.get("Cache-Control").split(",").map(value => value.trim());
-            let cacheControl = {};
-            for(var value of parts) {
-                let [k,v] = value.split("=");
-                cacheControl[k] = v;
-            }
-            let maxAge = cacheControl["max-age"];
+            let cacheControl = new Header(entry.headers.get("Cache-Control"));
+            let maxAge = cacheControl.get("max-age");
 
             stale = (nowTime - cachedTime) > maxAge;
         }
