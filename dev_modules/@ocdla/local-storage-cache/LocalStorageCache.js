@@ -9,8 +9,7 @@ export default class LocalStorageCache {
         
     }
 
-    static async put(req, httpResp) {
-
+    static put(req, httpResp) {
         let resp = LocalStorageResponse.fromHttpResponse(httpResp);
         resp.then( resp => {
             resp.addHeader("Date", new Date().toUTCString());

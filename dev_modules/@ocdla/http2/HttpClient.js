@@ -13,7 +13,8 @@ export default class HttpClient {
         // When we don't even have a cache, we should make a request.
         // Since we need to check the request time first, we check if it's not null. If our returnPromise.resolve(entry) doesn't return
         // Then we drop out of our if statement and fetch anyways.
-        if (entry !== null) {
+        let stale = true;
+        if (entry) {
 
             let cachedDate = new Date(entry.headers.get("Date"));
             let cachedTime = cachedDate.getTime() / 1000;
@@ -29,24 +30,15 @@ export default class HttpClient {
             }
             let maxAge = cacheControl["max-age"];
 
-            let stale = (nowTime - cachedTime) > maxAge;
-
-            // If we have a fresh cache entry, then we should return that.
-            if(entry && !stale) {
-
-                // get() should return a Response object.
-                return Promise.resolve(entry);
-            }
+            stale = (nowTime - cachedTime) > maxAge;
         }
-
-        // TODO: This is not resolving the body and we are storing an empty JSON object in the cache.
-        return fetch(req).then( resp => {
-            LocalStorageCache.put(req, resp.clone());
-            return resp;
-         }); 
-
         
-
+         return entry && !stale ?   
+            Promise.resolve(entry) : 
+            fetch(req).then( resp => {
+                LocalStorageCache.put(req, resp.clone());                            
+                return resp;
+            });
         
 
     }
