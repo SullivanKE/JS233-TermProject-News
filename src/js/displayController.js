@@ -1,9 +1,6 @@
-import './General';
-import NewsItemComponent from './components/NewsItemComponent';
-import CaroselComponent from './components/CaroselComponent';
-import FavoritesComponent from './components/FavoritesComponent';
-
-
+import NewsItemComponent from './components/FeedItem';
+import carouselComponent from './components/Carousel';
+import FavoritesComponent from './components/Favorites';
 
 export default class DisplayController {
     constructor() {
@@ -25,7 +22,7 @@ export default class DisplayController {
         this.$loading = document.querySelector('#loadingcontent');
 
         this.newsItemComponents = new NewsItemComponent();
-        this.newsCaroselComponent = new CaroselComponent();
+        this.newscarouselComponent = new carouselComponent();
         this.newsFavoritesComponent = new FavoritesComponent();
 
         
@@ -36,12 +33,12 @@ export default class DisplayController {
     populateFavoritesSidebar(favorites) {
         this.$favorites.innerHTML = this.newsFavoritesComponent.buildFavorites(favorites);
     }
-    populateTopStoriesCarosel(topstories) {
+    populateTopStoriescarousel(topstories) {
         if (topstories != null && topstories.length > 0) {
             // There are stories
            
-            this.$carouselIndicators.innerHTML = this.newsCaroselComponent.buildCarouselIndicators(topstories);
-            this.$carouselInner.innerHTML = this.newsCaroselComponent.buildCarouselItems(topstories);
+            this.$carouselIndicators.innerHTML = this.newscarouselComponent.buildCarouselIndicators(topstories);
+            this.$carouselInner.innerHTML = this.newscarouselComponent.buildCarouselItems(topstories);
 
             this.$carousel.classList.remove("visually-hidden");
             this.$loadingTop.classList.add("visually-hidden");
