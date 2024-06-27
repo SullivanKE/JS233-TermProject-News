@@ -1,7 +1,7 @@
 // Pulls the full article from the article extractor API
 
-import Url from "../../dev_modules/@ocdla/url/Url";
-import StorageList from "./StorageList";
+import Url from "../../../dev_modules/@ocdla/url/Url";
+import StorageList from "./../StorageList";
 
 export default class NewsFeedApi {
 
