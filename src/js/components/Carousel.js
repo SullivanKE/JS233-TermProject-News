@@ -1,6 +1,6 @@
-// Returns the html required to form the carosel for the main page
+// Returns the html required to form the carousel for the main page
 
-export default class CaroselComponent {
+export default class carouselComponent {
     #maximumTitleLength = 30;
     #maximumDescriptionLength = 70;
 
