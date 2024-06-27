@@ -1,6 +1,6 @@
 // Returns the main content portion of the news application
 
-export default class NewsItemComponent {
+/*export default class NewsItemComponent {
     #maximumTitleLength = 30;
     #maximumDescriptionLength = 70;
 
@@ -38,4 +38,31 @@ export default class NewsItemComponent {
         }
     }
 
+}*/
+
+export const feedItem = function(item) {
+    let maximumTitleLength = 30;
+    let maximumDescriptionLength = 70;
+
+    console.log(item);
+
+    const img = item.image_url ? item.image_url : "./img/nocontent.png";
+    return `<div class="m-1">
+                <div class="card fancy_card m-1 h-100" name="article" data-uuid="${item.uuid}">
+                    <div class="card-header">
+                        <h5 class="text-center text-white">${item.title.substr(0, maximumTitleLength)}...</h5>
+                    </div>
+                    <div class="card-body">
+                        <figure class="figure">
+                            <img src="${img}" class="figure-img card_image img-fluid" />
+                            <figcaption class="figure-caption text-white small">${item.description.substr(0, maximumDescriptionLength)}...</figcaption>
+                        </figure>
+                    </div>
+                    <div class="card-footer text-white text-center">
+                        UUID: ${item.uuid}
+                    </div>
+                </div>
+            </div>`;
 }
+
+export default feedItem;
