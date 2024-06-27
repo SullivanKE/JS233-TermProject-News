@@ -37,13 +37,14 @@ export default class LocalStorageCache {
         let localStorage = new LocalStorage(localStorageParams);
         let json = localStorage.getValue(key);
 
-        let cachedResp;
-        if (json === null)  // If we didn't get anything back, we return null.
-            return null;
-        else                // If we got something back, we convert it to a LocalStorageResponse object and return it.
+        if (json) {
+            let cachedResp;
             cachedResp = LocalStorageResponse.fromJson(json);
+            return cachedResp.toResponse();
+        }
+        
+        return null;
 
-        return cachedResp.toResponse();
     }
 
     
