@@ -1,6 +1,6 @@
 // Pulls the full article from the article extractor API
 
-import Url from "../../../dev_modules/@ocdla/url/Url";
+import Url from "@ocdla/url/Url";
 import StorageList from "./../StorageList";
 
 export default class NewsFeedApi {
@@ -64,7 +64,7 @@ export default class NewsFeedApi {
     // articleUrlIdentifier is the url component that the API uses. It is used as a string key in our local storage
     async getFeed(apiRequestUrl, articleUrlIdentifier) {
         let fetchedFeed;
-        console.log(articleUrlIdentifier);
+        (articleUrlIdentifier);
         let cachedFeed = this.articleStorage.getItem(articleUrlIdentifier);
 
         if (cachedFeed === null) { // We don't have anything in cache, so retrieve it from the API

@@ -32,7 +32,6 @@ export default class StorageList {
         let keys =  Object.keys(localStorage)
                     .filter(key => key.includes(this.listPrefix)); // Get all keys that contain our prefix
                     
-        console.log(keys);
         keys = keys.map(key => key.replace(this.listPrefix, ""));
         return keys.map(this.getItem);
     }

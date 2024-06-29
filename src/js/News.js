@@ -1,4 +1,4 @@
-import NewsClient from '../../dev_modules/@ocdla/http2/HttpClient.js';
+import NewsClient from '@ocdla/http2/HttpClient.js';
 import NewsFeedApi from './api/NewsFeedApi';
 import NewsArticleApi from './api/NewsArticleApi'
 import StorageList from './StorageList';
@@ -29,8 +29,6 @@ export default class News {
         .then((responses) => {
             const fulfilledResponses = responses.filter((resp) => resp.status === "fulfilled");
             const rejectedResponses = responses.filter((resp) => resp.status === "rejected");
-
-            console.log(fulfilledResponses);
 
             return Promise.all(fulfilledResponses.map((resp) => resp.value.json()));
         })

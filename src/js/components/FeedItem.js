@@ -44,8 +44,6 @@ export const feedItem = function(item) {
     let maximumTitleLength = 30;
     let maximumDescriptionLength = 70;
 
-    console.log(item);
-
     const img = item.image_url ? item.image_url : "./img/nocontent.png";
     return `
                 <div class="col-sm-* card fancy_card m-2" name="article" data-uuid="${item.uuid}">

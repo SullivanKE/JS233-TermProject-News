@@ -26,30 +26,7 @@ export default class NewsFeed extends Component {
         this.newsItems = data; // If I am doing things like Trung, I will need to make this its own object class.
     }
 
-    /*render($forecastSummaries, $forecastDetails) {
-        const getDays = this.forecast.getDays();
-        let summaryHtml = '';
-
-        const displayForecastDetails = data => {
-            const index = data.index;
-
-            if (!index) return false;
-
-            $forecastDetails.innerHTML = ForecastDetails(getDays[data.index], this.city, this.unitType);
-            $forecastDetails.classList.remove('d-none');
-        };
-
-        this.delegate('click', $forecastSummaries, displayForecastDetails);
-
-        for (const [i, day] of getDays.entries()) summaryHtml += this.forecast.getSummary(day, i, this.unitType);
-
-        return $forecastSummaries.innerHTML = summaryHtml;
-    };*/
-
     render($newsFeed) {
-
-        // So this is doing a parse on the forecast and returning a list of days.
-        //const getDays = this.forecast.getDays();
 
         // As a place holder, I am going to make a new variable just copying this.newsItems since it is already an array of news items.
         let newsItems = this.newsItems;
@@ -81,16 +58,9 @@ export default class NewsFeed extends Component {
             readFullArticleButton.onclick = () => this.openStory(summary.url, summary.uuid);
         }   
 
-        // forecastSummaries is the location of the day tiles in the weather application
-        // displayForecastDetails is the function being called in this method
-        // this.delegate('click', $forecastSummaries, displayForecastDetails);
-
         let items = newsItems.map(item => FeedItem(item));
         $newsFeed.innerHTML = items.join('\n');
 
-        // In our code, we actually want the grandchildren of $newsFeed.
-        //let $newsFeedChildren = [...$newsFeed.children];
-        //$newsFeedChildren.forEach(child => this.delegate('click', child, openSummary));
         this.delegate('click', $newsFeed, openSummary);
     }
 }
