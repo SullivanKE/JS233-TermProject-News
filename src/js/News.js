@@ -26,7 +26,7 @@ export default class News {
         let resps = reqs.map((req) => client.send(req));
 
         // TODO: When we get data from cache it is not being parsed into json. When we get it from the fetch it is.
-        Promise.all(resps)
+        Promise.all(resps) // Fails if any promises are not fulfilled. Chain promises is fine.
         .then((responses) => Promise.all(responses.map((resp) => resp.json())))
         .then((feeds) => {
             //this.displayController.populateAllNewsContentArea(feeds[0].data);

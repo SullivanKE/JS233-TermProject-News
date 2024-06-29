@@ -58,6 +58,10 @@ export default class NewsFeed extends Component {
 
         // The function I want to fire when the user clicks on a news item
         const openSummary = data => {
+            
+            if (!data) return false;
+
+            
             // This is getting the uuid
             const uuid = data.uuid;
             console.log(uuid);
@@ -99,8 +103,8 @@ export default class NewsFeed extends Component {
         // This is building the summaries of the forecast. I need to make it build my news items then.
         // for (const [i, day] of getDays.entries()) summaryHtml += this.forecast.getSummary(day, i, this.unitType);
 
-        newsItems.forEach(item => summaryHtml += FeedItem(item));
+        let items = newsItems.map(item => FeedItem(item));
 
-        return $newsFeed.innerHTML = summaryHtml;
+        return items.join('\n');
     }
 }
