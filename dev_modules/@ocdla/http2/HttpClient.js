@@ -1,4 +1,4 @@
-import LocalStorageCache from "../local-storage-cache/LocalStorageCache";
+import LocalStorageCache from "./LocalStorageCache";
 import Header from "./Header";
 export default class HttpClient {
 
