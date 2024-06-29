@@ -47,8 +47,8 @@ export const feedItem = function(item) {
     console.log(item);
 
     const img = item.image_url ? item.image_url : "./img/nocontent.png";
-    return `<div class="m-1">
-                <div class="card fancy_card m-1 h-100" name="article" data-uuid="${item.uuid}">
+    return `
+                <div class="col-sm-* card fancy_card m-2" name="article" data-uuid="${item.uuid}">
                     <div class="card-header">
                         <h5 class="text-center text-white">${item.title.substr(0, maximumTitleLength)}...</h5>
                     </div>
@@ -62,7 +62,7 @@ export const feedItem = function(item) {
                         UUID: ${item.uuid}
                     </div>
                 </div>
-            </div>`;
+            `;
 }
 
 export default feedItem;

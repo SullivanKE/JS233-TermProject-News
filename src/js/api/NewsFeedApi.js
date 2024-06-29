@@ -1,5 +1,5 @@
 import Url from "@ocdla/url";
-import LocalStorage from '@ocdla/local-storage-cache';
+import LocalStorage from '@ocdla/http2/LocalStorage.js';
 
 
 export default class NewsFeedApi {

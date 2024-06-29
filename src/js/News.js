@@ -25,34 +25,36 @@ export default class News {
         let client = new NewsClient();
         let resps = reqs.map((req) => client.send(req));
 
-        // TODO: When we get data from cache it is not being parsed into json. When we get it from the fetch it is.
-        Promise.all(resps) // Fails if any promises are not fulfilled. Chain promises is fine.
-        .then((responses) => Promise.all(responses.map((resp) => resp.json())))
+        Promise.allSettled(reqs.map((req) => client.send(req)))
+        .then((responses) => {
+            const fulfilledResponses = responses.filter((resp) => resp.status === "fulfilled");
+            const rejectedResponses = responses.filter((resp) => resp.status === "rejected");
+
+            console.log(fulfilledResponses);
+
+            return Promise.all(fulfilledResponses.map((resp) => resp.value.json()));
+        })
         .then((feeds) => {
-            //this.displayController.populateAllNewsContentArea(feeds[0].data);
-            //this.displayController.populateTopStoriescarousel(feeds[1].data);
+            // This solves the problem of our cache data not being parsed.
+            // It's less time consuming and more efficent to just use a try here.
+            for (let i = 0; i < feeds.length; i++) {
+                try {
+                    feeds[i] = JSON.parse(feeds[i]);
+                } catch (e) {}
+            }
 
             let $newsFeed = document.querySelector('#news-feed');
 
             let data = feeds[0].data; 
+
             let comp = new NewsFeed(data); 
-            let html = comp.render($newsFeed); 
-            document.querySelector('#news-feed').innerHTML = html;
+            comp.render($newsFeed);
         })
         .catch((error) => {
             console.error("Error fetching data:", error);
         });
 
-        /*
-        ... feeds => { let data = feeds[0].data; let comp = new NewsFeed(data); let html = comp.render(); 
-            document.querySelector('#content').innerHTML = html; } ...
-        */
     }
-
-    /*
-    TODO LIST
-
-    */
    
     
     async openStory(url, uuid) {
@@ -65,10 +67,5 @@ export default class News {
 
         this.articleModal.showModal(story.data);        
     }
-
-    
-
-    // TODO: Make this code fit my code.
-    
 
 }

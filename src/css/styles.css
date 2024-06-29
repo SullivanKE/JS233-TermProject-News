@@ -21,8 +21,8 @@ li {
     margin: auto;
 }
 .newsTile {
-    height: 100px;
-    width: 166px;
+    height: auto;
+    width: 100px;
 }
 /*fancy_card from https://nestedsoftware.com/2019/11/05/card-with-expand-on-hover-effect-2ccm.200941.html*/
 .fancy_card {
