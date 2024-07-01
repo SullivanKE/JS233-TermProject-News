@@ -1,41 +1,32 @@
-import * as bootstrap from 'bootstrap';
-export default class ArticleModal {
-    constructor() {
-
-        this.$modal = document.querySelector("#articleModal");
-        this.$modalHeader = document.querySelector("#articleModalHeader");
-        this.$carousel = document.querySelector("#articleModalCarousel");
-        this.$modalBody = document.querySelector("#articleModalBody");
-        this.$modalFooter = document.querySelector("#articleModalFooter");
-        this.articleModal = new bootstrap.Modal(this.$modal);
-
-        this.showModal = this.showModal.bind(this);
+import Carousel from "./Carousel";
+export default class Article {
+    static toHtml(article) {
+      let carousel = new Carousel();
+      return `
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header" id="articleModalHeader">
+            ${Article.buildHeader(article.title, article.url)}
+          </div>
+          <div class="modal-body">
+            <div id="articleModalBody">
+              ${Article.buildBody(article.top_image, article.authors, article.publish_date, article.meta_site_name, article.source_url, article.text)}
+            </div>
+          </div>
+          <div id="articleModalCarousel" class="carousel slide">
+            ${carousel}
+          </div>
+          <div class="modal-footer m-2" id="articleModalFooter">
+            ${Article.buildFooter(article.tags, article.url)}
+          </div>
+        </div>
+      </div>`;
     }
-    closeModal() {
-      this.articleModal.close();
-  }
-    showModal(article) {
-        // Make header
-        this.$modalHeader.innerHTML = this.buildHeader(article.title, article.url);
-
-        // Make image carousel
-        this.$carousel.innerHTML = this.buildImageCarousel(article.images, article.videos);
-
-        // Make body
-        this.$modalBody.innerHTML = this.buildBody(article.top_image, article.authors, article.publish_date, article.meta_site_name, article.source_url, article.text);
-
-        // Make footer
-        this.$modalFooter.innerHTML = this.buildFooter(article.tags, article.url);
-
-        this.articleModal.show();
-    }
-    buildHeader(title, url) {
-        // TODO: Check if it is favorited for the favorite button
+    static buildHeader(title, url) {
         return `<a href="${url}"><strong class="modal-title" id="newsModalLabel">${title}</strong></a>
-        
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>`
     }
-    buildImageCarousel(images, videos) {
+    static buildImageCarousel(images, videos) {
         //^(http(s):\/\/.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$
         const re = new RegExp("^(http(s):\/\/.)");
         // Cleans the arrays
@@ -87,36 +78,8 @@ export default class ArticleModal {
       </button>`;
         return completeModalCarousel;
 
-        /*
-        <div class="m-1 p-1 headlines">
-      <div id="headlinesCarousel" class="carousel slide visually-hidden">
-        <div class="carousel-indicators" id="headlineIndicators">
-          <button type="button" data-bs-target="#headlinesCarousel" data-bs-slide-to="0" class="active"
-            aria-current="true" aria-label="Slide 1"></button>
-        </div>
-        <div class="carousel-inner" id="headlineInner">
-          <div class="carousel-item active">
-            <img src="#" class="d-block sliderItem" alt="...">
-            <div class="carousel-caption d-none d-md-block">
-              <h5></h5>
-              <p></p>
-            </div>
-          </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#headlinesCarousel" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#headlinesCarousel" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
-      </div>
-        */
-
-
     }
-    buildBody(topImage, authors, published, siteName, source, text) {
+    static buildBody(topImage, authors, published, siteName, source, text) {
         // Loop through authors
         let authorList = "";
         published = new Date(Date.parse(published));

@@ -1,31 +1,39 @@
 import * as bootstrap from 'bootstrap';
+import Article from './Article';
+import Summary from './Summary';
 export default class Model {
-    constructor(modalPrefix) {
+    constructor(contentType) {
 
-        this.isArticleModal = modalPrefix === "article";
-
-        this.$modal = document.querySelector("#" + modalPrefix + "Modal");
+        this.$modal = document.querySelector("#" + contentType + "Modal");
+        /*
         this.$modalHeader = document.querySelector("#" + modalPrefix + "ModalHeader");
         this.$modalBody = document.querySelector("#" + modalPrefix + "ModalBody");
         this.$modalFooter = document.querySelector("#" + modalPrefix + "ModalFooter");
-        
         this.$carousel = document.querySelector("#" + modalPrefix + "ModalCarousel");
+        */
 
         this.modal = new bootstrap.Modal(this.$modal);
-
-        this.showModal = this.showModal.bind(this);
     }
     closeModal() {
       this.modal.close();
-  }
+    }
+
+    content(html) {
+      $modalHeader = document.querySelector("#" +  + "ModalHeader");
+      $modalBody = document.querySelector("#" +  + "ModalBody");
+      $modalFooter = document.querySelector("#" +  + "ModalFooter");
+      $carousel = document.querySelector("#" +  + "ModalCarousel");
+    }
+
+
     showModal(article, favorite = null) {
         
         
         if (this.isArticleModal) {
-          this.$modalHeader.innerHTML = this.buildHeader(article.title, article.url);
-          this.$carousel.innerHTML = this.buildImageCarousel(article.images, article.videos);
-          this.$modalBody.innerHTML = this.buildBody(article.top_image, article.authors, article.publish_date, article.meta_site_name, article.source_url, article.text);
-          this.$modalFooter.innerHTML = this.buildFooter(article.tags, article.url);
+          this.$modalHeader.innerHTML = this.buildArticleHeader(article.title, article.url);
+          this.$carousel.innerHTML = this.buildArticleImageCarousel(article.images, article.videos);
+          this.$modalBody.innerHTML = this.buildArticleBody(article.top_image, article.authors, article.publish_date, article.meta_site_name, article.source_url, article.text);
+          this.$modalFooter.innerHTML = this.buildArticleFooter(article.tags, article.url);
         }
         else {
           this.$modalHeader.innerHTML = this.buildSummaryHeader(article.title);
