@@ -22,6 +22,7 @@ export default class News {
         let reqs = [new Request(allNewsUrl.toString())];//, new Request(topNewsUrl.toString())];//, new Request(headlinesNewsUrl.toString())];
 
         // The client accesses our local storage and does fetchs on the Request objects we just made.
+        //let client = new NewsClient({config: {refresh: 900}});
         let client = new NewsClient();
         let resps = reqs.map((req) => client.send(req));
 
@@ -55,15 +56,6 @@ export default class News {
     }
    
     
-    async openStory(url, uuid) {
-        // Check and see if we have the story, if not, do a fetch
-        let story = this.articleStorage.getItem(uuid);
-        if (story == null) {
-            story = await this.newsArticleApi.getArticle(encodeURIComponent(url));
-            this.articleStorage.addItem(uuid, story);
-        }
-
-        this.articleModal.showModal(story.data);        
-    }
+    
 
 }
