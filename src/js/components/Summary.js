@@ -1,33 +1,26 @@
-import * as bootstrap from 'bootstrap';
-export default class SummaryModal {
-    constructor() {
-
-        this.$modal = document.querySelector("#summaryModal");
-        this.$modalHeader = document.querySelector("#summaryModalHeader");
-        this.$modalBody = document.querySelector("#summaryModalBody");
-        this.$modalFooter = document.querySelector("#summaryModalFooter");
-        this.summaryModal = new bootstrap.Modal(this.$modal);
-
-        this.showModal = this.showModal.bind(this);
-
-    }
-    closeModal() {
-        this.summaryModal.hide();
-    }
-    showModal(article, favorite) {
-        this.$modalHeader.innerHTML = this.buildHeader(article.title);
-        this.$modalBody.innerHTML = this.buildBody(article.image_url, article.url, article.description, article.published_at, article.source, favorite);
-        this.$modalFooter.innerHTML = this.buildFooter(article.categories, article.uuid);
-
-
-        this.summaryModal.show();
+export default class Summary {
+    static toHtml(article, favorite) {
+        return `
+            
+                <div class="modal-header" id="summaryModalHeader">
+                    ${Summary.buildHeader(article.title)}
+                </div>
+                <div class="modal-body" id="summaryModalBody">
+                    <div class="row">
+                        ${Summary.buildBody(article.image_url, article.url, article.description, article.published_at, article.source, favorite)}
+                    </div>
+                </div>
+                <div class="modal-footer" id="summaryModalFooter">
+                    ${Summary.buildFooter(article.categories, article.uuid)}
+                </div>
+        `;
     }
 
-    buildHeader(title) {
+    static buildHeader(title) {
         return `<h5 class="modal-title" id="summaryModalLabel">${title}</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>`;
     }
-    buildBody(img, url, description, published_at, source, favorite) {
+    static buildBody(img, url, description, published_at, source, favorite) {
         let publishTime = new Date(Date.parse(published_at));
         let btnstyle = "btn-success";
         let btntext = "Add to Favorites";
@@ -60,7 +53,7 @@ export default class SummaryModal {
                 </div><br /><br />`;
 
     }
-    buildFooter(categories, uuid) {
+    static buildFooter(categories, uuid) {
         let categoriesConcat = categories.join(', ');
         return `<div class="d-flex bd-highlight">
                     <div class="p-2 bd-highlight me-auto ">

@@ -12,6 +12,8 @@ import FeedItem from './FeedItem';
 import Modal from './Modal.js';
 import ArticleClient from '@ocdla/http2/HttpClient.js';
 import NewsArticleApi from '../api/NewsArticleApi';
+import Article from './Article';
+import Summary from './Summary';
 export default class NewsFeed extends Component {
 
     constructor(data) {
@@ -30,9 +32,6 @@ export default class NewsFeed extends Component {
 
     render($newsFeed) {
 
-        // As a place holder, I am going to make a new variable just copying this.newsItems since it is already an array of news items.
-        let newsItems = this.newsItems;
-
         // This is storing the html we are making
         let summaryHtml = '';
 
@@ -48,34 +47,44 @@ export default class NewsFeed extends Component {
             if (!uuid) return false;
 
             // Get the summary of the item. We want to open a modal window.
-            const summary = newsItems.find(item => item.uuid === uuid);
+            const article = this.newsItems.find(item => item.uuid === uuid);
             let isFavorited = false; // For now, lets just get this working. We will handle favorites later.
-               
-            let summaryModal = new Modal('summary');
-            summaryModal.showModal(summary, isFavorited);
+
+            let summaryContent = Summary.toHtml(article, isFavorited);
+            let summaryModal = new Modal();
+            summaryModal.content(summaryContent);
+            summaryModal.showModal();
             //let favoriteBtn = document.querySelector("#favoritebtn");
             //favoriteBtn.onclick = () => this.favoriteStorage.updateFavorites(summary, isFavorited);
 
-            const openStory = function (url, uuid) {
+            const openStory = async function (url, uuid) {
                 let articleApi = new NewsArticleApi(NEWS_ARTICLE_API_TOKEN);
                 let articleApiUrl = articleApi.getUrl(encodeURIComponent(url));
+
                 let req = new Request(articleApiUrl.toString());
                 let client = new ArticleClient();
-                let resp = client.send(req);
-                resp.then(resp => {
-                    let article = resp.json();
-                    article = article.data;
-                    let articleModal = new Modal('article');
-                    articleModal.showModal(article);
-                })
-                .catch(err => console.error(err));
+                let resp = await client.send(req);
+                let article = await resp.json();
+
+                // This solves the problem of our cache data not being parsed.
+                // It's less time consuming and more efficent to just use a try here.
+                    try {
+                        article = JSON.parse(article);
+                    } catch (e) {}
+            
+                console.log(article);
+
+                let articleModal = new Modal();
+                let articleContent = Article.toHtml(article.data);
+                articleModal.content(articleContent);
+                articleModal.showModal();
             }
     
             let readFullArticleButton = document.querySelector("#readFullArticleButton");
-            readFullArticleButton.onclick = () => openStory(summary.url, summary.uuid);
+            readFullArticleButton.onclick = () => openStory(article.url, article.uuid);
         }   
 
-        let items = newsItems.map(item => FeedItem(item));
+        let items = this.newsItems.map(item => FeedItem(item));
         $newsFeed.innerHTML = items.join('\n');
 
         this.delegate('click', $newsFeed, openSummary);

@@ -1,4 +1,4 @@
-import NewsClient from '@ocdla/http2/HttpClient.js';
+import NewsClient from '@ocdla/http2/HttpClient';
 import NewsFeedApi from './api/NewsFeedApi';
 import NewsArticleApi from './api/NewsArticleApi'
 import StorageList from './StorageList';
@@ -22,8 +22,7 @@ export default class News {
         let reqs = [new Request(allNewsUrl.toString())];//, new Request(topNewsUrl.toString())];//, new Request(headlinesNewsUrl.toString())];
 
         // The client accesses our local storage and does fetchs on the Request objects we just made.
-        //let client = new NewsClient({config: {refresh: 900}});
-        let client = new NewsClient();
+        let client = new NewsClient({config: {refresh: 900}});
         let resps = reqs.map((req) => client.send(req));
 
         Promise.allSettled(reqs.map((req) => client.send(req)))
