@@ -9,7 +9,9 @@ document.querySelector('#content').innerHTML = html; } ...
 */
 import Component from './Component';
 import FeedItem from './FeedItem';
-import SummaryModal from './SummaryModal';
+import Modal from './Model.js';
+import ArticleClient from '@ocdla/http2/HttpClient.js';
+import NewsArticleApi from '../api/NewsArticleApi';
 export default class NewsFeed extends Component {
 
     constructor(data) {
@@ -49,13 +51,28 @@ export default class NewsFeed extends Component {
             const summary = newsItems.find(item => item.uuid === uuid);
             let isFavorited = false; // For now, lets just get this working. We will handle favorites later.
                
-            let summaryModal = new SummaryModal();
+            let summaryModal = new Modal('summary');
             summaryModal.showModal(summary, isFavorited);
             //let favoriteBtn = document.querySelector("#favoritebtn");
             //favoriteBtn.onclick = () => this.favoriteStorage.updateFavorites(summary, isFavorited);
+
+            const openStory = function (url, uuid) {
+                let articleApi = new NewsArticleApi(NEWS_ARTICLE_API_TOKEN);
+                let articleApiUrl = articleApi.getUrl(encodeURIComponent(url));
+                let req = new Request(articleApiUrl.toString());
+                let client = new ArticleClient();
+                let resp = client.send(req);
+                resp.then(resp => {
+                    let article = resp.json();
+                    article = article.data;
+                    let articleModal = new Modal('article');
+                    articleModal.showModal(article);
+                })
+                .catch(err => console.error(err));
+            }
     
             let readFullArticleButton = document.querySelector("#readFullArticleButton");
-            readFullArticleButton.onclick = () => this.openStory(summary.url, summary.uuid);
+            readFullArticleButton.onclick = () => openStory(summary.url, summary.uuid);
         }   
 
         let items = newsItems.map(item => FeedItem(item));
