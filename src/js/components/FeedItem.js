@@ -46,7 +46,7 @@ export const feedItem = function(item) {
 
     const img = item.image_url ? item.image_url : "./img/nocontent.png";
     return `
-                <div class="col-sm-* card fancy_card m-2" name="article" data-uuid="${item.uuid} data-content-type="summary">
+                <div class="col-sm-* card fancy_card m-2" name="article" data-uuid="${item.uuid}" data-content-type="summary">
                     <div class="card-header">
                         <h5 class="text-center text-white">${item.title.substr(0, maximumTitleLength)}...</h5>
                     </div>

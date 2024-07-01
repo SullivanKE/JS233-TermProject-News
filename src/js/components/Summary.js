@@ -1,8 +1,7 @@
 export default class Summary {
     static toHtml(article, favorite) {
         return `
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
+            
                 <div class="modal-header" id="summaryModalHeader">
                     ${Summary.buildHeader(article.title)}
                 </div>
@@ -10,20 +9,10 @@ export default class Summary {
                     <div class="row">
                         ${Summary.buildBody(article.image_url, article.url, article.description, article.published_at, article.source, favorite)}
                     </div>
-                    <div class="d-flex flex-row">
-                    <div class="d-flex align-items-start">
-                        <button class="btn btn-primary">Read full article here</button>
-                    </div>
-                    <div class="d-flex align-items-end">
-                        <button class="btn btn-outline-success">Add to Favorites</button>
-                    </div>
-                    </div>
                 </div>
                 <div class="modal-footer" id="summaryModalFooter">
                     ${Summary.buildFooter(article.categories, article.uuid)}
                 </div>
-                </div>
-            </div>
         `;
     }
 
