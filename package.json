@@ -31,12 +31,14 @@
   },
   "dependencies": {
     "babel-loader": "^8.2.5",
+    "@babel/preset-react": "^7.18.6",
     "bootstrap": "^5.2.1",
     "bootstrap-less": "^3.3.8",
     "less": "^4.1.1",
     "regenerator-runtime": "^0.13.9",
     "toastr": "^2.1.4",
     "@ocdla/http2": "file:dev_modules/@ocdla/http2",
-    "@ocdla/url": "file:dev_modules/@ocdla/url"
+    "@ocdla/url": "file:dev_modules/@ocdla/url",
+    "@ocdla/view": "2.3.8"
   }
 }

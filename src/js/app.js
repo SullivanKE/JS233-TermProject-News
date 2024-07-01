@@ -1,3 +1,5 @@
+/** @jsx vNode */
+import { vNode, View } from "@ocdla/view";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/styles.css';
 import 'bootstrap';
