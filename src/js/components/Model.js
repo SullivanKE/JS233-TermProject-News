@@ -1,35 +1,41 @@
 import * as bootstrap from 'bootstrap';
-export default class ArticleModal {
-    constructor() {
+export default class Model {
+    constructor(modalPrefix) {
 
-        this.$modal = document.querySelector("#articleModal");
-        this.$modalHeader = document.querySelector("#articleModalHeader");
-        this.$carousel = document.querySelector("#articleModalCarousel");
-        this.$modalBody = document.querySelector("#articleModalBody");
-        this.$modalFooter = document.querySelector("#articleModalFooter");
-        this.articleModal = new bootstrap.Modal(this.$modal);
+        this.isArticleModal = modalPrefix === "article";
+
+        this.$modal = document.querySelector("#" + modalPrefix + "Modal");
+        this.$modalHeader = document.querySelector("#" + modalPrefix + "ModalHeader");
+        this.$modalBody = document.querySelector("#" + modalPrefix + "ModalBody");
+        this.$modalFooter = document.querySelector("#" + modalPrefix + "ModalFooter");
+        
+        this.$carousel = document.querySelector("#" + modalPrefix + "ModalCarousel");
+
+        this.modal = new bootstrap.Modal(this.$modal);
 
         this.showModal = this.showModal.bind(this);
     }
     closeModal() {
-      this.articleModal.close();
+      this.modal.close();
   }
-    showModal(article) {
-        // Make header
-        this.$modalHeader.innerHTML = this.buildHeader(article.title, article.url);
-
-        // Make image carousel
-        this.$carousel.innerHTML = this.buildImageCarousel(article.images, article.videos);
-
-        // Make body
-        this.$modalBody.innerHTML = this.buildBody(article.top_image, article.authors, article.publish_date, article.meta_site_name, article.source_url, article.text);
-
-        // Make footer
-        this.$modalFooter.innerHTML = this.buildFooter(article.tags, article.url);
-
-        this.articleModal.show();
+    showModal(article, favorite = null) {
+        
+        
+        if (this.isArticleModal) {
+          this.$modalHeader.innerHTML = this.buildHeader(article.title, article.url);
+          this.$carousel.innerHTML = this.buildImageCarousel(article.images, article.videos);
+          this.$modalBody.innerHTML = this.buildBody(article.top_image, article.authors, article.publish_date, article.meta_site_name, article.source_url, article.text);
+          this.$modalFooter.innerHTML = this.buildFooter(article.tags, article.url);
+        }
+        else {
+          this.$modalHeader.innerHTML = this.buildSummaryHeader(article.title);
+          this.$modalBody.innerHTML = this.buildSummaryBody(article.image_url, article.url, article.description, article.published_at, article.source, favorite);
+          this.$modalFooter.innerHTML = this.buildSummaryFooter(article.categories, article.uuid);
+        }
+          
+        this.modal.show();
     }
-    buildHeader(title, url) {
+    buildArticleHeader(title, url) {
         // TODO: Check if it is favorited for the favorite button
         return `<a href="${url}"><strong class="modal-title" id="newsModalLabel">${title}</strong></a>
         
@@ -116,7 +122,7 @@ export default class ArticleModal {
 
 
     }
-    buildBody(topImage, authors, published, siteName, source, text) {
+    buildArticleBody(topImage, authors, published, siteName, source, text) {
         // Loop through authors
         let authorList = "";
         published = new Date(Date.parse(published));
@@ -155,7 +161,7 @@ export default class ArticleModal {
         </p>
       </div>`;
     }
-    buildFooter(tags, url) {
+    buildArticleFooter(tags, url) {
         // Loop through tags
         let tagList = "";
         for (let i = 0; i < tags.length; i++) {
@@ -176,4 +182,56 @@ export default class ArticleModal {
         </div>
       </div>`;
     }
+
+    
+
+  buildSummaryHeader(title) {
+      return `<h5 class="modal-title" id="summaryModalLabel">${title}</h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>`;
+  }
+  buildSummaryBody(img, url, description, published_at, source, favorite) {
+      let publishTime = new Date(Date.parse(published_at));
+      let btnstyle = "btn-success";
+      let btntext = "Add to Favorites";
+      if (favorite) {
+          btnstyle = "btn-danger";
+          btntext = "Remove from Favorites";
+      }
+      if (img == undefined || img == null || img == "")
+          img = "./img/nocontent.png";
+          
+      return `<div class="row">
+                  <div class="col p-3 h-100">
+                      <!--image-->
+                      <img src="${img}" class="img-fluid rounded m-0" />
+                  </div>
+                  <div class="col p-3">
+                      <small class="fw-light">${publishTime.toDateString()}</small>
+                      <!--Text-->
+                      <p class="h-75">${description}... <button class="btn btn-link text-white m-0 p-0" id = "readFullArticleButton" data-bs-dismiss="modal" aria-label="Close">continue to full article here.</button></p>
+                      <hr />
+                      <div class="d-flex justify-content-between">
+                          <div class="p-2">
+                              <a href="${url}">Read on ${source}</a>
+                          </div>
+                          <div class="p-0">
+                              <button id="favoritebtn" class="btn ${btnstyle} m-0">${btntext}</button>
+                          </div>
+                      </div>
+                  </div>
+              </div><br /><br />`;
+
+  }
+  buildSummaryFooter(categories, uuid) {
+      let categoriesConcat = categories.join(', ');
+      return `<div class="d-flex bd-highlight">
+                  <div class="p-2 bd-highlight me-auto ">
+                      <small class="text-white">${categoriesConcat}</small>
+                  </div>
+                  <div class="p-2 bd-highlight">
+                      <small class="text-white">UUID: ${uuid}</small>
+                  </div>
+              </div>`;
+          
+  }   
 }

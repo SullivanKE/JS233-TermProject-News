@@ -1,6 +1,8 @@
 export default class Component {
     getNodeChildrenEventHandler(target, elem, fn) {
-        const children = [elem, ...elem.children];
+        const children = [...elem.children];
+        if (!children) return false;
+        
         const container = children.filter(child => child.contains(target))[0];
         const data = container.dataset;
         fn(data);
