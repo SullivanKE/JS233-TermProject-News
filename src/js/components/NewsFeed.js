@@ -9,7 +9,7 @@ document.querySelector('#content').innerHTML = html; } ...
 */
 import Component from './Component';
 import FeedItem from './FeedItem';
-import Modal from './Model.js';
+import Modal from './Modal.js';
 import ArticleClient from '@ocdla/http2/HttpClient.js';
 import NewsArticleApi from '../api/NewsArticleApi';
 export default class NewsFeed extends Component {
