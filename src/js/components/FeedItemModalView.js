@@ -25,15 +25,13 @@ export default class FeedItemModalView {
             </>);
     }
     buildBody(img, url, description, published_at, source, favorite) {
-        let publishTime = new Date(Date.parse(published_at));
         let btnstyle = "btn-success";
+        let btnClass = "btn " + btnstyle + " m-0";
         let btntext = "Add to Favorites";
         if (favorite) {
             btnstyle = "btn-danger";
             btntext = "Remove from Favorites";
         }
-        if (img == undefined || img == null || img == "")
-            img = "./img/nocontent.png";
             
         return (<>
                 <div class="row">
@@ -41,7 +39,7 @@ export default class FeedItemModalView {
                         <img src={img} class="img-fluid rounded m-0" />
                     </div>
                     <div class="col p-3">
-                        <small class="fw-light">{publishTime.toDateString()}</small>
+                        <small class="fw-light">{published_at.toDateString()}</small>
                         <p class="h-75">
                             {description}... 
                             <button class="btn btn-link text-white m-0 p-0" 
@@ -57,7 +55,7 @@ export default class FeedItemModalView {
                                 <a href={url}>Read on {source}</a>
                             </div>
                             <div class="p-0">
-                                <button id="favoritebtn" class="btn ${btnstyle} m-0">{btntext}</button>
+                                <button id="favoritebtn" class={btnClass}>{btntext}</button>
                             </div>
                         </div>
                     </div>
@@ -66,10 +64,9 @@ export default class FeedItemModalView {
     }
 
     static buildFooter(categories, uuid) {
-        let categoriesConcat = categories.join(', ');
         return (<div class="d-flex bd-highlight">
                     <div class="p-2 bd-highlight me-auto ">
-                        <small class="text-muted">{categoriesConcat}</small>
+                        <small class="text-muted">{categories}</small>
                     </div>
                     <div class="p-2 bd-highlight">
                         <small class="text-muted">UUID: {uuid}</small>

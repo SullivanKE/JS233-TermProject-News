@@ -1,21 +1,12 @@
-/* TODO:
-Add a NewsFeed component that replaces DisplayControllerfor the “allNews” functionality; 
-don’t create an instance reference to this new class in News.js - only a local variable reference
-so that as your fetch callouts to the news api resolve you will have something like (and give yourself 
-a reasonable id for this element like “news-feed” instead of just “content”):
-
-... feeds => { let data = feeds[0].data; let comp = new NewsFeed(data); let html = comp.render(); 
-document.querySelector('#content').innerHTML = html; } ...
-*/
 /** @jsx vNode */
 import { vNode } from '@ocdla/view/view';
 import Component from './Component';
-import FeedItem from './FeedItemTile.js';
 import Modal from './Modal.js';
-import ArticleClient from '@ocdla/http2/HttpClient.js';
+import ArticleClient from '@ocdla/http2/HttpClient';
 import NewsArticleApi from '../api/NewsArticleApi';
-import ArticleModalView from './ArticleModalView.js';
-import FeedItemModalView from './FeedItemModalView.js';
+import ArticleModalView from './ArticleModalView';
+import FeedItemModalView from './FeedItemModalView';
+
 export default class NewsFeed extends Component {
 
     constructor(data) {
@@ -83,9 +74,10 @@ export default class NewsFeed extends Component {
         }   
 
         let feedItemTiles = this.newsItems.map(item => item.renderTile());
+        console.log(feedItemTiles);
 
         this.delegate('click', $newsFeed, openSummary);
 
-        return (<span>{feedItemTiles.join('\n')}</span>);
+        return feedItemTiles;
     }
 }

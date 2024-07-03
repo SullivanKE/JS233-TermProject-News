@@ -11,10 +11,10 @@ export default class Article {
         this.text = obj.text;
         this.meta_site_name = obj.meta_site_name;
         this.tags = obj.tags.join(", ");
-        this.images = this.cleanMedia(obj.images);
-        this.videos = this.cleanMedia(obj.videos);
+        this.images = this.cleanMediaUrls(obj.images);
+        this.videos = this.cleanMediaUrls(obj.videos);
     }
-    cleanMedia(media) {
+    cleanMediaUrls(media) {
         const re = new RegExp("^(http(s):\/\/.)");
         return media.filter(function (item) {
             return re.test(item);

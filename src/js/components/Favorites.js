@@ -26,8 +26,8 @@ export default class FavoritesComponent {
 
             return (                
                 <li class="mb-3 border rounded">
-                    <img class="img-thumbnail" src="${image_url}" />
-                    <button class="btn btn-link p-0" name="article" data-uuid="${uuid}">
+                    <img class="img-thumbnail" src={image_url} />
+                    <button class="btn btn-link p-0" name="article" data-uuid={uuid}>
                         {trimmedTitle}
                     </button>
                 </li>);

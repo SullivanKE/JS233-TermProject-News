@@ -19,7 +19,7 @@ export default class FeedItem {
         this.language = obj.language;
         this.published_at = new Date(Date.parse(obj.published_at));
         this.source = obj.source;
-        this.categories = obj.categories;
+        this.categories = obj.categories.join(", ");
         this.favorite = favorite;
     }
     renderModal() {

@@ -53,8 +53,9 @@ export default class News {
 
             let comp = new NewsFeed(newsSummaries); 
             let newsFeed = View.createRoot($newsFeed);
+
             newsFeed.render(
-                comp.render($newsFeed)
+                <span>{comp.render($newsFeed)}</span>
             );
             
         })

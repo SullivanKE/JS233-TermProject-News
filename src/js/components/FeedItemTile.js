@@ -6,13 +6,13 @@ export default class FeedItemTile {
 
     static toHtml(item) {
         return (
-                    <div class="col-sm-* card fancy_card m-2" name="article" data-uuid="${item.uuid}" data-content-type="summary">
+                    <div class="col-sm-* card fancy_card m-2" name="article" data-uuid={item.uuid} data-content-type="summary">
                         <div class="card-header">
                             <h5 class="text-center text-white">{item.shortTitle}...</h5>
                         </div>
                         <div class="card-body">
                             <figure class="figure">
-                                <img src="${img}" class="figure-img card_image img-fluid" />
+                                <img src={item.image_url} class="figure-img card_image img-fluid" />
                                 <figcaption class="figure-caption text-white small">{item.shortSnippet}...</figcaption>
                             </figure>
                         </div>
