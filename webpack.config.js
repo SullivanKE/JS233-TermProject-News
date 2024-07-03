@@ -23,8 +23,8 @@ module.exports = {
     entry: {
       home: './src/js/app.js',
     },
-    resolve: {
-      symlinks: false,
+    watchOptions: {
+      followSymlinks: true,
     },
     output: {
       path: path.resolve(__dirname, "dist"),
