@@ -1,9 +1,14 @@
+/** @jsx vNode */
+import { vNode, View } from '@ocdla/view/view';
 import NewsClient from '@ocdla/http2/HttpClient';
 import NewsFeedApi from './api/NewsFeedApi';
 import NewsArticleApi from './api/NewsArticleApi'
 import StorageList from './StorageList';
 import Favorites from './Favorites';
 import NewsFeed from './components/NewsFeed';
+import Summary from './models/FeedItem';
+import Article from './models/Article';
+
 
 window.NewsFeedApi = NewsFeedApi;
 window.NewsArticleApi = NewsArticleApi;
@@ -44,9 +49,14 @@ export default class News {
             let $newsFeed = document.querySelector('#news-feed');
 
             let data = feeds[0].data; 
+            let newsSummaries = data.map((summary) => new Summary(summary));
 
-            let comp = new NewsFeed(data); 
-            comp.render($newsFeed);
+            let comp = new NewsFeed(newsSummaries); 
+            let newsFeed = View.createRoot($newsFeed);
+            newsFeed.render(
+                comp.render($newsFeed)
+            );
+            
         })
         .catch((error) => {
             console.error("Error fetching data:", error);

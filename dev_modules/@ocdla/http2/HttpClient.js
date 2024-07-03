@@ -25,7 +25,6 @@ export default class HttpClient {
         if (entry) {
             let cacheControl = new Header(entry.headers.get("Cache-Control"));
             let maxAge = cacheControl.get("max-age");
-            console.log(maxAge);
             if (maxAge) {
                 let cachedDate = new Date(entry.headers.get("Date"));
                 let cachedTime = cachedDate.getTime() / 1000;

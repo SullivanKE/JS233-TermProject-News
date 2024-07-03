@@ -7,13 +7,15 @@ a reasonable id for this element like “news-feed” instead of just “content
 ... feeds => { let data = feeds[0].data; let comp = new NewsFeed(data); let html = comp.render(); 
 document.querySelector('#content').innerHTML = html; } ...
 */
+/** @jsx vNode */
+import { vNode } from '@ocdla/view/view';
 import Component from './Component';
-import FeedItem from './FeedItem';
+import FeedItem from './FeedItemTile.js';
 import Modal from './Modal.js';
 import ArticleClient from '@ocdla/http2/HttpClient.js';
 import NewsArticleApi from '../api/NewsArticleApi';
-import Article from './Article';
-import Summary from './Summary';
+import ArticleModalView from './ArticleModalView.js';
+import FeedItemModalView from './FeedItemModalView.js';
 export default class NewsFeed extends Component {
 
     constructor(data) {
@@ -31,10 +33,6 @@ export default class NewsFeed extends Component {
     }
 
     render($newsFeed) {
-
-        // This is storing the html we are making
-        let summaryHtml = '';
-
         // The function I want to fire when the user clicks on a news item
         const openSummary = data => {
            
@@ -50,7 +48,7 @@ export default class NewsFeed extends Component {
             const article = this.newsItems.find(item => item.uuid === uuid);
             let isFavorited = false; // For now, lets just get this working. We will handle favorites later.
 
-            let summaryContent = Summary.toHtml(article, isFavorited);
+            let summaryContent = FeedItemModalView.toHtml(article, isFavorited);
             let summaryModal = new Modal();
             summaryModal.content(summaryContent);
             summaryModal.showModal();
@@ -75,7 +73,7 @@ export default class NewsFeed extends Component {
                 console.log(article);
 
                 let articleModal = new Modal();
-                let articleContent = Article.toHtml(article.data);
+                let articleContent = ArticleModalView.toHtml(article.data);
                 articleModal.content(articleContent);
                 articleModal.showModal();
             }
@@ -84,9 +82,10 @@ export default class NewsFeed extends Component {
             readFullArticleButton.onclick = () => openStory(article.url, article.uuid);
         }   
 
-        let items = this.newsItems.map(item => FeedItem(item));
-        $newsFeed.innerHTML = items.join('\n');
+        let feedItemTiles = this.newsItems.map(item => item.renderTile());
 
         this.delegate('click', $newsFeed, openSummary);
+
+        return (<span>{feedItemTiles.join('\n')}</span>);
     }
 }

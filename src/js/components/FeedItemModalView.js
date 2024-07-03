@@ -1,19 +1,19 @@
 /** @jsx vNode */
 import { vNode } from '@ocdla/view/view';
 
-export default class Summary {
-    static toHtml(article, favorite) {
+export default class FeedItemModalView {
+    static toHtml(summary) {
         return (<>
                 <div class="modal-header" id="summaryModalHeader">
-                    {Summary.buildHeader(article.title)}
+                    {FeedItemModalView.buildHeader(summary.title)}
                 </div>
                 <div class="modal-body" id="summaryModalBody">
                     <div class="row">
-                        {Summary.buildBody(article.image_url, article.url, article.description, article.published_at, article.source, favorite)}
+                        {FeedItemModalView.buildBody(summary.image_url, summary.url, summary.description, summary.published_at, summary.source, summary.favorite)}
                     </div>
                 </div>
                 <div class="modal-footer" id="summaryModalFooter">
-                    {Summary.buildFooter(article.categories, article.uuid)}
+                    {FeedItemModalView.buildFooter(summary.categories, summary.uuid)}
                 </div>
         </>);
     }
