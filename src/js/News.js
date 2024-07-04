@@ -6,7 +6,7 @@ import NewsArticleApi from './api/NewsArticleApi'
 import StorageList from './StorageList';
 import Favorites from './Favorites';
 import NewsFeed from './components/NewsFeed';
-import Summary from './models/FeedItem';
+import FeedItem from './models/FeedItem';
 import Article from './models/Article';
 
 
@@ -49,7 +49,7 @@ export default class News {
             let $newsFeed = document.querySelector('#news-feed');
 
             let data = feeds[0].data; 
-            let newsSummaries = data.map((summary) => new Summary(summary));
+            let newsSummaries = data.map((summary) => new FeedItem(summary));
 
             let comp = new NewsFeed(newsSummaries); 
             let newsFeed = View.createRoot($newsFeed);

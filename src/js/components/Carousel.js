@@ -76,21 +76,4 @@ export default class Carousel {
             </>);
     }
 
-    // TODO: Remove this when I am finished with the carousel and places it is called. Code is here only for reference as I refactor.
-
-    // for (let i = 0; i < videos.length; i++) {
-    //     videoList = `${videoList}<div class="carousel-item ${active}">
-    //         <div class="embed-responsive embed-responsive-16by9">
-    //             <iframe class="embed-responsive-item" src="${videos[i]}" allowfullscreen></iframe>
-    //         </div>
-    //     </div>`
-    //     active = "";
-    // }
-
-    // for (let i = 0; i < images.length; i++) {
-    //     imageList = `${imageList}<div class="carousel-item ${active}">
-    //         <img src="${images[i]}" class="d-block sliderItem" alt="...">
-    //     </div>`
-    //     active = "";
-    // }
 }

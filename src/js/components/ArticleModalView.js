@@ -7,8 +7,7 @@ import Carousel from "./Carousel";
 
 export default class ArticleModalView {
     static toHtml(article) {
-      let carousel = "";//new Carousel();
-      // TODO: Sort carousel items where this is called and pass it in the parameters then through to Carousel.
+      let carousel = new Carousel(article.images.concat(article.videos));
       return (<>
           <div class="modal-header">
             {ArticleView.buildHeader(article.title, article.url)}

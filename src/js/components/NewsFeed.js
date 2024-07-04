@@ -6,10 +6,12 @@ import ArticleClient from '@ocdla/http2/HttpClient';
 import NewsArticleApi from '../api/NewsArticleApi';
 import ArticleModalView from './ArticleModalView';
 import FeedItemModalView from './FeedItemModalView';
+import Article from '../models/Article';
+import FeedItem from '../models/FeedItem';
 
 export default class NewsFeed extends Component {
 
-    constructor(data) {
+    constructor(feedItems) {
         super();
         this.$content = document.querySelector('#news-feed');
         this.$noTop = document.querySelector('#nocontent');
@@ -20,7 +22,7 @@ export default class NewsFeed extends Component {
         // this.forecast = new DayForecast(data); 
         // Object.assign(this, ({ city, unitType }));
 
-        this.newsItems = data; // If I am doing things like Trung, I will need to make this its own object class.
+        this.feedItems = feedItems;
     }
 
     render($newsFeed) {
@@ -36,7 +38,7 @@ export default class NewsFeed extends Component {
             if (!uuid) return false;
 
             // Get the summary of the item. We want to open a modal window.
-            const article = this.newsItems.find(item => item.uuid === uuid);
+            const article = this.feedItems.find(item => item.uuid === uuid);
             let isFavorited = false; // For now, lets just get this working. We will handle favorites later.
 
             let summaryContent = FeedItemModalView.toHtml(article, isFavorited);
@@ -53,18 +55,19 @@ export default class NewsFeed extends Component {
                 let req = new Request(articleApiUrl.toString());
                 let client = new ArticleClient();
                 let resp = await client.send(req);
-                let article = await resp.json();
+                let data = await resp.json();
 
                 // This solves the problem of our cache data not being parsed.
                 // It's less time consuming and more efficent to just use a try here.
                     try {
-                        article = JSON.parse(article);
+                        data = JSON.parse(data);
                     } catch (e) {}
             
-                console.log(article);
+                console.log(data);
 
+                let article = new Article(data.data);
                 let articleModal = new Modal();
-                let articleContent = ArticleModalView.toHtml(article.data);
+                let articleContent = article.render();
                 articleModal.content(articleContent);
                 articleModal.showModal();
             }
@@ -73,8 +76,7 @@ export default class NewsFeed extends Component {
             readFullArticleButton.onclick = () => openStory(article.url, article.uuid);
         }   
 
-        let feedItemTiles = this.newsItems.map(item => item.renderTile());
-        console.log(feedItemTiles);
+        let feedItemTiles = this.feedItems.map(item => item.renderTile());
 
         this.delegate('click', $newsFeed, openSummary);
 

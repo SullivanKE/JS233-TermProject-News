@@ -1,4 +1,6 @@
 import ArticleView from '../components/ArticleModalView';
+import Image from '../components/Image';
+import Video from '../components/Video';
 export default class Article {
 
     constructor(obj) {
@@ -11,8 +13,12 @@ export default class Article {
         this.text = obj.text;
         this.meta_site_name = obj.meta_site_name;
         this.tags = obj.tags.join(", ");
-        this.images = this.cleanMediaUrls(obj.images);
-        this.videos = this.cleanMediaUrls(obj.videos);
+        this.images = this.cleanMediaUrls(obj.images).map((url) => new Image({ src: url, className: "d-block sliderItem" }));
+        this.videos = this.cleanMediaUrls(obj.videos).map((url) => new Video({ src: url }));
+
+        /*<div class="embed-responsive embed-responsive-16by9">
+            <iframe class="embed-responsive-item" src="${videos[i]}" allowfullscreen></iframe>
+        </div> */
     }
     cleanMediaUrls(media) {
         const re = new RegExp("^(http(s):\/\/.)");
