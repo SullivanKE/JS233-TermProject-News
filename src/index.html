@@ -9,139 +9,18 @@
 </head>
 
 <body>
-  <div class="container">
-    <!--Summary Modal-->
-    <div id="modal" class="modal fade modal-xl" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered" data-content-type="summary">
-        <div id="modalContent" class="modal-content">
-              
-        </div>
+  <div id="modal" class="modal fade modal-xl" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" data-content-type="summary">
+      <div id="modalContent" class="modal-content">
+            
       </div>
     </div>
-    <!--Headlines-->
-    <div class="m-1 p-1 headlines">
-      <div id="headlinesCarousel" class="carousel slide visually-hidden">
-        <div class="carousel-indicators" id="headlineIndicators">
-          <button type="button" data-bs-target="#headlinesCarousel" data-bs-slide-to="0" class="active"
-            aria-current="true" aria-label="Slide 1"></button>
-        </div>
-        <div class="carousel-inner" id="headlineInner">
-          <div class="carousel-item active">
-            <img src="#" class="d-block sliderItem" alt="...">
-            <div class="carousel-caption d-none d-md-block">
-              <h5></h5>
-              <p></p>
-            </div>
-          </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#headlinesCarousel" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#headlinesCarousel" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
-      </div>
-      <div id="nocontenttop" class="visually-hidden">
-        <img src="./img/nocontent.png" class="img-fluid"/>
-      </div>
-      <div id ="loadingtop">
-        <img src="./img/loading.gif" class="img-fluid"/>
-      </div>
-    </div>
+  </div>
+
+  <div class="container" id="root">    
     
-    <!--Bottom row-->
-    <div class="row m-2">
-      <div class="col-2">
-        <!--Search-->
-        <!--Not enough time to implement this feature-->
-        <!--
-        <input class="rounded-4 w-100" id="search" placeholder="Search..." hidden/>
-        -->
-
-        <!--List of saved stories-->
-        <div class="border border-light m-2 columnStyle h-100">
-          <h4 class="text-center">Favorites</h4>
-          <ul id="saved" style="list-style-type: none;" class="p-1 text-start">
-          </ul>
-        </div>
-
-        <!--Categories-->
-        <!--Not enough time to implement this feature-->
-        <!--
-<div class="m-2 border border-light columnStyle" hidden>
-          <h4 class="text-center">Categories</h4>
-          <ul style="list-style-type: none;" id="categories">
-            <li>
-              <button class="btn btn-link" name="category" data-category="general">General</button>
-            </li>
-            <li>
-              <button class="btn btn-link" name="category" data-category="science">Science</button>
-            </li>
-            <li>
-              <button class="btn btn-link" name="category" data-category="sports">Sports</button>
-            </li>
-            <li>
-              <button class="btn btn-link" name="category" data-category="business">Business</button>
-            </li>
-            <li>
-              <button class="btn btn-link" name="category" data-category="health">Health</button>
-            </li>
-            <li>
-              <button class="btn btn-link" name="category" data-category="entertainment">Entertainment</button>
-            </li>
-            <li>
-              <button class="btn btn-link" name="category" data-category="tech">Tech</button>
-            </li>
-            <li>
-              <button class="btn btn-link" name="category" data-category="politics">Politics</button>
-            </li>
-            <li>
-              <button class="btn btn-link" name="category" data-category="food">Food</button>
-            </li>
-            <li>
-              <button class="btn btn-link" name="category" data-category="travel">Travel</button>
-            </li>
-          </ul>
-        </div>
-        -->
-        
-
-      </div>
-      <!--Top Stories / area for listing out search and category picks-->
-      <div class="row row-cols-2 col-8 m-2 p-1 border border-light columnStyle" id="news-feed">
-        <h4 class="text-center">Trending Stories</h4>
-        <hr />
-
-        <!--
-        <div class="row-md">
-          <div class="col-md m-2 p-2">
-
-            <div class="card fancy_card">
-              <div class="card-header">
-                <h5 class="text-center">Example news headline</h5>
-              </div>
-              <div class="card-body">
-                <figure class="figure">
-                  <img src="/img/examples/1_TzaiFDmkiEkOxNU7eG43pw.jpg" class="figure-img card_image" />
-                  <figcaption class="figure-caption text-white small">Snippit of the article. This could go on for a
-                    little bit...</figcaption>
-                </figure>
-              </div>
-              <div class="card-footer text-muted text-center">
-                UUID: 20cd4fa6-5ef4-49b2-978a-12242a15a538
-              </div>
-
-            </div>
-
-          </div>
-        </div>
-        -->
-
-
-      </div>
-    </div>
+    
+    
   </div>
 
 

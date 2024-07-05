@@ -1,5 +1,9 @@
+/** @jsx vNode */
+import { vNode } from '@ocdla/view/view';
+
 import FeedItemModal from '../components/FeedItem.jsx';
 import FeedItemTile from '../components/FeedItemTile.jsx';
+import Image from '../components/Image.jsx';
 export default class FeedItem {
 
     constructor(obj, favorite=false) {
@@ -28,6 +32,10 @@ export default class FeedItem {
 
     renderTile() {
         return FeedItemTile(this, this.favorite);
+    }
+
+    renderImage() {
+        return (<Image src={this.image_url} className="d-block sliderItem" />);
     }
 
     toggleFavorite() {

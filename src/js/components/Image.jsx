@@ -1,5 +1,5 @@
 /** @jsx vNode */
 import { vNode } from "@ocdla/view/view";
-export default function Image(props) {
-  return <img src={props.src} className={props.className} />;
+export default function Image({ src, className }) {
+  return <img src={src} className={className} />;
 }

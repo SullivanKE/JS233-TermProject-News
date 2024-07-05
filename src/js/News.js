@@ -7,6 +7,7 @@ import NewsArticleApi from './api/NewsArticleApi'
 import StorageList from './StorageList';
 import Favorites from './Favorites';
 import NewsFeed from './components/NewsFeed';
+import TopStories from './components/TopStories';
 import FeedItem from './models/FeedItem';
 import Article from './models/Article';
 
@@ -28,11 +29,11 @@ export default class News extends Component {
         let newsFeedApi = new NewsFeedApi(NEWS_FEED_API_TOKEN);
         
         let allNewsUrl = newsFeedApi.getUrl("news/all");
-        //let topNewsUrl = newsFeedApi.getUrl("news/top");
+        let topNewsUrl = newsFeedApi.getUrl("news/top");
         //let headlinesNewsUrl = newsFeedApi.getUrl("news/headlines");
 
         // We convert our urls to Request objects
-        let reqs = [new Request(allNewsUrl.toString())];//, new Request(topNewsUrl.toString())];//, new Request(headlinesNewsUrl.toString())];
+        let reqs = [new Request(allNewsUrl.toString()), new Request(topNewsUrl.toString())];//, new Request(headlinesNewsUrl.toString())];
 
         // The client accesses our local storage and does fetchs on the Request objects we just made.
         let client = new NewsClient({config: {refresh: 900}});
@@ -54,20 +55,34 @@ export default class News extends Component {
                 } catch (e) {}
             }
 
-            let $newsFeed = document.querySelector('#news-feed');
+            let $root = document.querySelector('#root');
 
             let newsSummaries = feeds[0].data.map((summary) => new FeedItem(summary));
-            //let topStories = feeds[1].data.map((summary) => new FeedItem(summary));
+            let topStories = feeds[1].data.map((summary) => new FeedItem(summary));
             //let favorites = this.favoriteStorage.get();
 
-            let comp = new NewsFeed(newsSummaries); 
-            let newsFeed = View.createRoot($newsFeed);
+            let newsFeedComp = new NewsFeed(newsSummaries); 
+            let topStoriesComp = new TopStories(topStories);
+            let newsFeed = View.createRoot($root);
 
             newsFeed.render(
-                <>{comp.render($newsFeed)}</>
+                <>
+                    {topStoriesComp.render()}
+                    
+                    <div class="row m-2">
+                        <div class="col-2">
+                                <div class="border border-light m-2 columnStyle h-100">
+                                <h4 class="text-center">Favorites</h4>
+                                <ul id="saved" style="list-style-type: none;" class="p-1 text-start">
+                                </ul>
+                            </div>
+                        </div>
+                        {newsFeedComp.render()}
+                    </div>
+                </>
             );
 
-            this.eventDelegation($newsFeed, newsSummaries);
+            this.eventDelegation($root, newsSummaries);
             
         })
         .catch((error) => {
@@ -80,7 +95,8 @@ export default class News extends Component {
 
     eventDelegation($root, feedItems) {
         // The function I want to fire when the user clicks on a news item
-        const openSummary = data => {           
+        const openSummary = data => {   
+            console.log(data);        
             if (!data) return false;
 
             // This is getting the uuid
@@ -90,7 +106,7 @@ export default class News extends Component {
             if (!uuid) return false;
 
             // Get the summary of the item. We want to open a modal window.
-            const article = this.feedItems.find(item => item.uuid === uuid);
+            const article = feedItems.find(item => item.uuid === uuid);
             let isFavorited = false; // For now, lets just get this working. We will handle favorites later.
 
             let summaryContent = FeedItemModalView.toHtml(article, isFavorited);
@@ -127,6 +143,9 @@ export default class News extends Component {
             let readFullArticleButton = document.querySelector("#readFullArticleButton");
             readFullArticleButton.onclick = () => openStory(article.url, article.uuid);
         }   
+
+        console.log($root);
+        console.log(feedItems);
 
         this.delegate('click', $root, openSummary);
     }

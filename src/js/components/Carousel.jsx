@@ -1,4 +1,5 @@
 /** @jsx vNode */
+/** @jsxFrag "Fragment" */
 import { vNode } from "@ocdla/view/view";
 
 // Returns the html required to form the carousel for the main page given an array of html nodes and
@@ -12,42 +13,38 @@ import { vNode } from "@ocdla/view/view";
 // dataTarget = "#carouselExample"
 // indicatorLabels = ["Image 1", "Image 2", "Image 3"]
 
-export default function Carousel(nodes, dataTarget = "", labels = []) {
+export default function Carousel({ nodes, identifier = "" }) {
+  let dataTarget = "#" + identifier;
+
   return (
-    <>
-      <div id={dataTarget} class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-          {labels.map((label, index) => (
-            <CarouselIndicator label={label} dataTarget={dataTarget} />
-          ))}
-        </div>
-
-        <div class="carousel-inner">
-          {nodes.map((n, index) => (
-            <CarouselItem n={node} index={index} />
-          ))}
-        </div>
-
-        {
-          (controls =
-            dataTarget !== "" ? (
-              <CarouselControls dataTarget={dataTarget} />
-            ) : (
-              ""
-            ))
-        }
+    <div id={identifier} class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        {nodes.map((index) => (
+          <CarouselIndicator dataTarget={dataTarget} index={index} />
+        ))}
       </div>
-    </>
+
+      <div class="carousel-inner">
+        {nodes.map((node, index) => (
+          <CarouselItem n={node} index={index} />
+        ))}
+      </div>
+
+      {dataTarget !== "" ? <CarouselControls dataTarget={dataTarget} /> : ""}
+    </div>
   );
 }
 
+function CarouselCaption({ caption }) {
+  return <div class="carousel-caption d-none d-md-block">{caption}</div>;
+}
+
 function CarouselItem({ n, index }) {
-  const nodeClass = "carousel-item" + index === 0 ? " active" : "";
+  const nodeClass = "carousel-item" + (index === 0 ? " active" : "");
   return <div class={nodeClass}>{n}</div>;
 }
 
-function CarouselIndicator({ label, dataTarget }) {
-  // Map each label to a carousel indicator with the first item being active and join all jsx
+function CarouselIndicator({ dataTarget, index }) {
   const nodeClass = index === 0 ? "active" : "";
   const ariaCurrent = index === 0 ? "true" : "false";
   return (
@@ -57,7 +54,6 @@ function CarouselIndicator({ label, dataTarget }) {
       data-bs-slide-to={index}
       class={nodeClass}
       aria-current={ariaCurrent}
-      aria-label={label}
     ></button>
   );
 }
