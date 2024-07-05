@@ -1,5 +1,5 @@
-import FeedItemModalView from '../components/FeedItemModalView';
-import feedItemTile from '../components/FeedItemTile';
+import FeedItemModal from '../components/FeedItem';
+import FeedItemTile from '../components/FeedItemTile';
 export default class FeedItem {
 
     constructor(obj, favorite=false) {
@@ -23,11 +23,11 @@ export default class FeedItem {
         this.favorite = favorite;
     }
     renderModal() {
-        return FeedItemModalView.toHtml(this, this.favorite);
+        return FeedItemModal(this, this.favorite);
     }
 
     renderTile() {
-        return feedItemTile.toHtml(this, this.favorite);
+        return FeedItemTile(this, this.favorite);
     }
 
     toggleFavorite() {

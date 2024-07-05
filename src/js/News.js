@@ -1,4 +1,5 @@
 /** @jsx vNode */
+/** @jsxFrag "Fragment" */
 import { vNode, View } from '@ocdla/view/view';
 import NewsClient from '@ocdla/http2/HttpClient';
 import NewsFeedApi from './api/NewsFeedApi';
@@ -8,6 +9,12 @@ import Favorites from './Favorites';
 import NewsFeed from './components/NewsFeed';
 import FeedItem from './models/FeedItem';
 import Article from './models/Article';
+
+import Modal from './Modal.js';
+import ArticleModalView from './Article.jsx';
+import FeedItemModalView from './FeedItem.js';
+import Article from '../models/Article';
+import FeedItem from '../models/FeedItem';
 
 
 window.NewsFeedApi = NewsFeedApi;
@@ -55,7 +62,7 @@ export default class News {
             let newsFeed = View.createRoot($newsFeed);
 
             newsFeed.render(
-                <span>{comp.render($newsFeed)}</span>
+                <>{comp.render($newsFeed)}</>
             );
             
         })
@@ -65,7 +72,60 @@ export default class News {
 
     }
    
+    // sw.jx file to index
+
+    eventDelegation($newsFeed) {
+        // The function I want to fire when the user clicks on a news item
+        const openSummary = data => {           
+            if (!data) return false;
+
+            // This is getting the uuid
+            const uuid = data.uuid;
+
+            // If there isn't an uuid, we leave
+            if (!uuid) return false;
+
+            // Get the summary of the item. We want to open a modal window.
+            const article = this.feedItems.find(item => item.uuid === uuid);
+            let isFavorited = false; // For now, lets just get this working. We will handle favorites later.
+
+            let summaryContent = FeedItemModalView.toHtml(article, isFavorited);
+            let summaryModal = new Modal();
+            summaryModal.content(summaryContent);
+            summaryModal.showModal();
+            //let favoriteBtn = document.querySelector("#favoritebtn");
+            //favoriteBtn.onclick = () => this.favoriteStorage.updateFavorites(summary, isFavorited);
+
+            const openStory = async function (url, uuid) {
+                let articleApi = new NewsArticleApi(NEWS_ARTICLE_API_TOKEN);
+                let articleApiUrl = articleApi.getUrl(encodeURIComponent(url));
+
+                let req = new Request(articleApiUrl.toString());
+                let client = new ArticleClient();
+                let resp = await client.send(req);
+                let data = await resp.json();
+
+                // This solves the problem of our cache data not being parsed.
+                // It's less time consuming and more efficent to just use a try here.
+                    try {
+                        data = JSON.parse(data);
+                    } catch (e) {}
+            
+                console.log(data);
+
+                let article = new Article(data.data);
+                let articleModal = new Modal();
+                let articleContent = article.render();
+                articleModal.content(articleContent);
+                articleModal.showModal();
+            }
     
+            let readFullArticleButton = document.querySelector("#readFullArticleButton");
+            readFullArticleButton.onclick = () => openStory(article.url, article.uuid);
+        }   
+
+        this.delegate('click', $newsFeed, openSummary);
+    }
     
 
 }

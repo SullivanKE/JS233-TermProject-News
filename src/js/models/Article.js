@@ -1,4 +1,4 @@
-import ArticleView from '../components/ArticleModalView';
+import ArticleModal from '../components/Article';
 import Image from '../components/Image';
 import Video from '../components/Video';
 export default class Article {
@@ -27,7 +27,7 @@ export default class Article {
         });
     }
     render() {
-        return ArticleView.toHtml(this);
+        return ArticleModal.toHtml(this);
     }
 
 }
