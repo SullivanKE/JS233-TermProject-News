@@ -13,8 +13,8 @@ export default class HttpClient {
 
         // Req is sent in as the full request object. We need to check if it is saved in the cache.
         // get returns either a response or null.
-        
-        let entry = LocalStorageCache.get(req);
+        let localStorageCache = new LocalStorageCache(this.#params);
+        let entry = localStorageCache.get(req);
 
         
         // In my implementation, I needed to modify LocalStorageCache.get() in the instance of no cache found.
@@ -43,7 +43,6 @@ export default class HttpClient {
          return entry && !stale ?   
             Promise.resolve(entry) : 
             fetch(req).then( resp => {
-                let localStorageCache = new LocalStorageCache(this.#params);
                 localStorageCache.put(req, resp.clone());                            
                 return resp;
             });

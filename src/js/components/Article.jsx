@@ -1,6 +1,6 @@
 /** @jsx vNode */
 import { vNode } from "@ocdla/view/view";
-import Carousel from "./Carousel";
+import Carousel from "./Carousel.jsx";
 
 export default function ArticleModalView(article) {
   let carousel = new Carousel(

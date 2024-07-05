@@ -3,10 +3,9 @@ import { vNode } from '@ocdla/view/view';
 import Component from './Component';
 
 
-export default class NewsFeed extends Component {
+export default class NewsFeed {
 
     constructor(feedItems) {
-        super();
         this.$content = document.querySelector('#news-feed');
         this.$noTop = document.querySelector('#nocontent');
         this.$loading = document.querySelector('#loadingcontent');

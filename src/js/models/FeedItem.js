@@ -1,5 +1,5 @@
-import FeedItemModal from '../components/FeedItem';
-import FeedItemTile from '../components/FeedItemTile';
+import FeedItemModal from '../components/FeedItem.jsx';
+import FeedItemTile from '../components/FeedItemTile.jsx';
 export default class FeedItem {
 
     constructor(obj, favorite=false) {

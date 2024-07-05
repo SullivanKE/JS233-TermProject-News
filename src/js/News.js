@@ -10,20 +10,21 @@ import NewsFeed from './components/NewsFeed';
 import FeedItem from './models/FeedItem';
 import Article from './models/Article';
 
-import Modal from './Modal.js';
-import ArticleModalView from './Article.jsx';
-import FeedItemModalView from './FeedItem.js';
-import Article from '../models/Article';
-import FeedItem from '../models/FeedItem';
+import Modal from './components/Modal.js';
+import ArticleModalView from './components/Article.jsx';
+import FeedItemModalView from './components/FeedItem.jsx';
+import Carousel from './components/Carousel.jsx';
+
+import Component from './components/Component';
 
 
 window.NewsFeedApi = NewsFeedApi;
 window.NewsArticleApi = NewsArticleApi;
-export default class News {
+export default class News extends Component {
     constructor() {
-        
-        this.favoriteStorage = new Favorites({prefix: "Favorite-storage-"});
-        this.articleStorage = new StorageList({prefix: "News-Metadata-storage-"});    
+        super();
+        //this.favoriteStorage = new Favorites({prefix: "Favorite-storage-"});
+        //this.articleStorage = new StorageList({prefix: "News-Metadata-storage-"});    
         let newsFeedApi = new NewsFeedApi(NEWS_FEED_API_TOKEN);
         
         let allNewsUrl = newsFeedApi.getUrl("news/all");
@@ -40,7 +41,7 @@ export default class News {
         Promise.allSettled(reqs.map((req) => client.send(req)))
         .then((responses) => {
             const fulfilledResponses = responses.filter((resp) => resp.status === "fulfilled");
-            const rejectedResponses = responses.filter((resp) => resp.status === "rejected");
+            // const rejectedResponses = responses.filter((resp) => resp.status === "rejected");
 
             return Promise.all(fulfilledResponses.map((resp) => resp.value.json()));
         })
@@ -55,8 +56,9 @@ export default class News {
 
             let $newsFeed = document.querySelector('#news-feed');
 
-            let data = feeds[0].data; 
-            let newsSummaries = data.map((summary) => new FeedItem(summary));
+            let newsSummaries = feeds[0].data.map((summary) => new FeedItem(summary));
+            //let topStories = feeds[1].data.map((summary) => new FeedItem(summary));
+            //let favorites = this.favoriteStorage.get();
 
             let comp = new NewsFeed(newsSummaries); 
             let newsFeed = View.createRoot($newsFeed);
@@ -64,6 +66,8 @@ export default class News {
             newsFeed.render(
                 <>{comp.render($newsFeed)}</>
             );
+
+            this.eventDelegation($newsFeed, newsSummaries);
             
         })
         .catch((error) => {
@@ -74,7 +78,7 @@ export default class News {
    
     // sw.jx file to index
 
-    eventDelegation($newsFeed) {
+    eventDelegation($root, feedItems) {
         // The function I want to fire when the user clicks on a news item
         const openSummary = data => {           
             if (!data) return false;
@@ -124,7 +128,7 @@ export default class News {
             readFullArticleButton.onclick = () => openStory(article.url, article.uuid);
         }   
 
-        this.delegate('click', $newsFeed, openSummary);
+        this.delegate('click', $root, openSummary);
     }
     
 

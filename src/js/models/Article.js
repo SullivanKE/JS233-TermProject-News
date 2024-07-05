@@ -1,6 +1,6 @@
-import ArticleModal from '../components/Article';
-import Image from '../components/Image';
-import Video from '../components/Video';
+import ArticleModal from '../components/Article.jsx';
+import Image from '../components/Image.jsx';
+import Video from '../components/Video.jsx';
 export default class Article {
 
     constructor(obj) {
