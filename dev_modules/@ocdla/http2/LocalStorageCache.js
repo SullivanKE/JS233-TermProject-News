@@ -6,12 +6,17 @@ export default class LocalStorageCache {
     constructor(config) {
         if (config.refresh) 
             LocalStorageCache.REFRESH_INTERVAL = config.refresh;
+
+        this.debug = config.debug | false;
         
     }
 
     put(req, httpResp) {
         let resp = LocalStorageResponse.fromHttpResponse(httpResp);
-        let key = LocalStorageCache.cyrb53(req.method + req.url);
+        let key = this.debug ? 
+            req.method + req.url : 
+            LocalStorageCache.cyrb53(req.method + req.url);
+            
         resp.then( resp => {
             let maxAgeString = "";
             if (LocalStorageCache.REFRESH_INTERVAL >= 0) 
@@ -28,10 +33,12 @@ export default class LocalStorageCache {
     }
 
 
-    static get(req) {
+    get(req) {
         // Req is the full Request object. We are only interested in the URL at this point as it is the key used in our cache.
         // The method that stores however adds the method to the key. 
-        let key = LocalStorageCache.cyrb53(req.method + req.url);
+        let key = this.debug ? 
+            req.method + req.url : 
+            LocalStorageCache.cyrb53(req.method + req.url);
 
         const localStorageParams = {
             defaults: {
