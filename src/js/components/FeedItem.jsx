@@ -1,6 +1,7 @@
 /** @jsx vNode */
+/** @jsxFrag "Fragment" */
 import { vNode } from "@ocdla/view/view";
-export default function FeedItem(summary) {
+export default function FeedItem({ summary }) {
   return (
     <>
       <div class="modal-header" id="summaryModalHeader">
@@ -16,7 +17,7 @@ export default function FeedItem(summary) {
       </div>
       <div class="modal-body" id="summaryModalBody">
         <div class="row">
-          {FeedItem.buildBody(
+          {buildBody(
             summary.image_url,
             summary.url,
             summary.description,

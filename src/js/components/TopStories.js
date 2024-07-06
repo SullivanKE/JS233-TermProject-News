@@ -11,7 +11,7 @@ export default class TopStories {
     render() {
         let nodes = this.feedItems.map(item => item.renderImage());
         return (
-            <div class="m-1 p-1 headlines">
+            <div class="m-1 p-1 headlines" id="top-stories">
                 <Carousel nodes={nodes} identifier="headlinesCarousel" />
             </div>
         );

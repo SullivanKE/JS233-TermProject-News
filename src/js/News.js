@@ -12,11 +12,11 @@ import FeedItem from './models/FeedItem';
 import Article from './models/Article';
 
 import Modal from './components/Modal.js';
-import ArticleModalView from './components/Article.jsx';
-import FeedItemModalView from './components/FeedItem.jsx';
+import ArticleV from './components/Article.jsx';
+import FeedItemV from './components/FeedItem.jsx';
 import Carousel from './components/Carousel.jsx';
 
-import Component from './components/Component';
+import Component from '@ocdla/component/Component';
 
 
 window.NewsFeedApi = NewsFeedApi;
@@ -62,7 +62,7 @@ export default class News extends Component {
             //let favorites = this.favoriteStorage.get();
             let newsFeed = View.createRoot($root);
             newsFeed.render(
-                <>
+                <div data-index="this is a test">
                     <TopStories feedItems={topStories}/>
                     
                     <div class="row m-2">
@@ -75,10 +75,10 @@ export default class News extends Component {
                         </div>
                         <NewsFeed feedItems={newsSummaries} />
                     </div>
-                </>
+                </div>
             );
 
-            this.eventDelegation($root, newsSummaries);
+            this.eventDelegation(newsSummaries.concat(topStories));
             
         })
         .catch((error) => {
@@ -86,10 +86,15 @@ export default class News extends Component {
         });
 
     }
-   
+   //TODO list
     // sw.jx file to index
+    // Make articles work
+    // Make favorites work
+    // Make top stories work
+        // Currently no data-uuid set in the carousel
 
-    eventDelegation($root, feedItems) {
+    eventDelegation(feedItems) {
+        
         // The function I want to fire when the user clicks on a news item
         const openSummary = data => {   
             console.log(data);        
@@ -105,10 +110,11 @@ export default class News extends Component {
             const article = feedItems.find(item => item.uuid === uuid);
             let isFavorited = false; // For now, lets just get this working. We will handle favorites later.
 
-            let summaryContent = FeedItemModalView.toHtml(article, isFavorited);
             let summaryModal = new Modal();
-            summaryModal.content(summaryContent);
+            summaryModal.content(article);
             summaryModal.showModal();
+
+
             //let favoriteBtn = document.querySelector("#favoritebtn");
             //favoriteBtn.onclick = () => this.favoriteStorage.updateFavorites(summary, isFavorited);
 
@@ -136,14 +142,16 @@ export default class News extends Component {
                 articleModal.showModal();
             }
     
-            let readFullArticleButton = document.querySelector("#readFullArticleButton");
-            readFullArticleButton.onclick = () => openStory(article.url, article.uuid);
+            //let readFullArticleButton = document.querySelector("#readFullArticleButton");
+            //readFullArticleButton.onclick = () => openStory(article.url, article.uuid);
         }   
 
-        console.log($root);
-        console.log(feedItems);
+        
 
-        this.delegate('click', $root, openSummary);
+        let $topStories = document.querySelector('#top-stories');
+        let $newsFeed = document.querySelector('#news-feed');
+        this.delegate('click', $topStories, openSummary);
+        this.delegate('click', $newsFeed, openSummary);
     }
     
 

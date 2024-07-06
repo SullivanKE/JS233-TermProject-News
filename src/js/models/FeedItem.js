@@ -2,7 +2,6 @@
 /** @jsxFrag "Fragment" */
 import { vNode } from '@ocdla/view/view';
 
-import FeedItemModal from '../components/FeedItem.jsx';
 import FeedItemTile from '../components/FeedItemTile.jsx';
 import Image from '../components/Image.jsx';
 export default class FeedItem {
@@ -26,9 +25,6 @@ export default class FeedItem {
         this.source = obj.source;
         this.categories = obj.categories.join(", ");
         this.favorite = favorite;
-    }
-    renderModal() {
-        return FeedItemModal(this, this.favorite);
     }
 
     renderTile() {
