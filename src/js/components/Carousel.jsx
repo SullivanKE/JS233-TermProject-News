@@ -19,7 +19,7 @@ export default function Carousel({ nodes, identifier = "" }) {
   return (
     <div id={identifier} class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-indicators">
-        {nodes.map((index) => (
+        {nodes.map((node, index) => (
           <CarouselIndicator dataTarget={dataTarget} index={index} />
         ))}
       </div>
@@ -45,7 +45,7 @@ function CarouselItem({ n, index }) {
 }
 
 function CarouselIndicator({ dataTarget, index }) {
-  const nodeClass = index === 0 ? "active" : "";
+  const nodeClass = index === 0 ? "active" : "inactive";
   const ariaCurrent = index === 0 ? "true" : "false";
   return (
     <button

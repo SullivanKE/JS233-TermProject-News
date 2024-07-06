@@ -1,4 +1,5 @@
 /** @jsx vNode */
+/** @jsxFrag "Fragment" */
 import { vNode } from '@ocdla/view/view';
 
 import FeedItemModal from '../components/FeedItem.jsx';
@@ -35,7 +36,15 @@ export default class FeedItem {
     }
 
     renderImage() {
-        return (<Image src={this.image_url} className="d-block sliderItem" />);
+        return (
+            <>
+                <Image src={this.image_url} className="d-block sliderItem" />
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>{this.shortTitle}</h5>
+                    <p>{this.shortSnippet}</p>
+                </div>
+            </>
+        );
     }
 
     toggleFavorite() {
