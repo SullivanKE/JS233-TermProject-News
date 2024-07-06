@@ -60,14 +60,10 @@ export default class News extends Component {
             let newsSummaries = feeds[0].data.map((summary) => new FeedItem(summary));
             let topStories = feeds[1].data.map((summary) => new FeedItem(summary));
             //let favorites = this.favoriteStorage.get();
-
-            let newsFeedComp = new NewsFeed(newsSummaries); 
-            let topStoriesComp = new TopStories(topStories);
             let newsFeed = View.createRoot($root);
-
             newsFeed.render(
                 <>
-                    {topStoriesComp.render()}
+                    <TopStories feedItems={topStories}/>
                     
                     <div class="row m-2">
                         <div class="col-2">
@@ -77,7 +73,7 @@ export default class News extends Component {
                                 </ul>
                             </div>
                         </div>
-                        {newsFeedComp.render()}
+                        <NewsFeed feedItems={newsSummaries} />
                     </div>
                 </>
             );
