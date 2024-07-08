@@ -148,7 +148,7 @@ export default class News extends Component {
 
         
 
-        let $topStories = document.querySelector('#top-stories');
+        let $topStories = document.querySelector('#headlinesCarousel-inner');
         let $newsFeed = document.querySelector('#news-feed');
         this.delegate('click', $topStories, openSummary);
         this.delegate('click', $newsFeed, openSummary);

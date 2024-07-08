@@ -15,16 +15,21 @@ import { vNode } from "@ocdla/view/view";
 
 export default function Carousel({ nodes, identifier = "" }) {
   let dataTarget = "#" + identifier;
+  let innerId = identifier + "-inner";
 
   return (
-    <div id={identifier} class="carousel slide" data-bs-ride="carousel">
+    <div
+      id={identifier}
+      class="carousel slide carousel-fade"
+      data-bs-ride="carousel"
+    >
       <div class="carousel-indicators">
         {nodes.map((node, index) => (
           <CarouselIndicator dataTarget={dataTarget} index={index} />
         ))}
       </div>
 
-      <div class="carousel-inner">
+      <div class="carousel-inner" id={innerId}>
         {nodes.map((node, index) => (
           <CarouselItem n={node} index={index} />
         ))}
@@ -41,7 +46,17 @@ function CarouselCaption({ caption }) {
 
 function CarouselItem({ n, index }) {
   const nodeClass = "carousel-item" + (index === 0 ? " active" : "");
-  return <div class={nodeClass}>{n}</div>;
+  const uuid = n.uuid;
+  const node = n.node;
+  console.log(uuid);
+  console.log(node);
+  if (uuid)
+    return (
+      <div class={nodeClass} data-uuid={uuid}>
+        {node}
+      </div>
+    );
+  return <div class={nodeClass}>{node}</div>;
 }
 
 function CarouselIndicator({ dataTarget, index }) {

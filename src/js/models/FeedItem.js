@@ -34,10 +34,10 @@ export default class FeedItem {
     renderImage() {
         return (
             <>
-                <Image src={this.image_url} className="d-block sliderItem" />
+                <Image src={this.image_url} className="d-block sliderItem" uuid={this.uuid}/>
                 <div class="carousel-caption d-none d-md-block">
-                    <h5>{this.shortTitle}</h5>
-                    <p>{this.shortSnippet}</p>
+                    <h1 class="display-6">{this.shortTitle}</h1>
+                    <p class="lead"><strong>{this.shortSnippet}</strong></p>
                 </div>
             </>
         );

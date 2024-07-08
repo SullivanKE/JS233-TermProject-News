@@ -9,7 +9,9 @@ export default class TopStories {
     }
 
     render() {
-        let nodes = this.feedItems.map(item => item.renderImage());
+        let nodes = this.feedItems.map(item => {
+            return {'node': item.renderImage(), 'uuid': item.uuid};
+        });
         return (
             <div class="m-1 p-1 headlines" id="top-stories">
                 <Carousel nodes={nodes} identifier="headlinesCarousel" />
