@@ -11,4 +11,4 @@ NEWS_ARTICLE_API_TOKEN='articlextractor.com api token'
 https://newsapi.org/ (Free version is 100 calls. This application makes two calls every 15 minutes on user reload)
 https://www.articlextractor.com/ (Free version is 25 calls. This application makes one call every time the user opens a full article with 'read more'.)
 
-After installing all packages, in a terminal in VS code `npm run watch` to launch the application.
+After installing all packages using `npm install`, in a terminal in VS code use `npm run watch` to launch the application.
