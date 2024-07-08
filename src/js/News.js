@@ -14,7 +14,7 @@ import Article from './models/Article';
 import Modal from './components/Modal.js';
 import ArticleV from './components/Article.jsx';
 import FeedItemV from './components/FeedItem.jsx';
-import Carousel from './components/Carousel.jsx';
+import Carousel from './components/carousel/Carousel.jsx';
 
 import Component from '@ocdla/component/Component';
 

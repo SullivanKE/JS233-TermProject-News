@@ -1,8 +1,7 @@
 /** @jsx vNode */
 import { vNode } from '@ocdla/view/view';
-import ArticleModal from '../components/Article.jsx';
-import Image from '../components/Image.jsx';
-import Video from '../components/Video.jsx';
+import Image from '../components/shared/Image.jsx';
+import Video from '../components/shared/Video.jsx';
 export default class Article {
 
     constructor(obj) {

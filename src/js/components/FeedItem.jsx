@@ -2,6 +2,14 @@
 /** @jsxFrag "Fragment" */
 import { vNode } from "@ocdla/view/view";
 export default function FeedItem({ summary }) {
+  let btnstyle = "btn-success";
+  let btnClass = "btn " + btnstyle + " m-0";
+  let btntext = "Add to Favorites";
+  if (summary.favorite) {
+    btnstyle = "btn-danger";
+    btntext = "Remove from Favorites";
+  }
+
   return (
     <>
       <div class="modal-header" id="summaryModalHeader">
@@ -17,14 +25,38 @@ export default function FeedItem({ summary }) {
       </div>
       <div class="modal-body" id="summaryModalBody">
         <div class="row">
-          {buildBody(
-            summary.image_url,
-            summary.url,
-            summary.description,
-            summary.meta_site_name,
-            summary.source,
-            summary.favorite
-          )}
+          <div class="row">
+            <div class="col p-3 h-100">
+              <img src={summary.image_url} class="img-fluid rounded m-0" />
+            </div>
+            <div class="col p-3">
+              <small class="fw-light">{summary.meta_site_name}</small>
+              <p class="h-75">
+                {summary.snippet}...
+                <button
+                  class="btn btn-link text-white m-0 p-0"
+                  id="readFullArticleButton"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
+                  continue to full article here.
+                </button>
+              </p>
+              <hr />
+              <div class="d-flex justify-content-between">
+                <div class="p-2">
+                  <a href={summary.url}>Read on {summary.source}</a>
+                </div>
+                <div class="p-0">
+                  <button id="favoritebtn" class={btnClass}>
+                    {btntext}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br />
+          <br />
         </div>
       </div>
       <div class="modal-footer" id="summaryModalFooter">
@@ -37,53 +69,6 @@ export default function FeedItem({ summary }) {
           </div>
         </div>
       </div>
-    </>
-  );
-}
-
-function buildBody(img, url, description, meta_site_name, source, favorite) {
-  let btnstyle = "btn-success";
-  let btnClass = "btn " + btnstyle + " m-0";
-  let btntext = "Add to Favorites";
-  if (favorite) {
-    btnstyle = "btn-danger";
-    btntext = "Remove from Favorites";
-  }
-
-  return (
-    <>
-      <div class="row">
-        <div class="col p-3 h-100">
-          <img src={img} class="img-fluid rounded m-0" />
-        </div>
-        <div class="col p-3">
-          <small class="fw-light">{meta_site_name}</small>
-          <p class="h-75">
-            {description}...
-            <button
-              class="btn btn-link text-white m-0 p-0"
-              id="readFullArticleButton"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            >
-              continue to full article here.
-            </button>
-          </p>
-          <hr />
-          <div class="d-flex justify-content-between">
-            <div class="p-2">
-              <a href={url}>Read on {source}</a>
-            </div>
-            <div class="p-0">
-              <button id="favoritebtn" class={btnClass}>
-                {btntext}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <br />
-      <br />
     </>
   );
 }

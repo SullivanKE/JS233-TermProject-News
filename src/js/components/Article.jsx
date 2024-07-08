@@ -1,7 +1,7 @@
 /** @jsx vNode */
 /** @jsxFrag "Fragment" */
 import { vNode } from "@ocdla/view/view";
-import Carousel from "./Carousel.jsx";
+import Carousel from "./carousel/Carousel.jsx";
 
 export default function ArticleModalView({ article }) {
   let nodes = article.images.map((image) => {

@@ -3,7 +3,7 @@
 import { vNode } from '@ocdla/view/view';
 
 import FeedItemTile from '../components/FeedItemTile.jsx';
-import Image from '../components/Image.jsx';
+import Image from '../components/shared/Image.jsx';
 export default class FeedItem {
 
     constructor(obj, favorite=false) {
