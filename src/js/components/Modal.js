@@ -2,6 +2,7 @@
 import { vNode, View } from '@ocdla/view/view';
 import * as bootstrap from 'bootstrap';
 import FeedItem from './FeedItem.jsx';
+import Article from './Article.jsx';
 export default class Model {
     constructor() {
       this.$modal = document.querySelector('#modal');
@@ -19,9 +20,15 @@ export default class Model {
         this.modal.show();
     }
 
-    content(summary) {
+    summaryContent(summary) {
       const $modalContent = document.querySelector('#modalContent');
       let root = View.createRoot($modalContent);
       root.render(<FeedItem summary={summary} />);
+    }
+
+    articleContent(article) {
+      const $modalContent = document.querySelector('#modalContent');
+      let root = View.createRoot($modalContent);
+      root.render(<Article article={article} />);
     }
 }

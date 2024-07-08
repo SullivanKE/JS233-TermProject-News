@@ -88,16 +88,14 @@ export default class News extends Component {
     }
    //TODO list
     // sw.jx file to index
-    // Make articles work
     // Make favorites work
-    // Make top stories work
-        // Currently no data-uuid set in the carousel
+        // Will make favorites work after getting service workers added.
 
     eventDelegation(feedItems) {
         
         // The function I want to fire when the user clicks on a news item
         const openSummary = data => {   
-            console.log(data);        
+            (data);        
             if (!data) return false;
 
             // This is getting the uuid
@@ -107,11 +105,11 @@ export default class News extends Component {
             if (!uuid) return false;
 
             // Get the summary of the item. We want to open a modal window.
-            const article = feedItems.find(item => item.uuid === uuid);
+            const feedItem = feedItems.find(item => item.uuid === uuid);
             let isFavorited = false; // For now, lets just get this working. We will handle favorites later.
 
             let summaryModal = new Modal();
-            summaryModal.content(article);
+            summaryModal.summaryContent(feedItem);
             summaryModal.showModal();
 
 
@@ -123,7 +121,7 @@ export default class News extends Component {
                 let articleApiUrl = articleApi.getUrl(encodeURIComponent(url));
 
                 let req = new Request(articleApiUrl.toString());
-                let client = new ArticleClient();
+                let client = new NewsClient();
                 let resp = await client.send(req);
                 let data = await resp.json();
 
@@ -133,17 +131,17 @@ export default class News extends Component {
                         data = JSON.parse(data);
                     } catch (e) {}
             
-                console.log(data);
 
                 let article = new Article(data.data);
                 let articleModal = new Modal();
                 let articleContent = article.render();
-                articleModal.content(articleContent);
+
+                articleModal.articleContent(articleContent);
                 articleModal.showModal();
             }
     
-            //let readFullArticleButton = document.querySelector("#readFullArticleButton");
-            //readFullArticleButton.onclick = () => openStory(article.url, article.uuid);
+            let readFullArticleButton = document.querySelector("#readFullArticleButton");
+            readFullArticleButton.onclick = () => openStory(feedItem.url, feedItem.uuid);
         }   
 
         

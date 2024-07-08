@@ -1,12 +1,13 @@
 /** @jsx vNode */
+/** @jsxFrag "Fragment" */
 import { vNode } from "@ocdla/view/view";
 import Carousel from "./Carousel.jsx";
 
-export default function ArticleModalView(article) {
-  let carousel = new Carousel(
-    article.images.concat(article.videos),
-    "#articleModalCarousel"
-  );
+export default function ArticleModalView({ article }) {
+  let nodes = article.images.map((image) => {
+    return { node: image };
+  });
+
   return (
     <>
       <div class="modal-header">
@@ -40,7 +41,7 @@ export default function ArticleModalView(article) {
               </small>
             </div>
             <div class="p-2 bd-highlight">
-              <small>{article.publish_date.toDateString()}</small>
+              <small>{article.publish_date}</small>
             </div>
           </div>
         </div>
@@ -50,7 +51,9 @@ export default function ArticleModalView(article) {
         </div>
       </div>
 
-      <div class="carousel slide">{carousel}</div>
+      <div class="carousel slide">
+        <Carousel nodes={nodes} identifier="articleModalCarousel" />
+      </div>
 
       <div class="modal-footer m-2">
         <div class="row">

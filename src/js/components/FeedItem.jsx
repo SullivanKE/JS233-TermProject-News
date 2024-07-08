@@ -21,7 +21,7 @@ export default function FeedItem({ summary }) {
             summary.image_url,
             summary.url,
             summary.description,
-            summary.published_at,
+            summary.meta_site_name,
             summary.source,
             summary.favorite
           )}
@@ -41,7 +41,7 @@ export default function FeedItem({ summary }) {
   );
 }
 
-function buildBody(img, url, description, published_at, source, favorite) {
+function buildBody(img, url, description, meta_site_name, source, favorite) {
   let btnstyle = "btn-success";
   let btnClass = "btn " + btnstyle + " m-0";
   let btntext = "Add to Favorites";
@@ -57,7 +57,7 @@ function buildBody(img, url, description, published_at, source, favorite) {
           <img src={img} class="img-fluid rounded m-0" />
         </div>
         <div class="col p-3">
-          <small class="fw-light">{published_at.toDateString()}</small>
+          <small class="fw-light">{meta_site_name}</small>
           <p class="h-75">
             {description}...
             <button
