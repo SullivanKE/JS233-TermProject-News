@@ -1,23 +1,24 @@
 /** @jsx vNode */
 /** @jsxFrag "Fragment" */
 import { vNode } from '@ocdla/view/view';
-
-import FeedItemTile from '../components/FeedItemTile.jsx';
 import Image from '../components/shared/Image.jsx';
 export default class FeedItem {
 
+    static MAXIMUM_SNIPPET_LENGTH = 70;
+    static MAXIMUM_TITLE_LENGTH = 30;
+
     constructor(obj, favorite=false) {
-        let maximumTitleLength = 30;
-        let maximumSnippetLength = 70;
+        //let maximumTitleLength = 30;
+        //let maximumSnippetLength = 70;
 
 
         this.uuid = obj.uuid;
         this.title = obj.title;
-        this.shortTitle = obj.title.substr(0, maximumTitleLength) + "...";
+        this.shortTitle = obj.title.substr(0, FeedItem.MAXIMUM_TITLE_LENGTH) + "...";
         this.description = obj.description;
         this.keywords = obj.keywords;
         this.snippet = obj.snippet;
-        this.shortSnippet = obj.snippet.substr(0, maximumSnippetLength) + "...";
+        this.shortSnippet = obj.snippet.substr(0, FeedItem.MAXIMUM_SNIPPET_LENGTH) + "...";
         this.url = obj.url;
         this.image_url = obj.image_url ? obj.image_url : "../../img/nocontent.png";;
         this.language = obj.language;
@@ -25,10 +26,6 @@ export default class FeedItem {
         this.source = obj.source;
         this.categories = obj.categories.join(", ");
         this.favorite = favorite;
-    }
-
-    renderTile() {
-        return FeedItemTile(this, this.favorite);
     }
 
     renderImage() {

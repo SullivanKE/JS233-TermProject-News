@@ -11,11 +11,13 @@ export default class Article {
         this.title = obj.title;
         this.top_image = obj.top_image;
         this.authors = obj.authors.join(", ");
-        this.text = obj.text;
+        this.text = obj.text.replaceAll('\n\n', )
         this.meta_site_name = obj.meta_site_name;
         this.tags = obj.tags.join(", ");
         this.images = this.renderImages(obj.images);
         this.videos = this.renderVideos(obj.videos);
+
+        console.log(this);
 
         /*<div class="embed-responsive embed-responsive-16by9">
             <iframe class="embed-responsive-item" src="${videos[i]}" allowfullscreen></iframe>
@@ -44,8 +46,8 @@ export default class Article {
             <iframe class="embed-responsive-item" src="${videos[i]}" allowfullscreen></iframe>
         </div> */
     }
-    render() {
-        return (this);
-    }
+    //render() {
+        //return (this);
+    //}
 
 }

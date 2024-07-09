@@ -7,8 +7,8 @@ import NewsArticleApi from './api/NewsArticleApi'
 import StorageList from './StorageList';
 import Favorites from './Favorites';
 import NewsFeed from './components/NewsFeed';
-import TopStories from './components/TopStories';
 import FeedItem from './models/FeedItem';
+import FeedItemTile from './components/FeedItemTile.jsx';
 import Article from './models/Article';
 
 import Modal from './components/Modal.js';
@@ -24,65 +24,86 @@ window.NewsArticleApi = NewsArticleApi;
 export default class News extends Component {
     constructor() {
         super();
-        //this.favoriteStorage = new Favorites({prefix: "Favorite-storage-"});
-        //this.articleStorage = new StorageList({prefix: "News-Metadata-storage-"});    
-        let newsFeedApi = new NewsFeedApi(NEWS_FEED_API_TOKEN);
+        let api = new NewsFeedApi(NEWS_FEED_API_TOKEN);
         
-        let allNewsUrl = newsFeedApi.getUrl("news/all");
-        let topNewsUrl = newsFeedApi.getUrl("news/top");
-        //let headlinesNewsUrl = newsFeedApi.getUrl("news/headlines");
+        let allNewsUrl = api.getUrl("news/all");
+        let topNewsUrl = api.getUrl("news/top");
+        let headlinesNewsUrl = api.getUrl("news/headlines");
 
-        // We convert our urls to Request objects
-        let reqs = [new Request(allNewsUrl.toString()), new Request(topNewsUrl.toString())];//, new Request(headlinesNewsUrl.toString())];
+        let reqs = [topNewsUrl, allNewsUrl, headlinesNewsUrl].map((url) => new Request(url.toString(), {cache: "force-cache"}));
 
         // The client accesses our local storage and does fetchs on the Request objects we just made.
-        let client = new NewsClient({config: {refresh: 900}});
-        let resps = reqs.map((req) => client.send(req));
+        let client = new NewsClient({config: {debug: true, caching: false, refresh: 900}});
 
         Promise.allSettled(reqs.map((req) => client.send(req)))
         .then((responses) => {
-            const fulfilledResponses = responses.filter((resp) => resp.status === "fulfilled");
-            // const rejectedResponses = responses.filter((resp) => resp.status === "rejected");
-
-            return Promise.all(fulfilledResponses.map((resp) => resp.value.json()));
+            return responses.filter((resp) => resp.status === "fulfilled");
         })
+        .then((responses) => {
+            return responses.filter((resp) => resp.value.ok);
+        })
+        .then((responses) => {
+            return Promise.all(responses.map((resp) => resp.value.json()));
+        })
+        // We can fetch all the news. Append all news to top stories.
         .then((feeds) => {
-            // This solves the problem of our cache data not being parsed.
-            // It's less time consuming and more efficent to just use a try here.
-            for (let i = 0; i < feeds.length; i++) {
-                try {
-                    feeds[i] = JSON.parse(feeds[i]);
-                } catch (e) {}
-            }
-
+            
             let $root = document.querySelector('#root');
+            let summaries = [];
+            for (let feed of feeds) {
+                summaries = summaries.concat(feed.data);
+            }            
+            let items = summaries.map((summary) => new FeedItem(summary));
+            
 
-            let newsSummaries = feeds[0].data.map((summary) => new FeedItem(summary));
-            let topStories = feeds[1].data.map((summary) => new FeedItem(summary));
-            //let favorites = this.favoriteStorage.get();
-            let newsFeed = View.createRoot($root);
-            newsFeed.render(
-                <div data-index="this is a test">
-                    <TopStories feedItems={topStories}/>
+            let view = View.createRoot($root);
+            // newsFeed.render(
+            //     <div>
+            //         <TopStories feedItems={topStories}/>
                     
-                    <div class="row m-2">
-                        <div class="col-2">
-                                <div class="border border-light m-2 columnStyle h-100">
-                                <h4 class="text-center">Favorites</h4>
-                                <ul id="saved" style="list-style-type: none;" class="p-1 text-start">
-                                </ul>
-                            </div>
-                        </div>
-                        <NewsFeed feedItems={newsSummaries} />
+            //         <div class="row m-2">
+            //             <div class="col-2">
+            //                     <div class="border border-light m-2 columnStyle h-100">
+            //                     <h4 class="text-center">Favorites</h4>
+            //                     <ul id="saved" style="list-style-type: none;" class="p-1 text-start">
+            //                     </ul>
+            //                 </div>
+            //             </div>
+            //             <NewsFeed feedItems={newsSummaries} />
+            //         </div>
+            //     </div>
+            // );
+
+            // newsFeed.render(
+            //     <div>
+                    
+            //         <div class="row m-2">
+
+            //             <NewsFeed feedItems={newsSummaries} />
+            //         </div>
+            //     </div>
+            // );
+            let date = new Date();
+            view.render(
+                <>
+                    <h1 class='text-center'>News for {date.toDateString()}</h1>
+
+                    
+                    <div class="m-1 p-1 headlines" id="top-stories">
+                        <Carousel identifier="headlinesCarousel" className="carousel slide carousel-fade" showControls="true">
+                            {items.map(item => {return {node: item.renderImage(), uuid: item.uuid}})}
+                        </Carousel>
                     </div>
-                </div>
+                    
+                    <NewsFeed>
+                        {items.map(item => <FeedItemTile title={item.title} snippet={item.snippet} image={item.image_url} uuid={item.uuid} />)}
+                    </NewsFeed>
+                </>
+
             );
 
-            this.eventDelegation(newsSummaries.concat(topStories));
+            //this.eventDelegation(newsSummaries.concat(topStories));
             
-        })
-        .catch((error) => {
-            console.error("Error fetching data:", error);
         });
 
     }
@@ -124,12 +145,6 @@ export default class News extends Component {
                 let client = new NewsClient();
                 let resp = await client.send(req);
                 let data = await resp.json();
-
-                // This solves the problem of our cache data not being parsed.
-                // It's less time consuming and more efficent to just use a try here.
-                    try {
-                        data = JSON.parse(data);
-                    } catch (e) {}
             
 
                 let article = new Article(data.data);
@@ -146,9 +161,9 @@ export default class News extends Component {
 
         
 
-        let $topStories = document.querySelector('#headlinesCarousel-inner');
+        //let $topStories = document.querySelector('#headlinesCarousel-inner');
         let $newsFeed = document.querySelector('#news-feed');
-        this.delegate('click', $topStories, openSummary);
+        //this.delegate('click', $topStories, openSummary);
         this.delegate('click', $newsFeed, openSummary);
     }
     

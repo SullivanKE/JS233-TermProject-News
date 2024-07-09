@@ -2,26 +2,29 @@
 import { vNode } from "@ocdla/view/view";
 
 // Returns the main content portion of the news application
-export default function FeedItemTile(item) {
+export default function FeedItemTile({ title, snippet, image, uuid }) {
   return (
     <div
-      class="col-sm-* card fancy_card m-2"
+      class="col-sm-* card fancy_card m-0"
       name="article"
-      data-uuid={item.uuid}
+      data-uuid={uuid}
       data-content-type="summary"
     >
       <div class="card-header">
-        <h5 class="text-center text-white">{item.shortTitle}...</h5>
+        <h3 class="text-white">{title}</h3>
       </div>
       <div class="card-body">
         <figure class="figure">
-          <img src={item.image_url} class="figure-img card_image img-fluid" />
+          {image ? (
+            <img src={image} class="figure-img card_image img-fluid" />
+          ) : (
+            ""
+          )}
           <figcaption class="figure-caption text-white small">
-            {item.shortSnippet}...
+            {snippet}...
           </figcaption>
         </figure>
       </div>
-      <div class="card-footer text-white text-center">UUID: {item.uuid}</div>
     </div>
   );
 }

@@ -6,12 +6,14 @@ export default class LocalStorageCache {
     constructor(config) {
         if (config.refresh) 
             LocalStorageCache.REFRESH_INTERVAL = config.refresh;
-
+        
         this.debug = config.debug | false;
+        this.caching = config.caching | true;
         
     }
 
     put(req, httpResp) {
+        if (!this.caching) return null;
         let resp = LocalStorageResponse.fromHttpResponse(httpResp);
         let key = this.debug ? 
             req.method + req.url : 
@@ -34,6 +36,7 @@ export default class LocalStorageCache {
 
 
     get(req) {
+        if (!this.caching) return null;
         // Req is the full Request object. We are only interested in the URL at this point as it is the key used in our cache.
         // The method that stores however adds the method to the key. 
         let key = this.debug ? 

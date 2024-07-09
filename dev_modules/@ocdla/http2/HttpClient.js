@@ -2,19 +2,22 @@ import LocalStorageCache from "./LocalStorageCache";
 import Header from "./Header";
 export default class HttpClient {
     #params = {};
-    constructor(params) {
-        if (params) {
-            this.#params = params;
-        }
+    constructor(params = {}) {
+        this.#params = params.config;
+        if (params.caching)
+            this.localStorageCache = new LocalStorageCache();
+        
     }
+    // Take param that enables or disables local storage cache mechanism.
 
     send(req) {
 
 
         // Req is sent in as the full request object. We need to check if it is saved in the cache.
         // get returns either a response or null.
-        let localStorageCache = new LocalStorageCache(this.#params);
-        let entry = localStorageCache.get(req);
+        let entry = null;
+        if (this.localStorageCache)
+            entry = this.localStorageCache.get(req);
 
         
         // In my implementation, I needed to modify LocalStorageCache.get() in the instance of no cache found.
@@ -43,7 +46,8 @@ export default class HttpClient {
          return entry && !stale ?   
             Promise.resolve(entry) : 
             fetch(req).then( resp => {
-                localStorageCache.put(req, resp.clone());                            
+                if (this.localStorageCache)
+                    this.localStorageCache.put(req, resp.clone());                            
                 return resp;
             });
         

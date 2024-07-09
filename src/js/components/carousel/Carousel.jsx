@@ -16,28 +16,28 @@ import Controls from "./Controls.jsx";
 // dataTarget = "#carouselExample"
 // indicatorLabels = ["Image 1", "Image 2", "Image 3"]
 
-export default function Carousel({ nodes, identifier = "" }) {
+export default function Carousel({
+  children,
+  identifier = "",
+  className,
+  showControls = true,
+}) {
   let dataTarget = "#" + identifier;
   let innerId = identifier + "-inner";
   return (
-    <div
-      id={identifier}
-      class="carousel slide carousel-fade"
-      data-bs-ride="carousel"
-    >
+    <div id={identifier} class={className} data-bs-ride="carousel">
       <div class="carousel-indicators">
-        {nodes.map((node, index) => (
+        {children.map((node, index) => (
           <Indicator dataTarget={dataTarget} index={index} />
         ))}
       </div>
 
       <div class="carousel-inner" id={innerId}>
-        {nodes.map((node, index) => (
+        {children.map((node, index) => (
           <Item n={node} index={index} />
         ))}
       </div>
-
-      {dataTarget !== "" ? <Controls dataTarget={dataTarget} /> : ""}
+      {showControls ? <Controls dataTarget={dataTarget} /> : ""}
     </div>
   );
 }

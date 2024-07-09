@@ -30,12 +30,12 @@ export default class LocalStorageResponse {
      Convert this object to a standard JavaScript Response object.
     */
     toResponse() {
-        return Response.json(this.body, {headers: this.headers});
+        return Response.json(JSON.parse(this.body), {headers: this.headers});
     }
 
     // Convert stored JSON in the format '{"headers":{"h1":"h1","h2":"h2","h3":"h3"},"body":"{"prop1":"val1"}"}'.
-    static fromJson(cacheJson) {
-        const {headers,body} = JSON.parse(cacheJson);
+    static fromJson(cachedJson) {
+        const {body,headers} = JSON.parse(cachedJson);
 
         return new LocalStorageResponse(body,headers);
     }
