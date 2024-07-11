@@ -22,6 +22,7 @@ module.exports = {
     mode: !isProduction ? 'development': 'production',
     entry: {
       app: './src/js/app.js',
+      sw: './src/sw.js'
     },
     watchOptions: {
       followSymlinks: true,
@@ -75,7 +76,7 @@ module.exports = {
     plugins: [
       new htmlWebpackPlugin({
         template: path.resolve(__dirname, "./src/index.html"),
-        chunks: ["app"],
+        chunks: ["app", "sw"],
         inject: "body",
         filename: "index.html",
       }),
