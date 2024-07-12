@@ -22,20 +22,21 @@ module.exports = {
     mode: !isProduction ? 'development': 'production',
     entry: {
       app: './src/js/app.js',
-      sw: './src/sw.js'
     },
     watchOptions: {
       followSymlinks: true,
     },
     output: {
       path: path.resolve(__dirname, "dist"),
+      //path: '/',
       filename: fileNamePrefix + '[name].js',
       assetModuleFilename: "assets/[name][ext]",
       clean: true,
     },
     target: 'web',
     devServer: { 
-      static: "./dist"
+      static: "./dist",
+      historyApiFallback: true
     }, 
     /* no separate source map files in production */
     devtool: !isProduction ? 'source-map' : 'inline-source-map', 
@@ -76,7 +77,7 @@ module.exports = {
     plugins: [
       new htmlWebpackPlugin({
         template: path.resolve(__dirname, "./src/index.html"),
-        chunks: ["app", "sw"],
+        chunks: ["app"],
         inject: "body",
         filename: "index.html",
       }),

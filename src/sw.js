@@ -49,7 +49,7 @@ async function registerServiceWorker() {
       console.error(`Registration failed with ${error}`);
     }
   }
-};
+}
 
 
 // Sample code from Google.

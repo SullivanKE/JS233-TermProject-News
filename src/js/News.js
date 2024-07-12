@@ -30,6 +30,8 @@ export default class News extends Component {
         let topNewsUrl = api.getUrl("news/top");
         let headlinesNewsUrl = api.getUrl("news/headlines");
 
+        // , {cache: "force-cache"}
+
         let reqs = [topNewsUrl, allNewsUrl, headlinesNewsUrl].map((url) => new Request(url.toString(), {cache: "force-cache"}));
 
         // The client accesses our local storage and does fetchs on the Request objects we just made.
