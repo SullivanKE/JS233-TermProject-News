@@ -1,6 +1,3 @@
-
-
-
 // Location of this URI for this file.
 const workerUri = "./sw.js";
 
@@ -49,7 +46,7 @@ async function registerServiceWorker() {
       console.error(`Registration failed with ${error}`);
     }
   }
-}
+};
 
 
 // Sample code from Google.

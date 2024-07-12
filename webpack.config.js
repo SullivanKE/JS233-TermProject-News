@@ -22,6 +22,7 @@ module.exports = {
     mode: !isProduction ? 'development': 'production',
     entry: {
       app: './src/js/app.js',
+      sw: "./src/sw.js",
     },
     watchOptions: {
       followSymlinks: true,
