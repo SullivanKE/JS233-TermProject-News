@@ -1,5 +1,5 @@
 // Location of this URI for this file.
-const workerUri = "./sw.js";
+const workerUri = `./sw.js`;
 
 // The worker can control all pages within this scope, i.e., in the current directory and all its subdirectories.
 const workerScope = "./";
@@ -15,10 +15,10 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(cacheName).then((cache) => {
       return cache.addAll([
-        '/',
-        '/index.html',
-        '/css/styles.css',
-        '/js/app.js'
+        //'/',
+        //'/index.html'
+        //'/css/styles.css',
+        //'/js/app.js'
       ]);
     })
   );
@@ -32,9 +32,7 @@ self.addEventListener("install", (event) => {
 async function registerServiceWorker() {
   if ("serviceWorker" in navigator) {
     try {
-      const registration = await navigator.serviceWorker.register(workerUri, {
-        scope: workerScope,
-      });
+      const registration = await navigator.serviceWorker.register(workerUri);
       if (registration.installing) {
         console.log("Service worker installing");
       } else if (registration.waiting) {
@@ -68,7 +66,18 @@ self.addEventListener('fetch', (event) => {
             return fetch(event.request)
               .then(networkResponse => {
                 console.log('Fetched from network:', event.request.url);
-                cache.put(event.request, networkResponse.clone());
+
+                /*
+                const findJavascripts = /js$/g;
+                const found = paragraph.match(regex);
+
+                Const variablename = /^sw/g;|js$/g
+                Const javascirpts = /js$/g;
+                */
+
+                if (!event.request.url.includes('js')){
+                  cache.put(event.request, networkResponse.clone());
+                }
                 return networkResponse;
               });
           });

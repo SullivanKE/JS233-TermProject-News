@@ -3,6 +3,7 @@ const path = require('path');
 const htmlWebpackPlugin = require("html-webpack-plugin");
 const copyPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 // this loads all of the variables in the .env file
 // they're available in your code as process.env.KEY
@@ -22,7 +23,6 @@ module.exports = {
     mode: !isProduction ? 'development': 'production',
     entry: {
       app: './src/js/app.js',
-      sw: "./src/sw.js",
     },
     watchOptions: {
       followSymlinks: true,
@@ -33,6 +33,7 @@ module.exports = {
       filename: fileNamePrefix + '[name].js',
       assetModuleFilename: "assets/[name][ext]",
       clean: true,
+      publicPath: '/',
     },
     target: 'web',
     devServer: { 
@@ -76,6 +77,11 @@ module.exports = {
       ],
     },
     plugins: [
+      new CopyWebpackPlugin({
+        patterns: [
+          { from: './src/sw.js', to: './sw.js' },
+        ],
+      }),
       new htmlWebpackPlugin({
         template: path.resolve(__dirname, "./src/index.html"),
         chunks: ["app"],

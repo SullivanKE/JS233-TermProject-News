@@ -5,7 +5,7 @@ import '../css/styles.css';
 import 'bootstrap';
 import News from './News';
 
-new Worker(new URL('../sw.js', import.meta.url));
+
 
 let news;
 window.onload = () => {
