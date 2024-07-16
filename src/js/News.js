@@ -24,40 +24,12 @@ window.NewsArticleApi = NewsArticleApi;
 export default class News extends Component {
     constructor() {
         super();
-        let api = new NewsFeedApi(NEWS_FEED_API_TOKEN);
-        
-        let allNewsUrl = api.getUrl("news/all");
-        let topNewsUrl = api.getUrl("news/top");
-        let headlinesNewsUrl = api.getUrl("news/headlines");
-
-        // , {cache: "force-cache"}
-
-        let reqs = [topNewsUrl, allNewsUrl, headlinesNewsUrl].map((url) => new Request(url.toString(), {cache: "force-cache"}));
-
-        // The client accesses our local storage and does fetchs on the Request objects we just made.
-        let client = new NewsClient({config: {debug: true, caching: false, refresh: 900}});
-
-        Promise.allSettled(reqs.map((req) => client.send(req)))
-        .then((responses) => {
-            return responses.filter((resp) => resp.status === "fulfilled");
-        })
-        .then((responses) => {
-            return responses.filter((resp) => resp.value.ok);
-        })
-        .then((responses) => {
-            return Promise.all(responses.map((resp) => resp.value.json()));
-        })
+       
         // We can fetch all the news. Append all news to top stories.
-        .then((feeds) => {
+        this.fetchNews()
+        .then((feed) => {
             
             let $root = document.querySelector('#root');
-            let summaries = [];
-            for (let feed of feeds) {
-                summaries = summaries.concat(feed.data);
-            }            
-            let items = summaries.map((summary) => new FeedItem(summary));
-            
-
             let view = View.createRoot($root);
             // newsFeed.render(
             //     <div>
@@ -93,81 +65,87 @@ export default class News extends Component {
                     
                     <div class="m-1 p-1 headlines" id="top-stories">
                         <Carousel identifier="headlinesCarousel" className="carousel slide carousel-fade" showControls="true">
-                            {items.map(item => {return {node: item.renderImage(), uuid: item.uuid}})}
+                            {feed.map(item => {return {node: item.renderImage(), uuid: item.uuid}})}
                         </Carousel>
                     </div>
                     
                     <NewsFeed>
-                        {items.map(item => <FeedItemTile title={item.title} snippet={item.snippet} image={item.image_url} uuid={item.uuid} />)}
+                        {feed.map(item => <FeedItemTile title={item.title} snippet={item.snippet} image={item.image_url} uuid={item.uuid} />)}
                     </NewsFeed>
                 </>
 
             );
 
             //this.eventDelegation(newsSummaries.concat(topStories));
+
+            //let $topStories = document.querySelector('#headlinesCarousel-inner');
+            let $newsFeed = document.querySelector('#news-feed');
+            //this.delegate('click', $topStories, openSummary);
+            this.delegate('click', $newsFeed, this.openStory);
+
+            this.openStory = this.openStory.bind(this);
+            this.fetchNews = this.fetchNews.bind(this);
             
         });
 
     }
-   //TODO list
-    // sw.jx file to index
-    // Make favorites work
-        // Will make favorites work after getting service workers added.
 
-    eventDelegation(feedItems) {
+    async fetchNews() {
+        let api = new NewsFeedApi(NEWS_FEED_API_TOKEN);
         
-        // The function I want to fire when the user clicks on a news item
-        const openSummary = data => {   
-            (data);        
-            if (!data) return false;
+        let allNewsUrl = api.getUrl("news/all");
+        let topNewsUrl = api.getUrl("news/top");
+        let headlinesNewsUrl = api.getUrl("news/headlines");
 
-            // This is getting the uuid
-            const uuid = data.uuid;
+        // , {cache: "force-cache"}
 
-            // If there isn't an uuid, we leave
-            if (!uuid) return false;
+        let reqs = [topNewsUrl, allNewsUrl, headlinesNewsUrl].map((url) => new Request(url.toString(), {cache: "force-cache"}));
 
-            // Get the summary of the item. We want to open a modal window.
-            const feedItem = feedItems.find(item => item.uuid === uuid);
-            let isFavorited = false; // For now, lets just get this working. We will handle favorites later.
+        // The client accesses our local storage and does fetchs on the Request objects we just made.
+        let client = new NewsClient({config: {debug: true, caching: false, refresh: 900}});
 
-            let summaryModal = new Modal();
-            summaryModal.summaryContent(feedItem);
-            summaryModal.showModal();
-
-
-            //let favoriteBtn = document.querySelector("#favoritebtn");
-            //favoriteBtn.onclick = () => this.favoriteStorage.updateFavorites(summary, isFavorited);
-
-            const openStory = async function (url, uuid) {
-                let articleApi = new NewsArticleApi(NEWS_ARTICLE_API_TOKEN);
-                let articleApiUrl = articleApi.getUrl(encodeURIComponent(url));
-
-                let req = new Request(articleApiUrl.toString());
-                let client = new NewsClient();
-                let resp = await client.send(req);
-                let data = await resp.json();
-            
-
-                let article = new Article(data.data);
-                let articleModal = new Modal();
-                let articleContent = article.render();
-
-                articleModal.articleContent(articleContent);
-                articleModal.showModal();
-            }
-    
-            let readFullArticleButton = document.querySelector("#readFullArticleButton");
-            readFullArticleButton.onclick = () => openStory(feedItem.url, feedItem.uuid);
-        }   
-
-        
-
-        //let $topStories = document.querySelector('#headlinesCarousel-inner');
-        let $newsFeed = document.querySelector('#news-feed');
-        //this.delegate('click', $topStories, openSummary);
-        this.delegate('click', $newsFeed, openSummary);
+        return Promise.allSettled(reqs.map((req) => client.send(req)))
+        .then((responses) => {
+            return responses.filter((resp) => resp.status === "fulfilled");
+        })
+        .then((responses) => {
+            return responses.filter((resp) => resp.value.ok);
+        })
+        .then((responses) => {
+            return Promise.all(responses.map((resp) => resp.value.json()));
+        })
+        .then((feeds) => {
+            let summaries = [];
+            for (let feed of feeds) {
+                summaries = summaries.concat(feed.data);
+            }            
+            return summaries.map((summary) => new FeedItem(summary));
+        });
     }
+
     
+    async openStory(uuid) {
+
+        let feed = await this.fetchNews();
+        if (!feed) return false;
+
+        let url = feed.find((item) => item.uuid === uuid).url;
+        if (!url) return false;
+
+        let articleApi = new NewsArticleApi(NEWS_ARTICLE_API_TOKEN);
+        let articleApiUrl = articleApi.getUrl(encodeURIComponent(url));
+
+        let req = new Request(articleApiUrl.toString());
+        let client = new NewsClient();
+        let resp = await client.send(req);
+        let data = await resp.json();
+
+        let article = new Article(data.data);
+        let articleModal = new Modal();
+        let articleContent = article.render();
+
+        articleModal.articleContent(articleContent);
+        articleModal.showModal();
+    }
 
 }
