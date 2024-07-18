@@ -17,7 +17,6 @@ export default class Article {
         this.images = this.renderImages(obj.images);
         this.videos = this.renderVideos(obj.videos);
 
-        console.log(this);
 
         /*<div class="embed-responsive embed-responsive-16by9">
             <iframe class="embed-responsive-item" src="${videos[i]}" allowfullscreen></iframe>

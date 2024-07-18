@@ -36,6 +36,7 @@
   "dependencies": {
     "@ocdla/component": "^0.1.0",
     "@ocdla/http2": "file:dev_modules/@ocdla/http2",
+    "@ocdla/lib-http": "file:dev_modules/@ocdla/lib-http",
     "@ocdla/url": "file:dev_modules/@ocdla/url",
     "@ocdla/view": "^2.3.8",
     "babel-loader": "^8.2.5",

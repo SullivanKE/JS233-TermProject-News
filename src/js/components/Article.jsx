@@ -7,7 +7,6 @@ export default function ArticleModalView({ article }) {
   let nodes = article.images.map((image) => {
     return { node: image };
   });
-  console.log(article);
 
   return (
     <>

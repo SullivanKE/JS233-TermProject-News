@@ -1,7 +1,9 @@
 /** @jsx vNode */
 /** @jsxFrag "Fragment" */
 import { vNode, View } from '@ocdla/view/view';
-import NewsClient from '@ocdla/http2/HttpClient';
+//import NewsClient from '@ocdla/http2/HttpClient';
+import NewsClient from '@ocdla/lib-http/HttpClient';
+
 import NewsFeedApi from './api/NewsFeedApi';
 import NewsArticleApi from './api/NewsArticleApi'
 import StorageList from './StorageList';
@@ -98,11 +100,17 @@ export default class News extends Component {
         let headlinesNewsUrl = api.getUrl("news/headlines");
 
         // , {cache: "force-cache"}
+        const header = {
+            headers: {
+                'Cache-Control': 'public, max-age=900, force-cache' // Set the maximum age to 15 minutes
+            }
+        };
+        
 
-        let reqs = [topNewsUrl, allNewsUrl, headlinesNewsUrl].map((url) => new Request(url.toString(), {cache: "force-cache"}));
+        let reqs = [topNewsUrl, allNewsUrl, headlinesNewsUrl].map((url) => new Request(url.toString(), header));
 
         // The client accesses our local storage and does fetchs on the Request objects we just made.
-        let client = new NewsClient({config: {debug: true, caching: false, refresh: 900}});
+        let client = new NewsClient({LocalStorageCaching: true});
 
         return Promise.allSettled(reqs.map((req) => client.send(req)))
         .then((responses) => {

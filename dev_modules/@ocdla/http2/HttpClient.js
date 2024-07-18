@@ -34,9 +34,7 @@ export default class HttpClient {
     
                 let now = new Date();
                 let nowTime = now.getTime() / 1000;
-    
-                
-    
+
                 stale = (nowTime - cachedTime) > maxAge;
             }
             else
