@@ -4,18 +4,17 @@ import { vNode, View } from '@ocdla/view/view';
 //import NewsClient from '@ocdla/http2/HttpClient';
 import NewsClient from '@ocdla/lib-http/HttpClient';
 
+import LocalStorageCache from '@ocdla/lib-http/caches/LocalStorageCache';
+import HttpCache from '@ocdla/lib-http/caches/HttpCache';
+
 import NewsFeedApi from './api/NewsFeedApi';
-import NewsArticleApi from './api/NewsArticleApi'
-import StorageList from './StorageList';
-import Favorites from './Favorites';
+import NewsArticleApi from './api/NewsArticleApi';
 import NewsFeed from './components/NewsFeed';
 import FeedItem from './models/FeedItem';
 import FeedItemTile from './components/FeedItemTile.jsx';
 import Article from './models/Article';
 
 import Modal from './components/Modal.js';
-import ArticleV from './components/Article.jsx';
-import FeedItemV from './components/FeedItem.jsx';
 import Carousel from './components/carousel/Carousel.jsx';
 
 import Component from '@ocdla/component/Component';
@@ -33,32 +32,7 @@ export default class News extends Component {
             
             let $root = document.querySelector('#root');
             let view = View.createRoot($root);
-            // newsFeed.render(
-            //     <div>
-            //         <TopStories feedItems={topStories}/>
-                    
-            //         <div class="row m-2">
-            //             <div class="col-2">
-            //                     <div class="border border-light m-2 columnStyle h-100">
-            //                     <h4 class="text-center">Favorites</h4>
-            //                     <ul id="saved" style="list-style-type: none;" class="p-1 text-start">
-            //                     </ul>
-            //                 </div>
-            //             </div>
-            //             <NewsFeed feedItems={newsSummaries} />
-            //         </div>
-            //     </div>
-            // );
 
-            // newsFeed.render(
-            //     <div>
-                    
-            //         <div class="row m-2">
-
-            //             <NewsFeed feedItems={newsSummaries} />
-            //         </div>
-            //     </div>
-            // );
             let date = new Date();
             view.render(
                 <>
@@ -102,7 +76,7 @@ export default class News extends Component {
         // , {cache: "force-cache"}
         const header = {
             headers: {
-                'Cache-Control': 'public, max-age=900, force-cache' // Set the maximum age to 15 minutes
+                'Cache-Control': 'public, max-age=900' // Set the maximum age to 15 minutes
             }
         };
         
@@ -110,7 +84,23 @@ export default class News extends Component {
         let reqs = [topNewsUrl, allNewsUrl, headlinesNewsUrl].map((url) => new Request(url.toString(), header));
 
         // The client accesses our local storage and does fetchs on the Request objects we just made.
-        let client = new NewsClient({LocalStorageCaching: true});
+
+        let client = new NewsClient(
+            {
+                cacheOptions: {
+                    cache: LocalStorageCache,
+                    params: {
+                        refresh: 15 * 60
+                    }
+                }
+            });
+
+        // let client = new NewsClient(
+        //     {
+        //         cacheOptions: {
+        //             cache: HttpCache
+        //         }
+        //     });
 
         return Promise.allSettled(reqs.map((req) => client.send(req)))
         .then((responses) => {
@@ -121,6 +111,9 @@ export default class News extends Component {
         })
         .then((responses) => {
             return Promise.all(responses.map((resp) => resp.value.json()));
+        })
+        .then((responses) => {
+            return responses.filter((resp) => resp.data)
         })
         .then((feeds) => {
             let summaries = [];
