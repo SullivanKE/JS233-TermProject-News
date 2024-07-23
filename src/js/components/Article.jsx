@@ -3,7 +3,7 @@
 import { vNode } from "@ocdla/view/view";
 import Carousel from "./carousel/Carousel.jsx";
 
-export default function ArticleModalView({ article }) {
+export default function Article({ article }) {
   let nodes = article.images.map((image) => {
     return { node: image };
   });

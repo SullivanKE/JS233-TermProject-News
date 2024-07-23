@@ -20,13 +20,7 @@ export default class Model {
         this.modal.show();
     }
 
-    summaryContent(summary) {
-      const $modalContent = document.querySelector('#modalContent');
-      let root = View.createRoot($modalContent);
-      root.render(<FeedItem summary={summary} />);
-    }
-
-    articleContent(article) {
+    render(article) {
       const $modalContent = document.querySelector('#modalContent');
       let root = View.createRoot($modalContent);
       root.render(<Article article={article} />);

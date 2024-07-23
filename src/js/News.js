@@ -13,6 +13,7 @@ import NewsFeed from './components/NewsFeed';
 import FeedItem from './models/FeedItem';
 import FeedItemTile from './components/FeedItemTile.jsx';
 import Article from './models/Article';
+import ArticleJsx from './components/Article.jsx';
 
 import Modal from './components/Modal.js';
 import Carousel from './components/carousel/Carousel.jsx';
@@ -151,9 +152,8 @@ export default class News extends Component {
 
         let article = new Article(data.data);
         let articleModal = new Modal();
-        let articleContent = article.render();
-
-        articleModal.articleContent(articleContent);
+        
+        articleModal.render(article);
         articleModal.showModal();
     }
 
