@@ -27,7 +27,7 @@ export default class News extends Component {
         super();
        
         // We can fetch all the news. Append all news to top stories.
-        this.fetchNews()
+        News.fetchNews()
         .then((feed) => {
             
             let $root = document.querySelector('#root');
@@ -58,15 +58,12 @@ export default class News extends Component {
             let $newsFeed = document.querySelector('#news-feed');
             //this.delegate('click', $topStories, openSummary);
             this.delegate('click', $newsFeed, this.openStory);
-
-            this.openStory = this.openStory.bind(this);
-            this.fetchNews = this.fetchNews.bind(this);
             
         });
 
     }
 
-    async fetchNews() {
+    static async fetchNews() {
         let api = new NewsFeedApi(NEWS_FEED_API_TOKEN);
         
         let allNewsUrl = api.getUrl("news/all");
@@ -125,14 +122,25 @@ export default class News extends Component {
     }
 
     
-    async openStory(uuid) {
+    async openStory(itemData) {
+        let uuid = itemData.uuid || null;
+        if (!uuid) return false;
 
-        let feed = await this.fetchNews();
+        let feed = await News.fetchNews();
         if (!feed) return false;
 
-        let url = feed.find((item) => item.uuid === uuid).url;
+        let item = feed.find((item) => item.uuid === uuid);
+        if (!item) return false;
+
+        let url = item.url || null;
         if (!url) return false;
 
+        const header = {
+            headers: {
+                'Cache-Control': 'public, max-age=900' // Set the maximum age to 15 minutes
+            }
+        };
+        
         let articleApi = new NewsArticleApi(NEWS_ARTICLE_API_TOKEN);
         let articleApiUrl = articleApi.getUrl(encodeURIComponent(url));
 

@@ -71,11 +71,11 @@ self.addEventListener('fetch', (event) => {
                 const findJavascripts = /js$/g;
                 const found = paragraph.match(regex);
 
-                Const variablename = /^sw/g;|js$/g
+                Const variablename = /^sw/g\;|js$/g
                 Const javascirpts = /js$/g;
                 */
 
-                if (!event.request.url.includes('js')){
+                if (true || !event.request.url.includes('js')){
                   cache.put(event.request, networkResponse.clone());
                 }
                 return networkResponse;
